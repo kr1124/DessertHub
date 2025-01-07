@@ -42,7 +42,7 @@ public class HomeController {
     //     return "hom";
     // }
     public String getMethodName(HttpServletRequest request) {
-        return "hom";
+        return "home";
     }
     
 
@@ -51,4 +51,20 @@ public class HomeController {
     //     return homeService.getGreeting(); // 서비스 계층의 메서드를 호출하여 비즈니스 로직을 수행하고, 결과를 반환합니다.
     // }
 
+    // @GetMapping("/dessert") //@RequestParam 예제
+    // public String searchDessert(@RequestParam String name, @RequestParam(required = false) String type) {
+    //     return "Searching for dessert: " + name + " of type: " + type;
+    // }
+
+    // @PostMapping("/add") //post 예제
+    // public String addDessert(@RequestBody Dessert dessert) {
+    //     return "Added dessert: " + dessert.getName() + " with description: " + dessert.getDescription();
+    // }
+
+    // @PostMapping("/dessertImage") //파일 업로드 예제
+    // public String uploadDessertImage(@RequestParam("file") MultipartFile file) {
+    //     String filename = file.getOriginalFilename();
+    //     // 파일 처리 로직 (저장 등)
+    //     return "Uploaded file: " + filename;
+    // }
 }
