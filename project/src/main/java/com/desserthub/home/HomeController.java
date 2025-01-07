@@ -1,19 +1,9 @@
-package com.desserthub.home.controller;
+package com.desserthub.home;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.desserthub.home.service.HomeService;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 
 // @RestController //메서드에서 반환하는 데이터가 자동으로 HTTP 응답 본문으로 변환됩니다.
@@ -38,13 +28,9 @@ public class HomeController {
     // }
 
     @GetMapping("/home")
-    // public String getMethodName(@RequestParam String param) {
-    //     return "hom";
-    // }
-    public String getMethodName(HttpServletRequest request) {
+    public String request_home() {
         return "home";
     }
-    
 
     // @GetMapping("/greet") // /home/greet URL로 GET 요청을 처리하는 메서드를 정의합니다.
     // public String greet() {
