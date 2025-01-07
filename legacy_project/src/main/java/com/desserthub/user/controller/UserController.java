@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/user")
+//@RequestMapping("/user")
 public class UserController {
 
-    @GetMapping // /user URL로 GET 요청을 처리
+    @GetMapping("/user") // /user URL로 GET 요청을 처리
     public String request_user() {
         return "user"; // resources/templates/userHome.html 템플릿 반환
     }
