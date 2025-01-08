@@ -1,4 +1,4 @@
-package com.desserthub.user.controller;
+package com.desserthub.user;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,4 +1,4 @@
-package com.desserthub.home.service;
+package com.desserthub.home;
 
 import org.springframework.stereotype.Service;
 
