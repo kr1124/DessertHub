@@ -15,7 +15,7 @@ public class BoardController {
     private BoardService boardService;
 
     @RequestMapping("/board")
-    public ModelAndView request_board() throws Exception{
+    public ModelAndView request_board() throws Exception{ //ModelAndView 방식 안 쓸 수도 있음
 		ModelAndView mv = new ModelAndView("/apple/boardList");
 		
 		List<BoardDto> list = boardService.selectBoardList();

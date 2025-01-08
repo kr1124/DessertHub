@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class BoardServicelmpl implements BoardService {
 	
-	@Autowired
-	private BoardDAO boardDAO;
+	// @Autowired
+	// private BoardDAO boardDAO;
 	
 	@Override
 	public List<BoardDto> selectBoardList() throws Exception {
-		return boardDAO.selectBoardList();
+		// return boardDAO.selectBoardList();
+		return null;
 	}
 
 }
