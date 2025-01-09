@@ -1,20 +1,16 @@
-// package com.desserthub.gallery;
+package com.desserthub.gallery;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-// @Controller
-// public class GalleryController {
+@Controller
+public class GalleryController {
 
-//     @Autowired
-//     private GalleryService galleryService;
+    @GetMapping("/gallery")
+    public String get_gallery_data() {
+        GalleryService galleryService = new GalleryServiceImpl();
+        GalleryDto galleryDto = galleryService.get_gallery_data();
 
-//     @GetMapping("/gallery")
-//     public String get_gallery_data() {
-//         galleryService.get_gallery_data();
-
-//         return "gallery";
-//     }
-// }
+        return "gallery";
+    }
+}

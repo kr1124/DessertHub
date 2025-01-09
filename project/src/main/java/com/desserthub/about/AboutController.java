@@ -3,18 +3,23 @@ package com.desserthub.about;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/about")
 public class AboutController {
 
-    @GetMapping("/team")
-    public String request_about_team() {
+    @GetMapping
+    public String getMethodName() {
         return "about";
     }
 
-    @GetMapping("/contact")
-    public String request_about_contact() {
-        return "contact";
+    @PostMapping("/contact")
+    public String postMethodName(@RequestBody String entity) {
+        //TODO 등록 기능 추가
+        return entity;
     }
+    
 }
