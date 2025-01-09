@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성격 유형 테스트</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #ffe6e6;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #fff0f5;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: #ff66b2;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .answer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .answer-buttons button {
+      padding: 10px 20px;
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+
+    .answer-buttons button:hover {
+      background-color: #ff85c2;
+    }
+
+    .result-container {
+      width: 80%;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #fff0f5;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .result-container h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .result-container .result {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff66b2;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #ff85c2;
+    }
+
+    .iframe-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 300px;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      z-index: 1000;
+    }
+
+    .iframe-popup iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="quiz-container">
+    <h1>성격 유형 테스트</h1>
+    <p>당신의 성격 유형을 알아보고, 그에 맞는 디저트를 추천해드립니다!</p>
+
+    <!-- 질문 영역 -->
+    <div id="question-container">
+      <div class="question" id="question-text"></div>
+      <div class="answer-buttons" id="answer-buttons"></div>
+    </div>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div class="result-container" id="result-container">
+    <h2>추천 디저트</h2>
+    <div class="result" id="result-text"></div>
+    <button class="button" id="retry-button">다시 하기</button>
+    <button class="button" id="share-button">공유하기</button>
+  </div>
+
+  <!-- 공유하기 팝업 -->
+  <div class="iframe-popup" id="share-popup">
+    <button class="close-btn" id="close-popup">X</button>
+    <iframe src="../sns.html"></iframe>
+  </div>
+  <script>
+      // 초기 변수 설정
+const questions = [
+  {
+    question: "새로운 사람을 만날 때, 어떤 태도를 보이나요?",
+    answers: [
+      { text: "활발하게 먼저 다가간다.", dessert: "초콜릿 케이크" },
+      { text: "조용히 상대의 반응을 살핀다.", dessert: "딸기 마카롱" }
+    ]
+  },
+  {
+    question: "계획을 세우는 것을 좋아하나요?",
+    answers: [
+      { text: "계획을 철저히 세운다.", dessert: "블루베리 타르트" },
+      { text: "상황에 따라 유동적으로 움직인다.", dessert: "팬케이크" }
+    ]
+  },
+  {
+    question: "문제를 해결할 때 어떤 방식이 더 편한가요?",
+    answers: [
+      { text: "논리적이고 분석적인 접근을 선호한다.", dessert: "크로와상" },
+      { text: "감정과 직관을 따르는 편이다.", dessert: "푸딩" }
+    ]
+  }
+];
+
+let currentQuestionIndex = 0;
+let dessertScores = {};
+
+// 페이지 로드 시 결과창 숨기기
+document.getElementById('result-container').style.display = 'none';
+
+// 질문 표시 함수
+function showQuestion() {
+  const questionElement = document.getElementById('question-text');
+  const answerButtons = document.getElementById('answer-buttons');
+
+  questionElement.innerText = questions[currentQuestionIndex].question;
+  answerButtons.innerHTML = "";
+
+  questions[currentQuestionIndex].answers.forEach(answer => {
+    const button = document.createElement('button');
+    button.innerText = answer.text;
+    button.classList.add('button');
+    button.addEventListener('click', () => selectAnswer(answer.dessert));
+    answerButtons.appendChild(button);
+  });
+}
+
+// 답변 선택 시 실행 함수
+function selectAnswer(dessert) {
+  dessertScores[dessert] = (dessertScores[dessert] || 0) + 1;
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// 결과 표시 함수
+function showResult() {
+  // 가장 높은 점수의 디저트 선택
+  const resultDessert = Object.keys(dessertScores).reduce((a, b) =>
+    dessertScores[a] > dessertScores[b] ? a : b
+  );
+
+  document.getElementById('result-text').textContent = `${resultDessert}`;
+  document.getElementById('quiz-container').style.display = 'none'; // 질문 숨기기
+  document.getElementById('result-container').style.display = 'block'; // 결과창 보이기
+}
+
+// 다시 시작 버튼
+document.getElementById('retry-button').addEventListener('click', () => location.reload());
+
+// 공유하기 버튼
+document.getElementById('share-button').addEventListener('click', () => document.getElementById('share-popup').style.display = 'block');
+
+// 팝업 닫기 버튼
+document.getElementById('close-popup').addEventListener('click', () => document.getElementById('share-popup').style.display = 'none');
+
+// 첫 번째 질문 표시
+showQuestion();
+
+  </script>
+</body>
+</html>
