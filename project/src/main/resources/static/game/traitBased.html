@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디저트 추천 게임</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #fff5f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #ffe4e9;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: #ff6b81;
+      margin-bottom: 30px;
+    }
+
+    .result-container {
+      font-size: 24px;
+      color: #ff6b81;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #ffd1dc;
+      border-radius: 10px;
+    }
+
+    .iframe-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 300px;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      z-index: 1000;
+    }
+
+    .iframe-popup iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff6b81;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 5px 10px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #ff6b81;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #ff4f68;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>디저트 추천 게임</h1>
+
+    <!-- 추천 화면 -->
+    <div class="result-container" id="resultContainer">
+      <p>추천 디저트: <strong id="resultDish">---</strong></p>
+      <button class="button" id="retryButton">다시하기</button>
+      <button class="button" id="shareButton">공유하기</button>
+    </div>
+
+    <!-- 공유 팝업 -->
+    <div class="iframe-popup" id="sharePopup">
+      <button class="close-btn" id="closePopup">X</button>
+      <iframe src="../sns.html"></iframe>
+    </div>
+
+    <!-- 버튼 -->
+    <button class="button" id="recommendButton">디저트 추천받기</button>
+  </div>
+
+  <script>
+    const desserts = [
+      "케이크", "마카롱", "붕어빵", "초콜릿", "도넛", "초코 푸딩", "인절미 빙수", "딸기 파르페"
+    ];
+
+    const recommendButton = document.getElementById('recommendButton');
+    const resultContainer = document.getElementById('resultContainer');
+    const resultDish = document.getElementById('resultDish');
+    const retryButton = document.getElementById('retryButton');
+    const shareButton = document.getElementById('shareButton');
+    const sharePopup = document.getElementById('sharePopup');
+    const closePopup = document.getElementById('closePopup');
+
+    let isSpinning = false;
+
+    function autoSelectDessert() {
+      if (isSpinning) return;
+
+      isSpinning = true;
+      resultContainer.style.display = 'none';
+      let index = 0;
+      const interval = setInterval(() => {
+        resultDish.textContent = desserts[index % desserts.length];
+        index++;
+      }, 50);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        const randomIndex = Math.floor(Math.random() * desserts.length);
+        resultDish.textContent = desserts[randomIndex];
+        resultContainer.style.display = 'block';
+        isSpinning = false;
+      }, 2000);
+    }
+
+    recommendButton.addEventListener('click', () => {
+      autoSelectDessert();
+    });
+
+    retryButton.addEventListener('click', () => {
+      autoSelectDessert();
+    });
+
+    shareButton.addEventListener('click', () => {
+      sharePopup.style.display = 'block';
+    });
+
+    closePopup.addEventListener('click', () => {
+      sharePopup.style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>
