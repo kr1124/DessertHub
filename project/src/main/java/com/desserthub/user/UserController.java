@@ -2,12 +2,16 @@ package com.desserthub.user;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.desserthub.util.FileEncodingService;
 
 
 
@@ -59,6 +63,8 @@ public class UserController {
     
     @GetMapping("/profile")
     public String request_get_user_profile() {
+        //유저의 데이터를 DB에서 가져와 model, 혹은 session을 통해 뷰에 전달
+
         return "userProfile";
     }
 
@@ -68,10 +74,24 @@ public class UserController {
     }
     
 
-    @PostMapping("/dessertImage") //파일 업로드 예제
+    @PostMapping("/upload_pfp") //파일 업로드 예제
     public String uploadDessertImage(@RequestParam("file") MultipartFile file) {
+
         String filename = file.getOriginalFilename();
-        // 파일 처리 로직 (저장 등)
-        return "Uploaded file: " + filename;
+        FileEncodingService fileEncodingService = new FileEncodingService();
+
+        try {
+            // 파일을 Base64로 인코딩
+            String base64Encoded = fileEncodingService.encodeFileToBase64(file);
+
+            // Base64 인코딩된 문자열 반환
+            return "Base64 encoded image: " + base64Encoded;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Failed to process the file";
+        }
+        
+        // return "Uploaded file: " + filename;
     }
 }
