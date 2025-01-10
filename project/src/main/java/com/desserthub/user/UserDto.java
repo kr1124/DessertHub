@@ -7,6 +7,15 @@ public class UserDto {
     private String user_nn; //nickname
     private String user_pi; //profile image - base64
 
+    public UserDto() {}
+
+    public UserDto(String user_id, String user_pw, String user_em, String user_nn) {
+        this.user_id = user_id;
+        this.user_pw = user_pw;
+        this.user_em = user_em;
+        this.user_nn = user_nn;
+    }
+
     public String getUser_id() {
         return user_id;
     }

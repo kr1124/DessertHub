@@ -39,4 +39,18 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public boolean register_check(UserDto userDto) {
+        boolean result = false;
+
+        //DAO를 호출해 가능한 id인지 검증하는 작업 필요
+        //또한, DAO를 호출해 해당 Dto를 DB에 저장해야함
+
+        //검증 성공 시 true 반환, 지금은 무조건 성공한다고 가정
+        if(true) {
+            result = true;
+        }
+
+        return result;
+    }
 }

@@ -134,7 +134,9 @@
 
 <body>
   <!-- 로그인 실패 메시지 -->
-  <script th:if="${error}">alert('로그인 실패');</script>
+  <script th:if="${error}" th:inline="javascript">
+    alert('로그인 실패 : ' + [[${error}]]);
+  </script>
   
   <div class="container">
     <!-- 로그인 -->
@@ -155,26 +157,28 @@
     <!-- 회원가입 -->
     <div class="form-container" id="signup-form" style="display:none;">
       <h1>회원가입</h1>
-      <div class="inline-container">
-        <input type="text" id="signup-username" placeholder="아이디">
-        <button type="button" class="check-btn" onclick="checkUsername()">중복 확인</button>
-      </div>
-      <small id="username-feedback"></small>
-      <input type="password" id="signup-password" placeholder="비밀번호">
-      <input type="password" id="confirm-password" placeholder="비밀번호 확인" oninput="validatePassword()">
-      <small id="password-feedback"></small>
-      <input type="text" id="nickname" placeholder="닉네임">
-      <div class="email-container">
-        <input type="text" id="email" placeholder="이메일">
-        <span>@</span>
-        <select id="emailDomain">
-          <option value="gmail.com">gmail.com</option>
-          <option value="naver.com">naver.com</option>
-          <option value="custom">직접 입력</option>
-        </select>
-        <input type="text" id="customEmailDomain" placeholder="직접 입력" style="display:none;">
-      </div>
-      <button onclick="signup()">회원가입</button>
+      <form action="/user/register" method="post">
+        <div class="inline-container">
+          <input type="text" id="signup-username" name="reg_name" placeholder="아이디">
+          <button type="button" class="check-btn" onclick="checkUsername()">중복 확인</button>
+        </div>
+        <small id="username-feedback"></small>
+        <input type="password" id="signup-password" name="reg_pass" placeholder="비밀번호">
+        <input type="password" id="confirm-password" placeholder="비밀번호 확인" oninput="validatePassword()">
+        <small id="password-feedback"></small>
+        <input type="text" id="nickname" name="reg_nickname" placeholder="닉네임">
+        <div class="email-container">
+          <input type="text" id="email" name="reg_email" placeholder="이메일">
+          <span>@</span>
+          <select id="emailDomain">
+            <option value="gmail.com">gmail.com</option>
+            <option value="naver.com">naver.com</option>
+            <option value="custom">직접 입력</option>
+          </select>
+          <input type="text" id="customEmailDomain" placeholder="직접 입력" style="display:none;">
+        </div>
+        <button type="submit">회원가입</button>
+      </form>
     </div>
 
     <!-- 전환 버튼 -->

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+
 // 로그인, 회원가입 관련 컨트롤러
 @Controller
 @RequestMapping("/user")
@@ -29,10 +30,27 @@ public class UserController {
             session.setAttribute("username", id);
 
             //아래는 session과는 다르게, 저장되지는 않는 일회성 세션임
-            redirectAttributes.addFlashAttribute("message", "Login successful!");
+            redirectAttributes.addFlashAttribute("message", "Login success");
             return "redirect:/home";
         } else {
             // 로그인 실패 시 다시 login.html로 이동
+            model.addAttribute("error", "Invalid username or password");
+            return "login";
+        }
+    }
+    
+    @PostMapping("/register")
+    public String register_handler(@RequestParam("reg_name") String id, @RequestParam("reg_pass") String pass, @RequestParam("reg_email") String email, @RequestParam("reg_nickname") String nickname, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        UserService userService = new UserServiceImpl();
+        UserDto userDto = new UserDto(id, pass, email, nickname);
+
+        if(userService.register_check(userDto)) {
+            session.setAttribute("username", id);
+            redirectAttributes.addFlashAttribute("message", "Register success");
+            return "redirect:/home";
+        } else {
+            // 회원가입 실패 시 다시 login.html로 이동
             model.addAttribute("error", "Invalid username or password");
             return "login";
         }
