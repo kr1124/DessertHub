@@ -68,13 +68,7 @@ public class UserController {
         return "userProfile";
     }
 
-    @GetMapping("/find")
-    public String get_find() {
-        return "find";
-    }
-    
-
-    @PostMapping("/upload_pfp") //파일 업로드 예제
+    @PostMapping("/upload-pfp") //파일 업로드 예제
     public String uploadDessertImage(@RequestParam("file") MultipartFile file) {
 
         String filename = file.getOriginalFilename();
