@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시판</title>
+</head>
+<body>
+    <h1>게시글 목록</h1>
+    <a href="/board/new">새 게시글 작성</a>
+    <ul>
+        <li th:each="board : ${board}">
+            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}"></a>
+        </li>
+    </ul>
+</body>
+</html>

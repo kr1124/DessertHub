@@ -1,7 +1,39 @@
 package com.desserthub.board;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
-public interface BoardService {
-    List<BoardDto> selectBoardList() throws Exception;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class BoardService {
+
+    private final BoardRepository boardRepository;
+
+    public BoardService(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
+
+    public List<Board> getAllBoards() {
+        return boardRepository.findAll();
+    }
+
+    public Optional<Board> getBoard(Long id) {
+        return boardRepository.findById(id);
+    }
+
+    public Board createBoard(Board board) {
+        return boardRepository.save(board);
+    }
+
+    public Board updateBoard(Long id, Board boardDetails) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+        board.setTitle(boardDetails.getTitle());
+        board.setContent(boardDetails.getContent());
+        return boardRepository.save(board);
+    }
+
+    public void deleteBoard(Long id) {
+        boardRepository.deleteById(id);
+    }
 }

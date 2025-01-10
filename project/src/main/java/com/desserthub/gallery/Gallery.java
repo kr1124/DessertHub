@@ -1,21 +1,31 @@
 package com.desserthub.gallery;
 
-import java.sql.Timestamp;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-public class GalleryDto {
-    private String g_id;
+import java.time.LocalDateTime;
+
+@Entity
+public class Gallery {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long g_id;
+
     private String user_id;
     private String user_nn;
     private String g_title;
     private String g_hashtag;
     private String g_img;
     private int g_liked;
-    private Timestamp g_writeday;
+    private LocalDateTime g_writeday;
 
-    public String getG_id() {
+    public Long getG_id() {
         return g_id;
     }
-    public void setG_id(String g_id) {
+    public void setG_id(Long g_id) {
         this.g_id = g_id;
     }
     public String getUser_id() {
@@ -54,10 +64,10 @@ public class GalleryDto {
     public void setG_liked(int g_liked) {
         this.g_liked = g_liked;
     }
-    public Timestamp getG_writeday() {
+    public LocalDateTime getG_writeday() {
         return g_writeday;
     }
-    public void setG_writeday(Timestamp g_writeday) {
+    public void setG_writeday(LocalDateTime g_writeday) {
         this.g_writeday = g_writeday;
     }
 }
