@@ -327,16 +327,17 @@ footer p {
   </style>
 </head>
 <body>
+  <!-- 로그인 성공 메시지 -->
+  <script th:if="${message}">alert('로그인에 성공했습니다!')</script>
 
   <header>
     <div class="logo">
       <a href="/home" class="no-underline">Dessert Hub</a>
-    </div>    
-    <div class="auth-buttons">
+    </div> 
+    <div class="auth-buttons" th:unless="${message}">
       <a href="/user/login">
         <button>Login</button>
       </a>
-      <button id="theme-toggle">🌙</button>
     </div>
   </header>  
 

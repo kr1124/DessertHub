@@ -131,14 +131,21 @@
     }
   </style>
 </head>
+
 <body>
+  <!-- 로그인 실패 메시지 -->
+  <script th:if="${error}">alert('로그인 실패');</script>
+  
   <div class="container">
     <!-- 로그인 -->
     <div class="form-container" id="login-form">
       <h1>로그인</h1>
-      <input type="text" id="login-username" placeholder="아이디" required>
-      <input type="password" id="login-password" placeholder="비밀번호" required>
-      <button onclick="login()">로그인</button>
+      <form action="/user/login-check" method="post">
+        <input type="text" id="login-username" name="user_name" placeholder="아이디" required>
+        <input type="password" id="login-password" name="user_password" placeholder="비밀번호" required>
+        <button type="submit">로그인</button>
+      </form>
+      
       <p>계정이 없으신가요? <a href="#" onclick="toggleForm()">회원가입</a></p>
       <div class="link-container">
         <a href="/user/find">아이디/비밀번호 찾기</a>
@@ -223,6 +230,7 @@
       const customEmail = document.getElementById('customEmailDomain');
       customEmail.style.display = this.value === 'custom' ? 'block' : 'none';
     });
+
   </script>
 </body>
 </html>
