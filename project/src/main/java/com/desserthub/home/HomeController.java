@@ -38,12 +38,6 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/layout")
-    public String request_layout(Model model) {
-        
-        return "layout_test";
-    }
-
     // @GetMapping("/greet") // /home/greet URL로 GET 요청을 처리하는 메서드를 정의합니다.
     // public String greet() {
     //     return homeService.getGreeting(); // 서비스 계층의 메서드를 호출하여 비즈니스 로직을 수행하고, 결과를 반환합니다.
