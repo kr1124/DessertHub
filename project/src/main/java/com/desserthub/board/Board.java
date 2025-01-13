@@ -19,12 +19,12 @@ public class Board {
     private String title; //post_title
     private String content; //post_body
     private String post_img; //encode as base64
-    private LocalDateTime createdAt; //post_writeday
+    private LocalDateTime post_writeday; //post_writeday
     private int post_liked; //좋아요 수
     private int post_comment; //댓글 수
 
     public Board() {
-        this.createdAt = LocalDateTime.now();
+        this.post_writeday = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -75,14 +75,6 @@ public class Board {
         this.post_img = post_img;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public int getPost_liked() {
         return post_liked;
     }
@@ -99,6 +91,11 @@ public class Board {
         this.post_comment = post_comment;
     }
 
-    // getters and setters
-    
+    public LocalDateTime getPost_writeday() {
+        return post_writeday;
+    }
+
+    public void setPost_writeday(LocalDateTime post_writeday) {
+        this.post_writeday = post_writeday;
+    }
 }
