@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Board {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //post_id + post_num
