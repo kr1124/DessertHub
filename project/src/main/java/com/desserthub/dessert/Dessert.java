@@ -1,11 +1,28 @@
 package com.desserthub.dessert;
 
-public class DessertDto {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Dessert {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private int d_index;
-    private String d_name; //이름
-    private String d_image; //이미지
-    private String d_chara; //특징
-    
+    private String d_name;
+    private String d_image;
+    private String d_chara;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public int getD_index() {
         return d_index;
     }
@@ -29,5 +46,6 @@ public class DessertDto {
     }
     public void setD_chara(String d_chara) {
         this.d_chara = d_chara;
-    }
+    }    
+
 }
