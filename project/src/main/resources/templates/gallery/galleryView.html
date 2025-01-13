@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image View</title>
+</head>
+<body>
+    <h2 th:text="${gallery.g_title}"></h2> <!-- 제목 표시 -->
+
+    <div>
+        <img th:src="${gallery.g_img}" alt="이미지" /> <!-- 디코딩 필요 없음! -->
+    </div>
+
+    <br>
+    <a href="/gallery">다시 갤러리 보기</a>
+</body>
+</html>

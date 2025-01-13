@@ -70,4 +70,7 @@ public class Gallery {
     public void setG_writeday(LocalDateTime g_writeday) {
         this.g_writeday = g_writeday;
     }
+    public void set_now() {
+        this.g_writeday = LocalDateTime.now();
+    }
 }

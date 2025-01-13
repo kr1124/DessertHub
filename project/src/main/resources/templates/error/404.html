@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +52,6 @@ text-shadow: #FF847C 2px 2px, #FF7F7F 4px 4px, #FF7575 6px 6px, #FF6A6A 8px 8px,
 <body>
   <h1>404</h1>
   <p>Oops! Something is wrong.</p>
-  <br>
   <p th:text="${errorMessage}"></p>
   <a class="button" href="/home"><i class="icon-home"></i> Go back in Dessert Hub !!!</a>
 
