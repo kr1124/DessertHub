@@ -187,11 +187,15 @@
     hashtagsInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const value = hashtagsInput.value.trim();
-        if (value) {
+        let hvalue = hashtagsInput.value.trim(); //앞 뒤 공백 제거
+        if (hvalue) {
+          if(hvalue[0] != "#") { //#없으면 넣어줌
+            hvalue = '#' + hvalue;
+          }
+
           const tag = document.createElement('span');
           tag.classList.add('hashtag');
-          tag.innerHTML = `${value} <span class='remove-tag'>&times;</span>`;
+          tag.innerHTML = `${hvalue} <span class='remove-tag'>&times;</span>`;
           tag.querySelector('.remove-tag').addEventListener('click', () => tag.remove());
           hashtagsContainer.appendChild(tag);
           hashtagsInput.value = '';
