@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface LikeService {
+public class LikeService {
 
     private final LikeRepository likeRepository;
 
