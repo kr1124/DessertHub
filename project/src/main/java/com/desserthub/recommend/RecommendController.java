@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class RecommendController {
 
     @GetMapping
-    public String request_rec(@RequestParam String param) {
+    public String request_rec() {
         return "recommendHome";
     }
     
     @GetMapping("/random")
-    public String request_rec_random(@RequestParam String param) {
+    public String request_rec_random() {
         return null;
     }
     

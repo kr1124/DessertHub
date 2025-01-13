@@ -3,6 +3,7 @@ package com.desserthub.home;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -28,7 +29,12 @@ public class HomeController {
     // }
 
     @GetMapping("/home")
-    public String request_home() {
+    public String request_home(Model model) {
+        String username = (String) model.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("welcomeMessage", "Welcome, " + username + "!");
+        }
+
         return "home";
     }
 

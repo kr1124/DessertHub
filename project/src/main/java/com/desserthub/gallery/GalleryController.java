@@ -1,20 +1,53 @@
-// package com.desserthub.gallery;
+package com.desserthub.gallery;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-// @Controller
-// public class GalleryController {
+@Controller
+@RequestMapping("/gallery")
+public class GalleryController {
 
-//     @Autowired
-//     private GalleryService galleryService;
+    private final GalleryService galleryService;
 
-//     @GetMapping("/gallery")
-//     public String get_gallery_data() {
-//         galleryService.get_gallery_data();
+    public GalleryController(GalleryService galleryService) {
+        this.galleryService = galleryService;
+    }
 
-//         return "gallery";
-//     }
-// }
+    @GetMapping
+    public String getAllGallerys(Model model) {
+        model.addAttribute("gallery", galleryService.getAllGallerys());
+        return "gallery/main";
+    }
+
+    @GetMapping("/upload")
+    public String createGalleryForm(Model model) {
+        model.addAttribute("gallery", new Gallery());
+        return "gallery/upload";
+    }
+
+    @PostMapping
+    public String createGallery(@ModelAttribute Gallery gallery) {
+        galleryService.createGallery(gallery);
+        return "redirect:/gallery/main";
+    }
+
+
+    
+    // 단일 갤러리 사진은 새 창이 아니므로 따로 설정해야 할것임.
+    // @GetMapping("/{id}")
+    // public String getGallery(@PathVariable String id, Model model) {
+    //     model.addAttribute("board", galleryService.getGallery(id).orElseThrow(null));
+    //     return "gallery/detail";
+    // }
+
+    @PostMapping("/{id}/delete")
+    public String deleteGallery(@PathVariable Long id) {
+        galleryService.deleteGallery(id);
+        return "redirect:/gallery/main";
+    }
+}
