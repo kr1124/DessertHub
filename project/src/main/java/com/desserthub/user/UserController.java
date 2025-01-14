@@ -1,7 +1,5 @@
 package com.desserthub.user;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -32,13 +30,13 @@ public class UserController {
         if(userService.login_check(login_user)) {
             session.setAttribute("userCode", login_user.getUserCode());
             session.setAttribute("userId", login_user.getUserId());
-            //아래는 session과는 다르게, 저장되지는 않는 일회성 세션임
-            redirectAttributes.addFlashAttribute("message", "Login success");
+            //아래는 session과는 다르게, 저장되지는 않는 일회성 메시지 전달이며 리다이렉트 시에도 유지됨
+            redirectAttributes.addFlashAttribute("message", "로그인 성공!");
             return "redirect:/home";
         } else {
             // 로그인 실패 시 다시 login.html로 이동
             model.addAttribute("error", "Invalid username or password");
-            return "login";
+            return "user/login";
         }
     }
 
@@ -48,27 +46,27 @@ public class UserController {
         if(userService.register_check(reg_user)) {
             session.setAttribute("userCode", reg_user.getUserCode());
             session.setAttribute("userId", reg_user.getUserId());
-            redirectAttributes.addFlashAttribute("message", "Register success");
+            redirectAttributes.addFlashAttribute("message", "회원가입 성공!");
             return "redirect:/home";
         } else { //해당 아이디 이미 존재
             // 회원가입 실패 시 다시 login.html로 이동
             model.addAttribute("error", "Invalid username or password");
-            return "login";
+            return "user/ login";
         }
     }
     
-    
     @GetMapping("/profile")
-    public String request_get_user_profile(Model model, HttpSession session) {
-        //유저의 데이터를 DB에서 가져와 model, 혹은 session을 통해 뷰에 전달
+    public String request_get_user_profile(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        //유저의 데이터를 DB에서 가져와 model을 통해 뷰에 전달
         User user = userService.getUser((Long)session.getAttribute("userCode")).orElseThrow(null);
         if(user == null) {
-            // TODO
             // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            return "redirect:/home";
+        } else {
+            model.addAttribute("user", user);
+            return "user/profile";
         }
-        model.addAttribute("user", user);
-
-        return "user/profile";
     }
 
     // 로그아웃 처리 및 세션 삭제
@@ -89,7 +87,7 @@ public class UserController {
 
     @PostMapping("/upload-pfp") //파일 업로드 예제
     public String uploadDessertImage(String image64) {
-
+        // TODO
         return "";
     }
 }

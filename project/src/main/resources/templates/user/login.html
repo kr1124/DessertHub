@@ -135,7 +135,11 @@
 <body>
   <!-- 로그인 실패 메시지 -->
   <script th:if="${error}" th:inline="javascript">
-    alert('로그인 실패 : ');
+    alert('로그인 실패. 아이디나 비밀번호를 확인해주십시오.');
+  </script>
+  <!-- 회원가입 실패 메시지 -->
+  <script th:if="${error}" th:inline="javascript">
+    alert('회원가입 실패. 중복된 아이디가 존재합니다.');
   </script>
   
   <div class="container">
