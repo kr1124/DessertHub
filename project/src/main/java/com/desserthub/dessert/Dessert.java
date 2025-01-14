@@ -1,6 +1,6 @@
 package com.desserthub.dessert;
 
-public class DessertDto {
+public class Dessert {
     private int d_index;
     private String d_name; //이름
     private String d_image; //이미지
