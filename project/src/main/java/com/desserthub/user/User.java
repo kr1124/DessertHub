@@ -10,7 +10,7 @@ public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userCode;
+    private Long id;
 
     private String userId;
     private String userPw;
@@ -20,12 +20,12 @@ public class User {
 
     public User() {}
 
-    public Long getUserCode() {
-        return userCode;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserCode(Long userCode) {
-        this.userCode = userCode;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserId() {

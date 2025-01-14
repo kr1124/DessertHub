@@ -1,8 +1,11 @@
 package com.desserthub.board;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/board")
@@ -21,12 +24,25 @@ public class BoardController {
     }
 
     @GetMapping("/new")
-    public String createBoardForm(Model model) {
-        model.addAttribute("board", new Board());
-        return "board/new";
+    public String createBoardForm(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+
+        if(session.getAttribute("userId") != null) {
+            System.out.println("글 작성 페이지로 이동 1");
+            model.addAttribute("board", new Board());
+            System.out.println("글 작성 페이지로 이동 2");
+            return "board/new";
+        } else {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "글 작성은 로그인해야 할 수 있습니다.");
+            redirectAttributes.addFlashAttribute("target", "/board");
+            return "redirect:/remessage";
+        }
+            
+        // model.addAttribute("board", new Board());
+        // return "board/new";
     }
 
-    @PostMapping
+    @PostMapping("/upload")
     public String createBoard(@ModelAttribute Board board) {
         boardService.createBoard(board);
         return "redirect:/board";
@@ -39,7 +55,21 @@ public class BoardController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editBoardForm(@PathVariable Long id, Model model) {
+    public String editBoardForm(@PathVariable Long id, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        // Board board = boardService.getBoard(id).orElseThrow(null);
+        // UserService userService = new UserService(null);
+        // User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        // if(board.getUserId().equals(user.getUserId())) {
+        //     model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
+        //     return "board";
+        // } else {
+        //     // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+        //     redirectAttributes.addFlashAttribute("message", "작성자만 수정할 수 있습니다.");
+        //     redirectAttributes.addFlashAttribute("target", "/board");
+        //     return "redirect:/remessage";
+        // }
+
+        
         model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
         return "board/edit";
     }
@@ -51,8 +81,12 @@ public class BoardController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteBoard(@PathVariable Long id) {
+    public String deleteBoard(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         boardService.deleteBoard(id);
+        
+        // redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        // redirectAttributes.addFlashAttribute("target", "/board");
+        // return "redirect:/remessage";
         return "redirect:/board";
     }
 }

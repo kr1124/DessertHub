@@ -12,14 +12,14 @@
     <div class="upload-container">
         <h2>사진 업로드</h2>
         <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post" enctype="multipart/form-data">
-            <input type="text" id="title" th:field="*{g_title}" placeholder="제목 입력" required />
+            <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
             <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
             <div class="hashtags-container" id="hashtagsContainer"></div>
 
             <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
             <div class="preview-container" id="previewContainer"></div>
             
-            <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{g_img}" >
+            <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}" >
         
             <!-- <input type="file" id="imageUpload" accept="image/*" th:field="*{g_img}" required />
             <div class="preview-container" id="previewContainer"></div> -->

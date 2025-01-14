@@ -18,12 +18,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUser(Long userCode) {
-        return userRepository.findById(userCode);
+    public Optional<User> getUser(Long id) {
+        return userRepository.findById(id);
     }
 
-    public User createUser(User board) {
-        return userRepository.save(board);
+    public Optional<User> getUser(String userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
     public User updateUser(Long userCode, User userDetails) {
@@ -36,20 +40,27 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long userCode) {
-        userRepository.deleteById(userCode);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
 
-    public User updateUserProfileImage(Long userCode, User userDetails) {
-        User user = userRepository.findById(userCode).orElseThrow(null);
+    public User updateUserProfileImage(Long id, User userDetails) {
+        User user = userRepository.findById(id).orElseThrow(null);
         user.setUserPi(userDetails.getUserPi());
         return userRepository.save(user);
     }
 
     public boolean login_check(User login_user) {
         boolean result = false;
-        User user = userRepository.findByUserId(login_user.getUserId()).orElseThrow(null);
+
+        User user = null;
+
+        try {
+            user = userRepository.findByUserId(login_user.getUserId()).orElseThrow(null);
+        } catch (Exception e) {
+            //e.printStackTrace(); //NullPointerException
+        }
 
         if(user != null) {
             if(login_user.getUserId().equals(user.getUserId())) {
@@ -65,8 +76,13 @@ public class UserService {
 
     public boolean register_check(User user) {
         boolean result = false;
-
-        User target_user = userRepository.findByUserId(user.getUserId()).orElseThrow(null);
+        User target_user = null;
+        
+        try {
+            target_user = userRepository.findByUserId(user.getUserId()).orElseThrow(null);
+        } catch (Exception e) {
+            // null
+        }
 
         if(target_user == null) {
             target_user = new User();

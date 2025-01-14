@@ -7,10 +7,10 @@
     <h1>게시글 수정</h1>
     <form th:action="@{/board/{id}/edit(id=${board.id})}" th:object="${board}" method="post">
         <label for="title">제목</label>
-        <input type="text" th:field="*{title}" required="required" />
+        <input type="text" th:field="*{boardTitle}" required="required" />
         <br />
         <label for="content">내용</label>
-        <textarea th:field="*{content}" required="required"></textarea>
+        <textarea th:field="*{boardContent}" required="required"></textarea>
         <br />
         <button type="submit">수정</button>
     </form>
