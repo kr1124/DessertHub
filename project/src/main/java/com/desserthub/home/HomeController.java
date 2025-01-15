@@ -44,6 +44,12 @@ public class HomeController {
     public String redirect_handler() {
         return "remessage";
     }
+
+    @GetMapping("/test-frag")
+    public String test_frag() {
+        return "test-fragments";
+    }
+    
     
 
     // @GetMapping("/greet") // /home/greet URL로 GET 요청을 처리하는 메서드를 정의합니다.
