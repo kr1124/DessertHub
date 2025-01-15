@@ -222,7 +222,16 @@
 </head>
 
 <body>
-
+<!-- <h1 th:text="${board.boardTitle}"></h1>
+    <p th:text="${board.boardContent}"></p>
+    <small>작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span></small>
+    <br />
+    <a th:href="@{/board/{id}/edit(id=${board.id})}">수정</a>
+    <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
+        <button type="submit">삭제</button>
+    </form>
+    <br />
+    <a href="/board">목록으로</a> -->
   <header>
     <div class="logo">
       <a href="new_index.html" class="no-underline">Dessert Hub</a>

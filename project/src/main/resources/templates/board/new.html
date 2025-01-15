@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>새 게시글 작성</title>
+
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/fragments/header.css">
+    <link rel="stylesheet" href="/css/fragments/nav.css">
+    <link rel="stylesheet" href="/css/fragments/footer.css">
+    <link rel="stylesheet" href="/css/board/new.css">
 </head>
+
 <body>
-    <h1>새 게시글 작성</h1>
+
+    <!-- 헤더 포함 -->
+    <header th:replace="fragments/header.html :: header"></header>
+
+    <!-- <h1>새 게시글 작성</h1>
     <form action="/board/upload" th:object="${board}" method="post">
         <label for="title">제목</label>
         <input type="text" th:field="*{boardTitle}" required="required" />
@@ -14,6 +28,122 @@
         <br />
         <button type="submit">작성</button>
     </form>
-    <a href="/board">취소</a>
+    <a href="/board">취소</a> -->
+
+    <main>
+        <!-- 사이드바 포함 -->
+        <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
+        <div class="container">
+            <h2>
+                게시판 글쓰기
+                <!-- <button class="drafts-button" id="toggle-drafts-list">임시저장 목록</button> -->
+            </h2>
+
+            <!-- 임시저장 목록 팝업 -->
+            <!-- <div class="drafts-popup" id="drafts-popup">
+                <ul id="draft-list" class="draft-list"></ul>
+            </div> -->
+
+            <!-- <div class="form-group">
+                <label for="category">카테고리</label>
+                <select id="category">
+                    <option value="notice">공지사항</option>
+                    <option value="free">자유게시판</option>
+                    <option value="qna">Q&A</option>
+                </select>
+            </div> -->
+
+            <form action="/board/upload" th:object="${board}" method="post">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" th:field="*{boardTitle}" placeholder="제목을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" th:field="*{boardContent}" placeholder="내용을 입력하세요"></textarea>
+                </div>
+
+            <div class="divider"></div>
+
+            <!-- 사진 및 지도 버튼 -->
+            <!-- 현재 사진 업로드 불가, 수정 필요 -->
+            <div class="media-buttons">
+                <button id="upload-photo">사진 업로드</button>
+                <!-- <button id="select-map">지도 선택</button> -->
+                <input type="file" id="photo-input" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="submit-post">등록</button>
+                <button id="save-draft">임시저장</button>
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
+
+    <script>
+        const drafts = [];
+
+        document.getElementById('toggle-drafts-list').addEventListener('click', () => {
+            const popup = document.getElementById('drafts-popup');
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.getElementById('save-draft').addEventListener('click', () => {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!title || !content) {
+                alert('제목과 내용을 입력하세요.');
+                return;
+            }
+
+            drafts.push({ title, content });
+            alert('임시저장 완료!');
+            renderDrafts();
+        });
+
+        // '사진 업로드' 버튼과 파일 입력 요소 선택
+        const uploadButton = document.getElementById('upload-photo');
+        const photoInput = document.getElementById('photo-input');
+
+        // 버튼 클릭 시 파일 입력 창 열기
+        uploadButton.addEventListener('click', () => {
+            photoInput.click();
+        });
+
+        // 파일 선택 시 선택한 파일의 이름 출력
+        photoInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                alert(`선택한 파일: ${file.name}`);
+            }
+        });
+
+        function renderDrafts() {
+            const list = document.getElementById('draft-list');
+            list.innerHTML = drafts.map((d, i) => `
+            <li>${d.title} <span class="delete-btn" onclick="deleteDraft(${i})">삭제</span></li>
+          `).join('');
+        }
+
+        function deleteDraft(index) {
+            drafts.splice(index, 1);
+            renderDrafts();
+        }
+
+        document.getElementById('submit-post').addEventListener('click', () => {
+            alert('게시글이 등록되었습니다!');
+        });
+
+    </script>
+
 </body>
+
 </html>

@@ -34,7 +34,7 @@ public class BoardController {
         } else {
             // 잘못된 접근이므로 경고와 함께 home으로 보내야함
             redirectAttributes.addFlashAttribute("message", "글 작성은 로그인해야 할 수 있습니다.");
-            redirectAttributes.addFlashAttribute("target", "/board");
+            redirectAttributes.addFlashAttribute("target", "/user/login");
             return "redirect:/remessage";
         }
             

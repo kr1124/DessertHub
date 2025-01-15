@@ -1,18 +1,237 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 상세보기</title>
+
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/fragments/header.css">
+    <link rel="stylesheet" href="/css/fragments/nav.css">
+    <link rel="stylesheet" href="/css/fragments/footer.css">
+    <link rel="stylesheet" href="/css/board/detail.css">
 </head>
+
 <body>
-    <h1 th:text="${board.boardTitle}"></h1>
-    <p th:text="${board.boardContent}"></p>
-    <small>작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span></small>
-    <br />
-    <a th:href="@{/board/{id}/edit(id=${board.id})}">수정</a>
-    <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
-        <button type="submit">삭제</button>
-    </form>
-    <br />
-    <a href="/board">목록으로</a>
+    <!-- 헤더 포함 -->
+    <header th:replace="fragments/header.html :: header"></header>
+
+
+    <main>
+        <!-- 사이드바 포함 -->
+        <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
+        <div class="container">
+            <div class="header">
+                <div class="category" id="post-category">공지사항</div>
+                <div class="title" id="post-title"><h1 th:text="${board.boardTitle}"></h1></div>
+                <div class="info" id="post-info">작성자: 작성자 1 | 작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span> | 조회수: 123 | 찜: 0</div>
+                <div class="actions">
+                    <a href="/board"><button id="edit-post">목록으로</button></a>
+                    <a th:href="@{/board/{id}/edit(id=${board.id})}"><button id="edit-post">수정</button></a>
+                    <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
+                        <button id="delete-post" type="submit">삭제</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 게시글 내용 -->
+            <div class="content" id="post-content">
+                <p th:text="${board.boardContent}"></p>
+            </div>
+
+            <!-- 하트 버튼 위치 조정 -->
+            <div class="heart-container">
+                <div id="heart" class="button"></div>
+            </div>
+
+            <!-- 댓글 섹션 -->
+            <div class="comments-container">
+                <h3>댓글 (<span id="comment-count">0</span>)</h3>
+                <ul id="comment-list" class="comment-list"></ul> <!-- 이 부분 확인 -->
+                <div class="comment-input">
+                    <input type="text" id="comment-input" placeholder="댓글을 입력하세요">
+                    <button id="add-comment">등록</button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
+
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mo-js/0.288.2/mo.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 애니메이션 경로 설정
+            var scaleCurve = mojs.easing.path('M0,100 L25,99.9999983 C26.2328835,75.0708847 19.7847843,0 100,0');
+
+            // 하트 버튼 선택
+            var el = document.querySelector('#heart');
+            var timeline = new mojs.Timeline();
+
+            // 애니메이션 정의 1: 붉은 하트 퍼짐
+            var tween1 = new mojs.Burst({
+                parent: el,
+                radius: { 0: 100 },
+                angle: { 0: 45 },
+                y: -10,
+                count: 10,
+                children: {
+                    shape: 'circle',
+                    radius: 30,
+                    fill: ['red', 'white'],
+                    strokeWidth: 15,
+                    duration: 500,
+                },
+            });
+
+            // 애니메이션 정의 2: 스케일 변환
+            var tween2 = new mojs.Tween({
+                duration: 900,
+                onUpdate: function (progress) {
+                    var scaleProgress = scaleCurve(progress);
+                    el.style.transform = 'scale3d(' + scaleProgress + ',' + scaleProgress + ',1)';
+                },
+            });
+
+            // 애니메이션 정의 3: 반대 방향 퍼짐
+            var tween3 = new mojs.Burst({
+                parent: el,
+                radius: { 0: 125 },
+                angle: { 0: -45 },
+                y: -10,
+                count: 10,
+                children: {
+                    shape: 'circle',
+                    radius: 30,
+                    fill: ['white', 'red'],
+                    strokeWidth: 15,
+                    duration: 400,
+                },
+            });
+
+            // 타임라인 애니메이션 추가
+            timeline.add(tween1, tween2, tween3);
+
+            // 하트 클릭 이벤트 통합
+            $("#heart").click(function () {
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active'); // 비활성화
+                    post.liked = false; // 상태 비활성화
+                    post.likesCount = 0; // 찜 수 감소
+                } else {
+                    timeline.replay(); // 애니메이션 실행
+                    $(this).addClass('active'); // 활성화 상태 추가
+                    post.liked = true; // 상태 활성화
+                    post.likesCount = 1; // 찜 수 증가
+                }
+                renderPost(); // 상태 업데이트 반영
+            });
+        });
+
+        // 게시글 데이터 초기화 및 상태 업데이트
+        const post = {
+            id: 1,
+            category: '공지사항',
+            title: '게시글 제목 예시',
+            author: '작성자 1',
+            date: '2024-01-01',
+            views: 123,
+            content: '이곳은 게시글의 본문 내용입니다.',
+            liked: false,
+            likesCount: 0,
+            comments: []
+        };
+
+        // 게시글 렌더링 함수
+        const postCategory = document.getElementById('post-category');
+        const postTitle = document.getElementById('post-title');
+        const postInfo = document.getElementById('post-info');
+        const postContent = document.getElementById('post-content');
+        const heart = document.getElementById('heart');
+        const commentList = document.getElementById('comment-list');
+        const commentInput = document.getElementById('comment-input');
+        const commentCount = document.getElementById('comment-count');
+
+        function renderPost() {
+            postCategory.innerText = post.category;
+            postTitle.innerText = post.title;
+            postInfo.innerText = `작성자: ${post.author} | 작성일: ${post.date} | 조회수: ${post.views} | 찜: ${post.likesCount}`;
+            heart.classList.toggle('active', post.liked);
+        }
+
+        // DOM 로드 완료 후 실행
+        document.addEventListener('DOMContentLoaded', function () {
+            const commentList = document.getElementById('comment-list'); // 댓글 목록
+            const commentInput = document.getElementById('comment-input'); // 댓글 입력창
+            const commentCount = document.getElementById('comment-count'); // 댓글 수 표시
+
+            // 댓글 데이터 저장
+            const comments = [];
+
+            // 댓글 추가 함수
+            function addComment() {
+                const commentText = commentInput.value.trim(); // 공백 제거
+                if (!commentText) { // 빈 입력 처리
+                    alert('댓글을 입력하세요!');
+                    return;
+                }
+
+                const comment = { id: Date.now(), text: commentText }; // 고유 ID 생성
+                comments.push(comment); // 댓글 리스트에 추가
+                renderComments(); // 댓글 렌더링 업데이트
+                commentInput.value = ''; // 입력 필드 초기화
+            }
+
+            // 댓글 삭제 함수
+            function deleteComment(id) {
+                const index = comments.findIndex(comment => comment.id === id); // ID 기반 검색
+                if (index > -1) {
+                    comments.splice(index, 1); // 댓글 삭제
+                }
+                renderComments(); // 삭제 후 렌더링 업데이트
+            }
+
+            // 댓글 렌더링 함수
+            function renderComments() {
+                commentList.innerHTML = ''; // 기존 댓글 초기화
+                comments.forEach(comment => {
+                    const li = document.createElement('li'); // <li> 태그 생성
+                    li.innerHTML = `
+        <span>${comment.text}</span>
+        <button class="delete-btn" onclick="deleteComment(${comment.id})">삭제</button>
+      `;
+                    commentList.appendChild(li); // 댓글 추가
+                });
+                commentCount.innerText = comments.length; // 댓글 수 업데이트
+            }
+
+            // 댓글 등록 버튼 클릭 이벤트
+            document.getElementById('add-comment').addEventListener('click', addComment);
+
+            // Enter 키로 댓글 추가
+            commentInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    addComment();
+                }
+            });
+
+            // 전역 함수로 deleteComment 등록 (onClick에서 사용)
+            window.deleteComment = deleteComment;
+        });
+
+        // 초기 렌더링
+        renderPost();
+
+
+    </script>
 </body>
+
 </html>
