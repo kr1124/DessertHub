@@ -11,7 +11,7 @@ public class Gallery {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long galleryId;
+    private Long id;
 
     private String userId;
     private String userNn;
@@ -25,11 +25,11 @@ public class Gallery {
         this.galleryWriteday = LocalDateTime.now();
     }
 
-    public Long getGalleryId() {
-        return galleryId;
+    public Long getId() {
+        return id;
     }
-    public void setGalleryId(Long galleryId) {
-        this.galleryId = galleryId;
+    public void setId(Long id) {
+        this.id = id;
     }
     public String getUserId() {
         return userId;
