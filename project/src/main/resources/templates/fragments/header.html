@@ -1,12 +1,27 @@
-<!-- header.html -->
-<div th:fragment="header">
-    <header>
-        <h1>사이트 제목</h1>
-        <nav>
-            <ul>
-                <li><a href="/">홈</a></li>
-                <li><a href="/about">소개</a></li>
-            </ul>
-        </nav>
-    </header>
-</div>
+<header th:fragment="header">
+    <div class="logo">
+        <a href="/home" class="no-underline">Dessert Hub</a>
+    </div>
+
+    <!-- 로그인된 사용자가 아니라면 로그인 버튼을 보임 -->
+    <div class="auth-buttons" th:unless="${session.userId}">
+        <a href="/user/login">
+            <button>Login</button>
+        </a>
+        <button id="theme-toggle">🌙</button>
+    </div>
+
+    <!-- 로그인된 사용자가 있다면 로그인 정보를 표시 -->
+    <div class="auth-buttons" th:if="${session.userId}">
+        <button>
+            <a href="/user/profile" class="no-underline">
+                마이 페이지
+            </a>
+            <span> / </span>
+            <a href="/user/logout" class="no-underline">
+                Logout
+            </a>
+        </button>
+        <button id="theme-toggle">🌙</button>
+    </div>
+</header>

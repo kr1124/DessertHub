@@ -1,15 +1,175 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판</title>
+
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/fragments/header.css">
+    <link rel="stylesheet" href="/css/fragments/nav.css">
+    <link rel="stylesheet" href="/css/fragments/footer.css">
+    <link rel="stylesheet" href="/css/board.css">
 </head>
+
 <body>
-    <h1>게시글 목록</h1>
-    <a href="/board/new">새 게시글 작성</a>
+
+    <!-- 헤더 포함 -->
+    <header th:replace="fragments/header.html :: header"></header>
+
+    <!--
     <ul>
         <li th:each="board : ${board}">
             <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
         </li>
-    </ul>
+    </ul> -->
+
+    <main>
+        <!-- 사이드바 포함 -->
+        <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
+        <div class="container">
+            <div class="header">
+                <div class="filter-box">
+                    <select id="categoryFilter">
+                        <option value="all">전체</option>
+                        <option value="notice">공지</option>
+                        <option value="free">자유게시판</option>
+                    </select>
+                    <select id="sortOrder">
+                        <option value="latest">최신순</option>
+                        <option value="popular">인기순</option>
+                    </select>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-box" placeholder="검색어 입력" />
+                    <button id="searchBtn" class="search-btn">검색</button>
+                </div>
+            </div>
+
+            <table class="post-list">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">번호</th>
+                        <th style="width: 40%;">제목</th>
+                        <th style="width: 15%;">작성자</th>
+                        <th style="width: 15%;">작성일</th>
+                        <th style="width: 10%;">조회수</th>
+                        <th style="width: 10%;">찜</th>
+                    </tr>
+                </thead>
+                <tbody id="postList"></tbody>
+            </table>
+
+            <div class="pagination" id="pagination"></div>
+
+            <a href="/board/new">
+                <button class="write-btn">글쓰기</button>
+            </a>
+        </div>
+
+    </main>
+
+
+
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
+
+    <!-- JavaScript -->
+    <script>
+        const posts = Array.from({ length: 50 }, (_, i) => ({
+            id: i + 1,
+            title: `게시글 제목 ${i + 1}`,
+            author: `작성자 ${i + 1}`,
+            date: '2024-01-01',
+            views: Math.floor(Math.random() * 1000),
+            likes: Math.floor(Math.random() * 50)
+        }));
+
+        const postList = document.getElementById('postList');
+        const pagination = document.getElementById('pagination');
+        const sortOrder = document.getElementById('sortOrder');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+
+        let currentPage = 1;
+        const postsPerPage = 15;
+
+        function renderPosts() {
+            const search = searchInput.value.toLowerCase();
+            const order = sortOrder.value;
+
+            let filteredPosts = posts.filter(post =>
+                post.title.toLowerCase().includes(search)
+            );
+
+            if (order === 'popular') {
+                filteredPosts.sort((a, b) => b.views - a.views);
+            } else {
+                filteredPosts.sort((a, b) => b.id - a.id);
+            }
+
+            const start = (currentPage - 1) * postsPerPage;
+            const end = start + postsPerPage;
+            const paginatedPosts = filteredPosts.slice(start, end);
+
+            postList.innerHTML = '';
+            paginatedPosts.forEach(post => {
+                const row = `<tr>
+          <td>${post.id}</td>
+          <td>${post.title}</td>
+          <td>${post.author}</td>
+          <td>${post.date}</td>
+          <td>${post.views}</td>
+          <td>${post.likes}</td>
+        </tr>`;
+                postList.innerHTML += row;
+            });
+
+            renderPagination(filteredPosts.length);
+        }
+
+        function renderPagination(totalPosts) {
+            const totalPages = Math.ceil(totalPosts / postsPerPage);
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.classList.add(i === currentPage ? 'active' : '');
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderPosts();
+                });
+                pagination.appendChild(btn);
+            }
+        }
+
+        searchBtn.addEventListener('click', renderPosts);
+        sortOrder.addEventListener('change', renderPosts);
+        renderPosts();
+
+        // 스크롤 
+        const sidebar = document.querySelector('.sidebar');
+        const initialTop = 0; // 초기 위치 설정
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            // 스크롤 방향에 따라 이동
+            if (currentScrollY > lastScrollY) {
+                // 아래로 스크롤
+                sidebar.style.transform = `translateY(${currentScrollY}px)`;
+            } else {
+                // 위로 스크롤
+                sidebar.style.transform = `translateY(${currentScrollY}px)`;
+            }
+
+            lastScrollY = currentScrollY; // 현재 스크롤 위치 저장
+        });
+    </script>
 </body>
+
 </html>

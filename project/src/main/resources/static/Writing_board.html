@@ -1,19 +1,73 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>게시판 글쓰기</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+
+.main-layout {
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 35px;
+      background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+      box-shadow: 0 2px 10px var(--shadow-color);
+      position:relative;
+      top: 0;
+      z-index: 1000;
+      border-radius: 10px; /* 둥근 모서리 설정 */
+      margin: 2px; /* 페이지 가장자리에 여백 추가 */
+    }
+
+
+    .logo {
+      font-family: 'Caveat', cursive;
+      font-size: 28px;
+      font-weight: bold;
+      color:#ff6f91;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .auth-buttons button {
+      border: none;
+      padding: 10px 20px;
+      background-color: #ff6f91;
+      color: white;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .auth-buttons button:hover {
+      background-color: #ff3d66;
+      transform: scale(1.1);
+    }
+
     body, html {
       margin: 0;
       padding: 0;
       font-family: 'Noto Sans KR', sans-serif;
       background-color: #fff8f0;
+      
     }
 
     .container {
-      max-width: 800px;
+      width: 1100px;
+      height: 600px;
       margin: 50px auto;
       padding: 30px;
       background: #ffffff;
@@ -92,6 +146,7 @@
     .media-buttons button:hover,
     .button-group button:hover {
       background-color: #e91e63;
+      transform: scale(1.1);
     }
 
     /* 임시저장 팝업 */
@@ -146,9 +201,150 @@
       margin-top: 20px;
     }
 
+    footer {
+    display: flex;
+    justify-content: center; /* 모든 콘텐츠를 수평 중앙에 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    padding: 20px 35px;
+    background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    position: relative;
+    z-index: 1000;
+    border-radius: 10px; /* 둥근 모서리 설정 */
+    margin: 2px;
+    bottom: 0;
+    }
+
+
+    footer p {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    /* Fade-in animation for better visuals */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+
+    .no-underline {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit;        /* 부모 요소의 글씨 색상 사용 */
+    }
+
+    .no-underline:hover {
+    text-decoration: underline; /* 호버 시 밑줄 추가 (선택 사항) */
+    }
+
+/* 사이드바 */
+    .sidebar {
+      position:sticky;
+      width: 84px;
+      height: 750px;
+      background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+      z-index: 9999;
+      transition: width 0.4s;
+      padding: 10px 0;
+      overflow: hidden;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+      border-top-right-radius: 15px;
+      border-radius: 10px;
+    }
+
+.sidebar:hover {
+    width: 230px;
+}
+
+/* 메뉴 항목 */
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: 0;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: #FF6B81;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 아이콘 및 텍스트 */
+.menu-item span {
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease, margin-left 0.3s ease;
+    white-space: nowrap;
+}
+
+.sidebar:hover .menu-item span {
+    opacity: 1;
+    margin-left: 10px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px !important;
+    }
+
+    .sidebar:hover {
+        width: 200px !important;
+    }
+
+    .menu-item {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}
+
+
   </style>
-</head>
 <body>
+    <header>
+        <div class="logo">
+          <a href="new_index.html" class="no-underline">Dessert Hub</a>
+        </div>    
+        <div class="auth-buttons">
+          <a href="Login_Join.html">
+            <button>Login</button>
+          </a>
+          <button id="theme-toggle">🌙</button>
+        </div>
+      </header>  
+
+      <div class="main-layout">
+      <nav class="sidebar">
+        <a href="#recommend" class="menu-item">
+          🍩 <span>추천 디저트</span>
+        </a>
+        <a href="#store" class="menu-item">
+          🍰 <span>가게</span>
+        </a>
+        <a href="#map" class="menu-item">
+          🗺️ <span>지도</span>
+        </a>
+        <a href="#community" class="menu-item">
+          📋 <span>게시판</span>
+        </a>
+        <a href="#about" class="menu-item">
+          ℹ️ <span>About</span>
+        </a>
+      </nav>
 
   <div class="container">
     <h2>
@@ -195,6 +391,14 @@
     </div>
   </div>
 
+</div>
+
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
+
+  
   <script>
     const drafts = [];
 
@@ -249,6 +453,8 @@
     document.getElementById('submit-post').addEventListener('click', () => {
       alert('게시글이 등록되었습니다!');
     });
+
   </script>
+    
 </body>
 </html>

@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시판</title>
-
+  
+ <link rel="stylesheet" href="/bar.css">  <!-- 없어도 됨 -->
   <!-- CSS -->
   <style>
     body, html {
@@ -17,6 +18,12 @@
 
     .container {
       padding: 20px;
+      width: 1000px;
+      margin: 40px auto;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      animation: fadeIn 0.5s ease-in-out;
     }
 
     .header {
@@ -51,21 +58,23 @@
 
     .search-btn:hover {
       background-color: #FF6B81;
+      background-color: #ff3d66;
+      transform: scale(1.1);
     }
 
     /* 드롭다운을 버튼 스타일과 통일 */
     .filter-box select {
       padding: 10px 15px;
       border: none; /* 테두리 제거 */
-      background-color: #FF6B81; /* 버튼과 동일한 배경색 */
-      color: white; /* 버튼과 동일한 텍스트 색상 */
+      background-color: white; /* 버튼과 동일한 배경색 */
+      color: #FF4B61;; /* 버튼과 동일한 텍스트 색상 */
       border-radius: 20px; /* 버튼과 동일한 둥근 모서리 */
       cursor: pointer; /* 포인터 커서 추가 */
       transition: 0.3s; /* 부드러운 효과 */
     }
 
     .filter-box select:hover {
-      background-color: #FF4B61; /* 버튼과 동일한 호버 효과 */
+      background-color: white; /* 버튼과 동일한 호버 효과 */
     }
 
     .filter-box select:focus {
@@ -134,10 +143,49 @@
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
+    .write-btn:hover{
+      background-color: #ff3d66;
+      transform: scale(1.1);
+      transition: 0.3s;
+    }
     
   </style>
 </head>
 <body>
+
+
+  <header>
+    <div class="logo">
+      <a href="new_index.html" class="no-underline">Dessert Hub</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="Login_Join.html">
+        <button>Login</button>
+      </a>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header> 
+
+  <div class="main-layout">
+  <nav class="sidebar">
+    <a href="#recommend" class="menu-item">
+      🍩 <span>추천 디저트</span>
+    </a>
+    <a href="#store" class="menu-item">
+      🍰 <span>가게</span>
+    </a>
+    <a href="#map" class="menu-item">
+      🗺️ <span>지도</span>
+    </a>
+    <a href="#community" class="menu-item">
+      📋 <span>게시판</span>
+    </a>
+    <a href="#about" class="menu-item">
+      ℹ️ <span>About</span>
+    </a>
+  </nav>
+
   <div class="container">
     <div class="header">
       <div class="filter-box">
@@ -175,6 +223,12 @@
 
     <button class="write-btn">글쓰기</button>
   </div>
+
+</div>
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
 
   <!-- JavaScript -->
   <script>
@@ -249,6 +303,26 @@
     searchBtn.addEventListener('click', renderPosts);
     sortOrder.addEventListener('change', renderPosts);
     renderPosts();
+
+      // 스크롤 
+      const sidebar = document.querySelector('.sidebar');
+    const initialTop = 0; // 초기 위치 설정
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      
+      // 스크롤 방향에 따라 이동
+      if (currentScrollY > lastScrollY) {
+        // 아래로 스크롤
+        sidebar.style.transform = `translateY(${currentScrollY}px)`;
+      } else {
+        // 위로 스크롤
+        sidebar.style.transform = `translateY(${currentScrollY}px)`;
+      }
+
+      lastScrollY = currentScrollY; // 현재 스크롤 위치 저장
+    });
   </script>
 </body>
 </html>

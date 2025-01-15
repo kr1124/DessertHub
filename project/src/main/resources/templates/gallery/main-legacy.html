@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>갤러리 사이트</title>
-
-  <link rel="stylesheet" href="/back.css">
-
   <style>
     body, html {
       margin: 0;
@@ -16,18 +13,14 @@
       background-color: #f9f9f9;
     }
 
-
     .gallery-container {
       padding: 20px;
-      /* width: 1000px; */
-      display: flex;
-      margin: 40px auto;
+      display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
 
     .gallery-item {
-      width: 200px;
       background: white;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,13 +39,8 @@
       object-fit: cover;
     }
 
-    .gallery-item {
+    .gallery-item .info {
       padding: 15px;
-    }
-
-    .info {
-      margin: 50px auto;
-      padding: 30px;
     }
 
     .register-btn {
@@ -197,45 +185,8 @@
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="logo">
-      <a href="new_index.html" class="no-underline">Dessert Hub</a>
-    </div>
-    <div class="auth-buttons">
-      <a href="Login_Join.html">
-        <button>Login</button>
-      </a>
-      <button id="theme-toggle">🌙</button>
-    </div>
-  </header> 
-
-  <div class="main-layout">
-  <nav class="sidebar">
-    <a href="#recommend" class="menu-item">
-      🍩 <span>추천 디저트</span>
-    </a>
-    <a href="#store" class="menu-item">
-      🍰 <span>가게</span>
-    </a>
-    <a href="#map" class="menu-item">
-      🗺️ <span>지도</span>
-    </a>
-    <a href="#community" class="menu-item">
-      📋 <span>게시판</span>
-    </a>
-    <a href="#about" class="menu-item">
-      ℹ️ <span>About</span>
-    </a>
-  </nav>
-
-  <a href="/register" class="register-btn">갤러리 등록</a>
-
-  <div class="gallery-container" id="gallery">
-    
-
-  </div>
-
+  <a href="/gallery/upload" class="register-btn">갤러리 등록</a>
+  <div class="gallery-container" id="gallery"></div>
   <div class="modal" id="modal">
     <span class="close" id="closeModal">&times;</span>
     <div class="modal-content">
@@ -250,12 +201,6 @@
       <button class="slider-btn next-btn" id="nextBtn">&#9654;</button>
     </div>
   </div>
-  </div>
-
-  <footer>
-    <p>© Dessert Hub, All rights reserved.</p>
-  </footer>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const gallery = document.getElementById('gallery');
@@ -276,14 +221,15 @@
         { img: 'https://via.placeholder.com/500', title: '사진 3', hashtags: ['#음식', '#카페'], liked: false }
       ];
 
-      const galleryItem = document.createElement('div');
-      //galleryItem.innerHTML = `<div class=container>`;
       galleryData.forEach((item, index) => {
+        const galleryItem = document.createElement('div');
         galleryItem.classList.add('gallery-item');
-        galleryItem.innerHTML += `
+        galleryItem.innerHTML = `
           <img src="${item.img}" alt="${item.title}" style="height: 250px;">
+          <div class="info">
             <h3>${item.title}</h3>
-            <p>${item.hashtags.join(' ')} </p>`;
+            <p>${item.hashtags.join(' ')} </p>
+          </div>`;
         galleryItem.onclick = () => {
           currentIndex = index;
           showImage(currentIndex);
@@ -291,8 +237,6 @@
         };
         gallery.appendChild(galleryItem);
       });
-
-      //galleryItem.innerHTML += `</div>`;
 
       function showImage(index) {
         const item = galleryData[index];

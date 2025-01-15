@@ -209,10 +209,6 @@
         transition: margin-left 0.4s ease-in-out;
     }
 
-    nav:hover ~ main {
-        margin-left: 230px !important;
-    }
-
     /* Main content shift */
     main {
         margin-left: 84px;
@@ -342,11 +338,22 @@ footer p {
 
 <nav>
   <div class="nav-links">
-    <a href="#recommend"><span class="nav-icon">🍩</span> <span>추천 디저트</span></a>
-    <a href="#store"><span class="nav-icon">🍰</span> <span>가게</span></a>
-    <a href="#map"><span class="nav-icon">🗺️</span> <span>지도</span></a>
-    <a href="#community"><span class="nav-icon">📋</span> <span>게시판</span></a>
-    <a href="#about"><span class="nav-icon">ℹ️</span> <span>About</span></a>
+      <a href="#recommend" class="menu-item">
+        🍩 <span>추천 디저트</span>
+      </a>
+      <a href="#store" class="menu-item">
+        🍰 <span>가게</span>
+      </a>
+      <a href="#map" class="menu-item">
+        🗺️ <span>지도</span>
+      </a>
+      <a href="#community" class="menu-item">
+        📋 <span>게시판</span>
+      </a>
+      <a href="#about" class="menu-item">
+        ℹ️ <span>About</span>
+      </a>
+    </nav>
   </div>
 </nav>
 
@@ -396,10 +403,10 @@ footer p {
     images[currentIndex].classList.add('active');
   }, 3000);
 
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => {
-    document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
-  });
+  // const themeToggle = document.getElementById('theme-toggle');
+  // themeToggle.addEventListener('click', () => {
+  //   document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
+  // });
 </script>
 
 </body>
