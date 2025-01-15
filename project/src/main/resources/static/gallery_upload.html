@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사진 업로드 페이지</title>
+
+  <link rel="stylesheet" href="/back.css">
+
   <style>
-    body, html {
+    /* body, html {
       margin: 0;
       padding: 0;
       font-family: 'Noto Sans KR', sans-serif;
@@ -15,11 +18,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    } */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      box-sizing: border-box;
+      background-color: #fff8f0; /* 부드러운 피치 배경 */
     }
 
     .upload-container {
       width: 600px;
       padding: 30px;
+      margin: 40px auto;
       background: white;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -36,7 +47,7 @@
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ddd;
-      border-radius: 5px;
+      border-radius: 25px;
     }
 
     .upload-container button {
@@ -59,18 +70,26 @@
     .preview-modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 50%;  /* 화면 중간 위치 */
+      left: 50%;
+      transform: translate(-50%, -50%); /* 수평, 수직으로 정확히 가운데 정렬 */
+      width: 600px;  /* 고정된 너비 */
+      height: 400px; /* 고정된 높이 */
       background: rgba(0, 0, 0, 0.8);
-      align-items: center;
-      justify-content: center;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000; /* 다른 콘텐츠 위에 표시되도록 */
+      display: flex;
+      justify-content: center; /* 이미지가 중앙에 오도록 설정 */
+      align-items: center; /* 이미지가 수직 중앙에 오도록 설정 */
     }
 
+    /* 이미지 크기 제한 */
     .preview-modal img {
-      max-width: 500px;
-      max-height: 500px;
+      max-width: 100%; /* 이미지가 모달을 벗어나지 않게 */
+      max-height: 100%; /* 이미지가 모달을 벗어나지 않게 */
+      object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */
       border-radius: 10px;
     }
 
@@ -151,6 +170,38 @@
   </style>
 </head>
 <body>
+   
+  <header>
+    <div class="logo">
+      <a href="new_index.html" class="no-underline">Dessert Hub</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="Login_Join.html">
+        <button>Login</button>
+      </a>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header> 
+
+ <div class="main-layout">
+  <nav class="sidebar">
+    <a href="#recommend" class="menu-item">
+      🍩 <span>추천 디저트</span>
+    </a>
+    <a href="#store" class="menu-item">
+      🍰 <span>가게</span>
+    </a>
+    <a href="#map" class="menu-item">
+      🗺️ <span>지도</span>
+    </a>
+    <a href="#community" class="menu-item">
+      📋 <span>게시판</span>
+    </a>
+    <a href="#about" class="menu-item">
+      ℹ️ <span>About</span>
+    </a>
+  </nav>
+    
   <div class="upload-container">
     <h2>사진 업로드</h2>
     <form id="uploadForm">
@@ -167,13 +218,19 @@
     </form>
   </div>
 
-  <!-- 미리보기 모달 -->
-  <div id="previewModal" class="preview-modal">
+  <!--  미리보기 모달 -->
+ <div id="previewModal" class="preview-modal">
     <button id="closePreview" class="close-btn">닫기</button>
     <button id="prevBtn" class="slider-btn prev-btn">&#9664;</button>
     <img id="previewImg" src="" alt="미리보기 이미지">
     <button id="nextBtn" class="slider-btn next-btn">&#9654;</button>
   </div>
+
+ </div>
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
 
   <script>
 

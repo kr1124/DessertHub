@@ -16,18 +16,24 @@
       background-color: #f9f9f9;
     }
 
+    .container {
+      padding: 20px;
+      width: 1000px;
+      margin: 40px auto;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
 
     .gallery-container {
       padding: 20px;
-      /* width: 1000px; */
-      display: flex;
-      margin: 40px auto;
+      display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
 
     .gallery-item {
-      width: 200px;
       background: white;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,13 +52,8 @@
       object-fit: cover;
     }
 
-    .gallery-item {
+    .gallery-item .info {
       padding: 15px;
-    }
-
-    .info {
-      margin: 50px auto;
-      padding: 30px;
     }
 
     .register-btn {
@@ -231,11 +232,7 @@
 
   <a href="/register" class="register-btn">갤러리 등록</a>
 
-  <div class="gallery-container" id="gallery">
-    
-
-  </div>
-
+  <div class="gallery-container" id="gallery"></div>
   <div class="modal" id="modal">
     <span class="close" id="closeModal">&times;</span>
     <div class="modal-content">
@@ -276,14 +273,18 @@
         { img: 'https://via.placeholder.com/500', title: '사진 3', hashtags: ['#음식', '#카페'], liked: false }
       ];
 
-      const galleryItem = document.createElement('div');
-      //galleryItem.innerHTML = `<div class=container>`;
       galleryData.forEach((item, index) => {
+        const galleryItem = document.createElement('div');
         galleryItem.classList.add('gallery-item');
-        galleryItem.innerHTML += `
-          <img src="${item.img}" alt="${item.title}" style="height: 250px;">
-            <h3>${item.title}</h3>
-            <p>${item.hashtags.join(' ')} </p>`;
+        galleryItem.innerHTML = `
+          <div class=container>
+            <div class="info">
+              <img src="${item.img}" alt="${item.title}" style="height: 250px;">
+            
+              <h3>${item.title}</h3>
+              <p>${item.hashtags.join(' ')} </p>
+            </div>
+          </div>`;
         galleryItem.onclick = () => {
           currentIndex = index;
           showImage(currentIndex);
@@ -291,8 +292,6 @@
         };
         gallery.appendChild(galleryItem);
       });
-
-      //galleryItem.innerHTML += `</div>`;
 
       function showImage(index) {
         const item = galleryData[index];

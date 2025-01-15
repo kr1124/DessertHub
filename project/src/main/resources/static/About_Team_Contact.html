@@ -4,36 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessert Hub</title>
+
+  <link rel="stylesheet" href="/back.css">
+
   <style>
-    /* 기본 스타일 */
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #fff8f0; /* 부드러운 피치 배경 */
-      color: #5d4037;
-      margin: 0;
-      padding: 0;
-    }
 
-    header {
-      background: linear-gradient(135deg, #ffb6c1, #ff80ab); /* 그라데이션 헤더 */
-      color: white;
-      padding: 20px;
+    .center-content{
+    width: 600px;
+      padding: 30px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
-    nav {
-      display: flex;
+   
+   .top-nav {
+      display:flex;
       justify-content: center;
-      gap: 20px;
-      background-color: #ffe4e1; /* 연한 피치 */
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      gap: 15px;
+      margin: 20px;
+      transition: transform 0.4s ease; /* transform 속성의 부드러운 전환 */
     }
 
-    nav a {
+    .top-nav a {
       color: #5d4037;
       text-decoration: none;
       font-size: 1.2rem;
@@ -43,21 +37,23 @@
       border-radius: 25px;
     }
 
-    nav a:hover, nav a.active {
-      background-color: #f06292;
+    .top-nav a.active {
+    background-color: #f06292;
       color: white;
       font-weight: bold;
+      font-weight: bold;
+      
     }
 
-    .section {
+    /* .section {
       padding: 40px 20px;
       text-align: left;
       background-color: #ffffff; /* 카드 배경 */
-      border-radius: 10px;
+    /*border-radius: 10px;
       margin: 20px auto;
       max-width: 800px;
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    }
+    } */
 
     h2 {
       margin-bottom: 20px;
@@ -106,7 +102,7 @@
       color: white;
       border: none;
       padding: 12px 20px;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
       font-size: 16px;
       margin-top: 20px;
@@ -120,23 +116,50 @@
     }
 
     .about-section, .team-section, .contact-section {
-      display: none;
+      display:none;
     }
   </style>
 </head>
 <body>
 
-  <!-- 헤더 -->
   <header>
-    Dessert Hub
-  </header>
+    <div class="logo">
+      <a href="new_index.html" class="no-underline">Dessert Hub</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="Login_Join.html">
+        <button>Login</button>
+      </a>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header> 
 
-  <!-- 네비게이션 -->
-  <nav>
-    <a href="javascript:void(0);" onclick="showSection('about')" class="active">About Us</a>
-    <a href="javascript:void(0);" onclick="showSection('team')">Meet Our Team</a>
-    <a href="javascript:void(0);" onclick="showSection('contact')">Contact Us</a>
+  <div class="main-layout">
+  <nav class="sidebar">
+    <a href="#recommend" class="menu-item">
+      🍩 <span>추천 디저트</span>
+    </a>
+    <a href="#store" class="menu-item">
+      🍰 <span>가게</span>
+    </a>
+    <a href="#map" class="menu-item">
+      🗺️ <span>지도</span>
+    </a>
+    <a href="#community" class="menu-item">
+      📋 <span>게시판</span>
+    </a>
+    <a href="#about" class="menu-item">
+      ℹ️ <span>About</span>
+    </a>
   </nav>
+
+   <!-- 상단 내비게이션 -->
+   <div class="center-content">
+    <nav class="top-nav">
+      <a href="javascript:void(0);" onclick="showSection('about', this)" class="active">About Us</a>
+      <a href="javascript:void(0);" onclick="showSection('team', this)">Meet Our Team</a>
+      <a href="javascript:void(0);" onclick="showSection('contact', this)">Contact Us</a>
+    </nav>
 
   <!-- About Section -->
   <div id="about" class="section about-section">
@@ -178,26 +201,52 @@
     </div>
   </div>
 
+  </div>
+  </div>
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
+
   <script>
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(function(section) {
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const defaultSection = document.querySelector('.top-nav a.active');
+    showSection('about', defaultSection);
+        });
+
+
+    function showSection(sectionId, element) {
+      // 모든 섹션 숨기기
+      document.querySelectorAll('.section').forEach(function (section) {
         section.style.display = 'none';
       });
+
+      // 선택한 섹션 표시
       document.getElementById(sectionId).style.display = 'block';
+
+      // 모든 네비게이션 링크에서 'active' 클래스 제거
+      document.querySelectorAll('nav a').forEach(function (navLink) {
+        navLink.classList.remove('active');
+      });
+
+      // 클릭된 링크에 'active' 클래스 추가
+      element.classList.add('active');
     }
-    showSection('about');
 
     function submitContactForm() {
-      const title = document.getElementById('title').value;
-      const email = document.getElementById('email').value;
-      const message = document.getElementById('message').value;
+    // 입력값 가져오기
+    const title = document.getElementById('title').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
 
-      if (title && email && message) {
-        alert('등록되었습니다!');
-      } else {
-        alert('모든 필드를 입력해주세요.');
-      }
+    // 입력값 확인
+    if (title && email && message) {
+      alert('등록되었습니다!');
+    } else {
+      alert('모든 필드를 입력해주세요.');
     }
+  }
   </script>
 </body>
 </html>

@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글/댓글/갤러리 관리</title>
+
+
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -14,7 +16,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      width: 1500px;
       margin: 40px auto;
       padding: 20px;
       background-color: #ffe4e9;
@@ -43,7 +45,7 @@
     .nav-buttons button {
       padding: 10px 15px;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
       background-color: #ff85a2;
       color: white;
       cursor: pointer;
@@ -72,7 +74,7 @@
       background-color: #ffa5b8;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
       transition: all 0.3s;
     }
@@ -112,7 +114,7 @@
     .item-actions button {
       padding: 8px 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
     }
 
@@ -144,7 +146,7 @@
       background-color: #f67280;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
       transition: all 0.3s;
       display: block;
@@ -159,6 +161,7 @@
   </style>
 </head>
 <body>
+
 <div class="container">
   <div class="nav">
     <div class="nav-buttons">
@@ -219,6 +222,10 @@
 
   <button id="deleteSelectedBtn">전체 삭제</button>
 </div>
+</div>
+
+
+
 <script>
 
   const navButtons = document.querySelectorAll('.nav-buttons button');

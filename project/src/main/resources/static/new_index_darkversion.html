@@ -5,23 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessert Hub Community</title>
   <style>
-    
+
     :root {
       --bg-color: #fffafa;
       --text-color: #333;
-      --header-bg-color: #ffdde1;
+      --header-bg-color: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
       --cta-color: #ff6f91;
       --cta-hover-color: #ff3d66;
       --shadow-color: rgba(0, 0, 0, 0.1);
+      --footer-bg-color: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+      --nav-bg-color: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+      --nav-text-color: #333;
     }
 
     [data-theme="dark"] {
       --bg-color: #2e2e2e;
       --text-color: #fefefe;
-      --header-bg-color: #444;
+      --header-bg-color: linear-gradient(135deg, #444 0%, #666 100%);  /* 어두운 톤으로 변경 */
       --cta-color: #ff6f91;
       --cta-hover-color: #ff3d66;
       --shadow-color: rgba(0, 0, 0, 0.3);
+      --footer-bg-color: linear-gradient(135deg, #444 0%, #666 100%);  /* 어두운 톤으로 변경 */
+      --nav-bg-color: linear-gradient(135deg, #444 0%, #666 100%);  /* 어두운 톤으로 변경 */
+      --nav-text-color: #fefefe;  /* 다크 모드 텍스트 색상 */
     }
 
     body {
@@ -40,7 +46,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 35px;
-      background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+      background: var(--header-bg-color);  /* 다크 모드에서 변경된 값 적용 */
       box-shadow: 0 2px 10px var(--shadow-color);
       position: sticky;
       top: 0;
@@ -84,7 +90,7 @@
     position:fixed;
     width: 84px;
     height: 750px;
-    background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+    background: var(--nav-bg-color);  /* 다크 모드에서 변경된 값 적용 */
     z-index: 9999; /* 가장 위에 배치 */
     transition: width 0.4s ease-in-out;
     padding: 10px 0;
@@ -287,7 +293,7 @@
         position: sticky;
         text-align: center;
         padding: 15px;
-        background:linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+        background: var(--footer-bg-color);  /* 다크 모드에서 변경된 값 적용 */
         box-shadow: 0 -4px 10px var(--shadow-color);
         border-radius: 10px; /* 둥근 모서리 적용 */
         margin-top: 10px;
@@ -393,6 +399,7 @@ footer p {
   <p>© Dessert Hub, All rights reserved.</p>
 </footer>
 
+<script src="darkmode.js"></script>
 <script>
   const images = document.querySelectorAll('.slider img');
   let currentIndex = 0;
@@ -403,11 +410,7 @@ footer p {
     images[currentIndex].classList.add('active');
   }, 3000);
 
-  // const themeToggle = document.getElementById('theme-toggle');
-  // themeToggle.addEventListener('click', () => {
-  //   document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
-  // });
+  
 </script>
-
 </body>
 </html>
