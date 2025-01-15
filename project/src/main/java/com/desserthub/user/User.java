@@ -1,58 +1,70 @@
-package com.desserthub.comment;
+package com.desserthub.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
 
 @Entity
-public class Comment {
-
+public class User {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String userId;
-    private String userNn;
-    private String commentBody;
-    private LocalDateTime commentTime;
+    private String userPw;
+    private String userEm; //email
+    private String userNn; //nickname
+    private String userPi; //profile image - base64
 
-    public Comment() {
-        this.commentTime = LocalDateTime.now();
-    }
-    
+    public User() {}
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getUserId() {
         return userId;
     }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    public String getUserPw() {
+        return userPw;
+    }
+
+    public void setUserPw(String userPw) {
+        this.userPw = userPw;
+    }
+
+    public String getUserEm() {
+        return userEm;
+    }
+
+    public void setUserEm(String userEm) {
+        this.userEm = userEm;
+    }
+
     public String getUserNn() {
         return userNn;
     }
+
     public void setUserNn(String userNn) {
         this.userNn = userNn;
     }
-    public String getCommentBody() {
-        return commentBody;
-    }
-    public void setCommentBody(String commentBody) {
-        this.commentBody = commentBody;
-    }
-    public LocalDateTime getCommentTime() {
-        return commentTime;
-    }
-    public void setCommentTime(LocalDateTime commentTime) {
-        this.commentTime = commentTime;
-    }
-    
-    
 
+    public String getUserPi() {
+        return userPi;
+    }
+
+    public void setUserPi(String userPi) {
+        this.userPi = userPi;
+    }
 }

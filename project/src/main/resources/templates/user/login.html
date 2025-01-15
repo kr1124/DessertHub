@@ -134,17 +134,21 @@
 
 <body>
   <!-- 로그인 실패 메시지 -->
-  <script th:if="${error}" th:inline="javascript">
-    alert('로그인 실패 : ');
-  </script>
+  <!-- <script th:if="${error}" th:inline="javascript">
+    alert('로그인 실패. 아이디나 비밀번호를 확인해주십시오.');
+  </script> -->
+  <!-- 회원가입 실패 메시지 -->
+  <!-- <script th:if="${error}" th:inline="javascript">
+    alert('회원가입 실패. 중복된 아이디가 존재합니다.');
+  </script> -->
   
   <div class="container">
     <!-- 로그인 -->
     <div class="form-container" id="login-form">
       <h1>로그인</h1>
-      <form action="/user/login-check" method="post">
-        <input type="text" id="login-username" name="user_name" placeholder="아이디" required>
-        <input type="password" id="login-password" name="user_password" placeholder="비밀번호" required>
+      <form action="/user/login-check" th:object="${user}" method="post">
+        <input type="text" id="login-username" name="user_name" th:field="*{userId}" placeholder="아이디" required>
+        <input type="password" id="login-password" name="user_password" th:field="*{userPw}" placeholder="비밀번호" required>
         <button type="submit">로그인</button>
       </form>
       
@@ -157,18 +161,18 @@
     <!-- 회원가입 -->
     <div class="form-container" id="signup-form" style="display:none;">
       <h1>회원가입</h1>
-      <form action="/user/register" method="post">
+      <form action="/user/register" th:object="${user}" method="post">
         <div class="inline-container">
-          <input type="text" id="signup-username" name="reg_name" placeholder="아이디">
+          <input type="text" id="signup-username" name="reg_name" th:field="*{userId}" placeholder="아이디">
           <button type="button" class="check-btn" onclick="checkUsername()">중복 확인</button>
         </div>
         <small id="username-feedback"></small>
-        <input type="password" id="signup-password" name="reg_pass" placeholder="비밀번호">
+        <input type="password" id="signup-password" name="reg_pass" th:field="*{userPw}" placeholder="비밀번호">
         <input type="password" id="confirm-password" placeholder="비밀번호 확인" oninput="validatePassword()">
         <small id="password-feedback"></small>
-        <input type="text" id="nickname" name="reg_nickname" placeholder="닉네임">
+        <input type="text" id="nickname" name="reg_nickname" th:field="*{userNn}" placeholder="닉네임">
         <div class="email-container">
-          <input type="text" id="email" name="reg_email" placeholder="이메일">
+          <input type="text" id="email" name="reg_email" th:field="*{userEm}" placeholder="이메일">
           <span>@</span>
           <select id="emailDomain">
             <option value="gmail.com">gmail.com</option>

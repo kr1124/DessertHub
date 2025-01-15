@@ -28,8 +28,8 @@ public class BoardService {
 
     public Board updateBoard(Long id, Board boardDetails) {
         Board board = boardRepository.findById(id).orElseThrow(null);
-        board.setTitle(boardDetails.getTitle());
-        board.setContent(boardDetails.getContent());
+        board.setBoardTitle(boardDetails.getBoardTitle());
+        board.setBoardContent(boardDetails.getBoardContent());
         return boardRepository.save(board);
     }
 

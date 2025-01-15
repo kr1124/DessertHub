@@ -8,7 +8,7 @@
     <a href="/board/new">새 게시글 작성</a>
     <ul>
         <li th:each="board : ${board}">
-            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}"></a>
+            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
         </li>
     </ul>
 </body>
