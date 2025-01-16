@@ -1,197 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessert Hub</title>
+
+  <link rel="stylesheet" href="/back.css">
+
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/fragments/header.css">
+  <link rel="stylesheet" href="/css/fragments/nav.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
+  <link rel="stylesheet" href="/css/about.css">
   <style>
-    /* 기본 스타일 */
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #fff8f0; /* 부드러운 피치 배경 */
-      color: #5d4037;
-      margin: 0;
-      padding: 0;
-    }
 
-    header {
-      background: linear-gradient(135deg, #ffb6c1, #ff80ab); /* 그라데이션 헤더 */
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      background-color: #ffe4e1; /* 연한 피치 */
-      padding: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    nav a {
-      color: #5d4037;
-      text-decoration: none;
-      font-size: 1.2rem;
-      font-weight: 500;
-      transition: 0.3s;
-      padding: 8px 15px;
-      border-radius: 25px;
-    }
-
-    nav a:hover, nav a.active {
-      background-color: #f06292;
-      color: white;
-      font-weight: bold;
-    }
-
-    .section {
-      padding: 40px 20px;
-      text-align: left;
-      background-color: #ffffff; /* 카드 배경 */
-      border-radius: 10px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #f06292; /* 핑크 포인트 */
-    }
-
-    p {
-      color: #5d4037;
-      line-height: 1.8;
-    }
-
-    .team-members {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .team-member img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 4px solid #f06292;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: 0.3s;
-    }
-
-    .team-member img:hover {
-      transform: scale(1.1);
-    }
-
-    .contact-form input, .contact-form textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-      box-sizing: border-box;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .contact-form button {
-      background-color: #f06292;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-      transition: 0.3s;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .contact-form button:hover {
-      background-color: #e91e63;
-      transform: scale(1.05);
-    }
-
-    .about-section, .team-section, .contact-section {
-      display: none;
-    }
   </style>
 </head>
+
 <body>
 
-  <!-- 헤더 -->
-  <header>
-    Dessert Hub
-  </header>
+  <!-- 헤더 포함 -->
+  <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 네비게이션 -->
-  <nav>
-    <a href="javascript:void(0);" onclick="showSection('about')" class="active">About Us</a>
-    <a href="javascript:void(0);" onclick="showSection('team')">Meet Our Team</a>
-    <a href="javascript:void(0);" onclick="showSection('contact')">Contact Us</a>
-  </nav>
 
-  <!-- About Section -->
-  <div id="about" class="section about-section">
-    <h2>About Dessert Hub</h2>
-    <p>디저트와 함께하는 따뜻한 커뮤니티, Dessert Hub입니다. 다양한 디저트와 정보를 공유해요!</p>
-  </div>
+  <main>
+    <!-- 사이드바 포함 -->
+    <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <!-- Team Section -->
-  <div id="team" class="section team-section">
-    <h2>Meet Our Team</h2>
-    <div class="team-members">
-      <div class="team-member">
-        <img src="https://via.placeholder.com/150" alt="Team Member 1">
-        <p>팀원 1: 소개글</p>
+    <!-- 상단 내비게이션 -->
+    <div class="center-content">
+      <nav class="top-nav">
+        <a href="javascript:void(0);" onclick="showSection('about', this)" class="active">About Us</a>
+        <a href="javascript:void(0);" onclick="showSection('team', this)">Meet Our Team</a>
+        <a href="javascript:void(0);" onclick="showSection('contact', this)">Contact Us</a>
+      </nav>
+
+      <!-- About Section -->
+      <div id="about" class="section about-section">
+        <h2>About Dessert Hub</h2>
+        <p>디저트와 함께하는 따뜻한 커뮤니티, Dessert Hub입니다. 다양한 디저트와 정보를 공유해요!</p>
       </div>
-      <div class="team-member">
-        <img src="https://via.placeholder.com/150" alt="Team Member 2">
-        <p>팀원 2: 소개글</p>
+
+      <!-- Team Section -->
+      <div id="team" class="section team-section">
+        <h2>Meet Our Team</h2>
+        <div class="team-members">
+          <div class="team-member">
+            <img src="https://via.placeholder.com/150" alt="Team Member 1">
+            <p>팀원 1: 소개글</p>
+          </div>
+          <div class="team-member">
+            <img src="https://via.placeholder.com/150" alt="Team Member 2">
+            <p>팀원 2: 소개글</p>
+          </div>
+          <div class="team-member">
+            <img src="https://via.placeholder.com/150" alt="Team Member 2">
+            <p>팀원 3: 소개글</p>
+          </div>
+          <div class="team-member">
+            <img src="https://via.placeholder.com/150" alt="Team Member 2">
+            <p>팀원 4: 소개글</p>
+          </div>
+        </div>
       </div>
-      <div class="team-member">
-        <img src="https://via.placeholder.com/150" alt="Team Member 2">
-        <p>팀원 3: 소개글</p>
+
+      <!-- Contact Us Section -->
+      <div id="contact" class="section contact-section">
+        <h2>Contact Us</h2>
+        <div class="contact-form">
+          <input type="text" id="title" placeholder="제목">
+          <input type="email" id="email" placeholder="이메일">
+          <textarea id="message" rows="4" placeholder="내용"></textarea>
+          <button onclick="submitContactForm()">등록</button>
+        </div>
       </div>
-      <div class="team-member">
-        <img src="https://via.placeholder.com/150" alt="Team Member 2">
-        <p>팀원 4: 소개글</p>
-      </div>
+
     </div>
-  </div>
+  </main>
 
-  <!-- Contact Us Section -->
-  <div id="contact" class="section contact-section">
-    <h2>Contact Us</h2>
-    <div class="contact-form">
-      <input type="text" id="title" placeholder="제목">
-      <input type="email" id="email" placeholder="이메일">
-      <textarea id="message" rows="4" placeholder="내용"></textarea>
-      <button onclick="submitContactForm()">등록</button>
-    </div>
-  </div>
+  <!-- 푸터 포함 -->
+  <footer th:replace="fragments/footer.html :: footer"></footer>
 
   <script>
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(function(section) {
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const defaultSection = document.querySelector('.top-nav a.active');
+      showSection('about', defaultSection);
+    });
+
+
+    function showSection(sectionId, element) {
+      // 모든 섹션 숨기기
+      document.querySelectorAll('.section').forEach(function (section) {
         section.style.display = 'none';
       });
+
+      // 선택한 섹션 표시
       document.getElementById(sectionId).style.display = 'block';
+
+      // 모든 네비게이션 링크에서 'active' 클래스 제거
+      document.querySelectorAll('nav a').forEach(function (navLink) {
+        navLink.classList.remove('active');
+      });
+
+      // 클릭된 링크에 'active' 클래스 추가
+      element.classList.add('active');
     }
-    showSection('about');
 
     function submitContactForm() {
-      const title = document.getElementById('title').value;
-      const email = document.getElementById('email').value;
-      const message = document.getElementById('message').value;
+      // 입력값 가져오기
+      const title = document.getElementById('title').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
 
+      // 입력값 확인
       if (title && email && message) {
         alert('등록되었습니다!');
       } else {
@@ -200,4 +123,5 @@
     }
   </script>
 </body>
+
 </html>

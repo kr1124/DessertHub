@@ -362,12 +362,12 @@
         if ($(this).hasClass('active')) {
           $(this).removeClass('active'); // 비활성화
           post.liked = false; // 상태 비활성화
-          post.likesCount = 0; // 찜 수 감소
+          post.likesCount -= 1; // 찜 수 감소
         } else {
           timeline.replay(); // 애니메이션 실행
           $(this).addClass('active'); // 활성화 상태 추가
           post.liked = true; // 상태 활성화
-          post.likesCount = 1; // 찜 수 증가
+          post.likesCount += 1; // 찜 수 증가
         }
         renderPost(); // 상태 업데이트 반영
       });

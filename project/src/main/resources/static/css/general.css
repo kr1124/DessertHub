@@ -7,13 +7,17 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-[data-theme="dark"] {
+/* [data-theme="dark"] {
     --bg-color: #2e2e2e;
     --text-color: #fefefe;
     --header-bg-color: #444;
     --cta-color: #ff6f91;
     --cta-hover-color: #ff3d66;
     --shadow-color: rgba(0, 0, 0, 0.3);
+} */
+
+body {
+    cursor: url('/img/foo192.cur'), auto; /* 이미지 커서 */
 }
 
 main {

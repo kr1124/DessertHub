@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -18,8 +18,8 @@
     <!-- 헤더 포함 -->
     <header th:replace="fragments/header.html :: header"></header>
 
-    <!--
-    <ul>
+    
+    <!-- <ul>
         <li th:each="board : ${board}">
             <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
         </li>
@@ -150,7 +150,7 @@
         sortOrder.addEventListener('change', renderPosts);
         renderPosts();
 
-        // 스크롤 
+        // 스크롤 해도 사이바의 위치가 동일하도록
         const sidebar = document.querySelector('.sidebar');
         const initialTop = 0; // 초기 위치 설정
         let lastScrollY = window.scrollY;

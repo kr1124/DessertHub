@@ -5,8 +5,6 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
-    cursor: url('../second/img/foo192.cur'), auto;
-    /* 이미지 커서 */
 }
 
 /* Main content shift */

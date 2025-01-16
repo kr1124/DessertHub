@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 // 로그인, 회원가입 관련 컨트롤러
 @Controller
@@ -22,6 +25,12 @@ public class UserController {
     public String request_login(Model model) {
         model.addAttribute("user", new User());
         return "user/login";
+    }
+
+    @GetMapping("/find")
+    public String request_find(Model model) {
+        model.addAttribute("user", new User());
+        return "user/find";
     }
 
     @PostMapping("/login-check")
@@ -66,6 +75,34 @@ public class UserController {
         // return "redirect:/remessage";
     }
     
+    @PostMapping("/find-id")
+    public String find_id_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        if(userService.login_check(user)) {
+            User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
+            session.setAttribute("userId", tuser.getId());
+            System.out.println("세션에 userId 저장됨: " + tuser.getId());  // 디버깅용 로그
+            //아래는 session과는 다르게, 저장되지는 않는 일회성 메시지 전달이며 리다이렉트 시에도 유지됨
+            redirectAttributes.addFlashAttribute("message", (String)tuser.getUserNn() + "님 로그인을 환영합니다.");
+            //redirectAttributes.addFlashAttribute("message", "로그인 성공!");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            // 로그인 실패 시 다시 login.html로 이동
+            redirectAttributes.addFlashAttribute("message", "아이디나 비밀번호가 맞지 않습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/login");
+            return "redirect:/remessage";
+        }
+    }
+
+    @PostMapping("/find-pw")
+    public String find_pw_handler(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
+
     @GetMapping("/profile")
     public String request_get_user_profile(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         //유저의 데이터를 DB에서 가져와 model을 통해 뷰에 전달

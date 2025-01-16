@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>디저트 아이디/비밀번호 찾기</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+  <link rel="stylesheet" href="/css/user/find.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 아이디 찾기 -->
+    <div class="form-container" id="find-id">
+      <form id="findIdForm" action="/user/find-id" method="post" th:object="${user}">
+        <h1>아이디 찾기</h1>
+        <input type="text" id="nickname" placeholder="닉네임" th:field="*{userNn}" required>
+        <input type="email" id="email-id" placeholder="이메일" th:field="*{userEm}" required>
+        <button type="button" onclick="findId()">확인</button>
+      </form>
+    </div>
+
+    <!-- 비밀번호 찾기 -->
+    <div class="form-container" id="find-password" style="display:none;">
+      <form id="findPwForm" action="/user/find-pw" method="post" th:object="${user}">
+        <h1>비밀번호 찾기</h1>
+      <input type="text" id="username" placeholder="아이디" required>
+      <input type="email" id="email-password" placeholder="이메일" required>
+      <button onclick="findPassword()">확인</button>
+      </form>
+    </div>
+
+    <!-- 전환 버튼 -->
+    <div class="overlay-container">
+      <button id="switch-to-password">비밀번호 찾기</button>
+      <button id="switch-to-id" style="display:none;">아이디 찾기</button>
+    </div>
+  </div>
+
+  <script>
+    // 폼 전환 기능
+    const idForm = document.getElementById('find-id');
+    const passwordForm = document.getElementById('find-password');
+    const switchToPassword = document.getElementById('switch-to-password');
+    const switchToId = document.getElementById('switch-to-id');
+
+    switchToPassword.addEventListener('click', () => {
+      idForm.style.display = 'none';
+      passwordForm.style.display = 'flex';
+      switchToPassword.style.display = 'none';
+      switchToId.style.display = 'block';
+    });
+
+    switchToId.addEventListener('click', () => {
+      passwordForm.style.display = 'none';
+      idForm.style.display = 'flex';
+      switchToPassword.style.display = 'block';
+      switchToId.style.display = 'none';
+    });
+
+    // 아이디 찾기 기능
+    function findId() {
+      const nickname = document.getElementById('nickname').value;
+      const email = document.getElementById('email-id').value;
+      if (!nickname || !email) {
+        alert('모든 필드를 입력해주세요!');
+      } else {
+        // TODO 아이디 받아와야함. AJAX?
+        alert('닉네임 요청 완료하였습니다.');
+        document.getElementById("findIdForm").submit();
+      }
+    }
+
+    // 비밀번호 찾기 기능
+    function findPassword() {
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email-password').value;
+      if (!username || !email) {
+        alert('모든 필드를 입력해주세요!');
+      } else {
+        alert('이메일로 임시 비밀번호를 전송하였습니다.');
+        document.getElementById("findPwForm").submit();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,80 +1,140 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사진 업로드 페이지</title>
+
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/fragments/header.css">
+  <link rel="stylesheet" href="/css/fragments/nav.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
+  <link rel="stylesheet" href="/css/gallery/upload.css">
+
 </head>
 
 <body>
-    <!-- 이제 Gallery 객체에 맞는 HTML 폼을 작성할 때, input 필드의 name 속성을 Java 객체의 필드와 일치하도록 설정해야 합니다. -->
+
+  <!-- 헤더 포함 -->
+  <header th:replace="fragments/header.html :: header"></header>
+
+  <div class="main-layout">
+    <!-- 사이드바 포함 -->
+    <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
     <div class="upload-container">
-        <h2>사진 업로드</h2>
-        <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post" enctype="multipart/form-data">
-            <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
-            <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
-            <div class="hashtags-container" id="hashtagsContainer"></div>
-
-            <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
-            <div class="preview-container" id="previewContainer"></div>
-            
-            <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}" >
-        
-            <!-- <input type="file" id="imageUpload" accept="image/*" th:field="*{g_img}" required />
-            <div class="preview-container" id="previewContainer"></div> -->
-
-            <div class="button-container">
-                <button type="button" id="cancelBtn">취소</button>
-                <button type="submit" id="submitBtn">등록</button>
-            </div>
-        </form>
+      <h2>사진 업로드</h2>
+      <form id="uploadForm">
+        <input type="text" id="title" placeholder="제목 입력" required />
+        <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
+        <div class="hashtags-container" id="hashtagsContainer"></div>
+        <input type="file" id="imageUpload" accept="image/*" multiple required />
+        <button type="button" id="locationBtn">주소 선택</button>
+        <div class="preview-container" id="previewContainer"></div>
+        <div class="button-container">
+          <button type="button" id="cancelBtn">취소</button>
+          <button type="submit" id="submitBtn">등록</button>
+        </div>
+      </form>
     </div>
 
-    <script>
-        // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
-        function encodeImage(event) {
-            var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
-            
-            if (file) {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    // Base64 인코딩된 데이터
-                    var base64data = reader.result;
-    
-                    // 숨은 입력 필드에 Base64 데이터 설정
-                    document.getElementById('encodedImage').value = base64data;
-    
-                    // 미리보기 이미지 표시
-                    var previewContainer = document.getElementById('previewContainer');
-                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
-                    var imgElement = document.createElement('img');
-                    imgElement.src = base64data;
-                    imgElement.alt = 'Image Preview';
-                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
-                    previewContainer.appendChild(imgElement);
-                };
-    
-                reader.readAsDataURL(file);  // 파일을 Base64로 읽음
-            }
+    <!--  미리보기 모달 -->
+    <div id="previewModal" class="preview-modal" style="display: none;">
+      <button id="closePreview" class="close-btn">닫기</button>
+      <button id="prevBtn" class="slider-btn prev-btn">&#9664;</button>
+      <img id="previewImg" src="" alt="미리보기 이미지">
+      <button id="nextBtn" class="slider-btn next-btn">&#9654;</button>
+    </div>
+
+  </div>
+
+  <!-- 푸터 포함 -->
+  <footer th:replace="fragments/footer.html :: footer"></footer>
+
+  <script>
+
+    const hashtagsInput = document.getElementById('hashtags');
+    const hashtagsContainer = document.getElementById('hashtagsContainer');
+
+    hashtagsInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = hashtagsInput.value.trim();
+        if (value) {
+          const tag = document.createElement('span');
+          tag.classList.add('hashtag');
+          tag.innerHTML = `${value} <span class='remove-tag'>&times;</span>`;
+          tag.querySelector('.remove-tag').addEventListener('click', () => tag.remove());
+          hashtagsContainer.appendChild(tag);
+          hashtagsInput.value = '';
         }
-    
-        // 해시태그 입력 처리 (엔터로 구분된 해시태그 추가)
-        // document.getElementById('hashtags').addEventListener('keypress', function(event) {
-        //     if (event.key === 'Enter') {
-        //         event.preventDefault();  // 엔터키 기본 동작 방지
-        //         var hashtag = event.target.value.trim();
-        //         if (hashtag) {
-        //             var hashtagsContainer = document.getElementById('hashtagsContainer');
-        //             var newHashtag = document.createElement('span');
-        //             newHashtag.classList.add('hashtag');
-        //             newHashtag.textContent = hashtag;
-        //             hashtagsContainer.appendChild(newHashtag);
-        //             event.target.value = '';  // 입력 필드 초기화
-        //         }
-        //     }
-        // });
-    </script>
+      }
+    });
+
+
+    const previewContainer = document.getElementById('previewContainer');
+    const imageUpload = document.getElementById('imageUpload');
+    const previewModal = document.getElementById('previewModal');
+    const previewImg = document.getElementById('previewImg');
+    const closePreview = document.getElementById('closePreview');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let previewImages = [];
+    let currentIndex = 0;
+
+    imageUpload.addEventListener('change', (e) => {
+      const files = e.target.files;
+      previewContainer.innerHTML = '';
+      previewImages = [];
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          previewImages.push(event.target.result);
+          img.addEventListener('click', () => {
+            currentIndex = index;
+            showPreviewImage();
+            previewModal.style.display = 'flex';
+          });
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    function showPreviewImage() {
+      previewImg.src = previewImages[currentIndex];
+    }
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + previewImages.length) % previewImages.length;
+      showPreviewImage();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % previewImages.length;
+      showPreviewImage();
+    });
+
+    closePreview.addEventListener('click', () => {
+      previewModal.style.display = 'none';
+    });
+
+    // 등록 버튼 클릭 시 알림 및 페이지 이동
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('등록 완료되었습니다!');
+      window.location.href = 'gallery.html'; // 갤러리 페이지로 이동
+    });
+
+    // 취소 버튼 클릭 시 알림
+    cancelBtn.addEventListener('click', () => {
+      alert('취소되었습니다!');
+    });
+  </script>
 </body>
 
 </html>

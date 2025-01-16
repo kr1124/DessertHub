@@ -1,5 +1,5 @@
 /* 사이드바 */
-nav {
+.sidebar {
     display: flex;
     flex-direction: column;
 
@@ -19,7 +19,7 @@ nav {
     /* 하단 오른쪽 모서리 둥글게 */
 }
 
-nav:hover {
+.sidebar:hover {
     width: 230px !important;
 }
 
@@ -69,18 +69,18 @@ nav:hover {
     white-space: nowrap;
 }
 
-nav:hover .nav-text {
+.sidebar:hover .nav-text {
     opacity: 1;
     margin-left: 10px;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-    nav {
+    .sidebar {
         width: 60px !important;
     }
 
-    nav:hover {
+    .sidebar:hover {
         width: 200px !important;
     }
 
