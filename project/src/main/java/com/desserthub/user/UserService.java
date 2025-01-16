@@ -30,14 +30,41 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long userCode, User userDetails) {
-        User user = userRepository.findById(userCode).orElseThrow(null);
+    public boolean updateUser(Long id, User userDetails) {
+        // User user = userRepository.findById(userCode).orElseThrow(null);
 
-        user.setUserPw(userDetails.getUserPw());
-        user.setUserEm(userDetails.getUserEm());
-        user.setUserNn(userDetails.getUserNn());
+        // user.setUserPw(userDetails.getUserPw());
+        // user.setUserEm(userDetails.getUserEm());
+        // user.setUserNn(userDetails.getUserNn());
 
-        return userRepository.save(user);
+        // return userRepository.save(user);
+
+        boolean result = false;
+        User target_user = null;
+        
+        try {
+            target_user = userRepository.findById(id).orElseThrow(null);
+        } catch (Exception e) {
+            // null
+        }
+
+        if(target_user != null) {
+            if (userDetails.getUserPw() != null) {
+                target_user.setUserPw(userDetails.getUserPw());
+            }
+            if (userDetails.getUserEm() != null) {
+                target_user.setUserEm(userDetails.getUserEm());
+            }
+            if (userDetails.getUserNn() != null) {
+                target_user.setUserNn(userDetails.getUserNn());
+            }
+
+            userRepository.save(target_user);
+
+            result = true;
+        }
+
+        return result;
     }
 
     public void deleteUser(Long id) {
@@ -45,10 +72,23 @@ public class UserService {
     }
 
 
-    public User updateUserProfileImage(Long id, User userDetails) {
-        User user = userRepository.findById(id).orElseThrow(null);
-        user.setUserPi(userDetails.getUserPi());
-        return userRepository.save(user);
+    public boolean updateUserProfileImage(Long id, String string) {
+        boolean result = false;
+        User target_user = null;
+        
+        try {
+            target_user = userRepository.findById(id).orElseThrow(null);
+        } catch (Exception e) {
+            // null
+        }
+
+        if(target_user != null) {
+            target_user.setUserPi(string);
+            userRepository.save(target_user);
+            result = true;
+        }
+
+        return result;
     }
 
     public boolean login_check(User login_user) {

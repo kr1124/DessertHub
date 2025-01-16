@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessert Hub</title>
 
-  <link rel="stylesheet" href="/back.css">
-
   <link rel="stylesheet" href="/css/general.css">
   <link rel="stylesheet" href="/css/fragments/header.css">
   <link rel="stylesheet" href="/css/fragments/nav.css">
@@ -66,7 +64,7 @@
       </div>
 
       <!-- Contact Us Section -->
-      <div id="contact" class="section contact-section">
+      <!-- <div id="contact" class="section contact-section">
         <h2>Contact Us</h2>
         <div class="contact-form">
           <input type="text" id="title" placeholder="제목">
@@ -74,7 +72,7 @@
           <textarea id="message" rows="4" placeholder="내용"></textarea>
           <button onclick="submitContactForm()">등록</button>
         </div>
-      </div>
+      </div> -->
 
     </div>
   </main>
@@ -108,19 +106,19 @@
       element.classList.add('active');
     }
 
-    function submitContactForm() {
-      // 입력값 가져오기
-      const title = document.getElementById('title').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
+    // function submitContactForm() {
+    //   // 입력값 가져오기
+    //   const title = document.getElementById('title').value.trim();
+    //   const email = document.getElementById('email').value.trim();
+    //   const message = document.getElementById('message').value.trim();
 
-      // 입력값 확인
-      if (title && email && message) {
-        alert('등록되었습니다!');
-      } else {
-        alert('모든 필드를 입력해주세요.');
-      }
-    }
+    //   // 입력값 확인
+    //   if (title && email && message) {
+    //     alert('등록되었습니다!');
+    //   } else {
+    //     alert('모든 필드를 입력해주세요.');
+    //   }
+    // }
   </script>
 </body>
 

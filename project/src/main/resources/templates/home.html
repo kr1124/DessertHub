@@ -67,11 +67,6 @@
       currentIndex = (currentIndex + 1) % images.length;
       images[currentIndex].classList.add('active');
     }, 3000);
-
-    const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
-    });
   </script>
 
 </body>

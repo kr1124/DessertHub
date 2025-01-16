@@ -136,6 +136,35 @@ public class UserController {
         return "redirect:/remessage";
     }
 
+    @PostMapping("update")
+    public String profile_update_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        if(userService.updateUser((Long)session.getAttribute("userId"), user)) {
+            redirectAttributes.addFlashAttribute("message", "수정되었습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/profile");
+            return "redirect:/remessage";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "오류가 발생하여 수정에 실패하였습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/profile");
+            return "redirect:/remessage";
+        }
+    }
+
+    @PostMapping("update/image")
+    public String profile_image_update_handler(String image64, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        if(userService.updateUserProfileImage((Long)session.getAttribute("userId"), image64)) {
+            redirectAttributes.addFlashAttribute("message", "수정되었습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/profile");
+            return "redirect:/remessage";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "오류가 발생하여 수정에 실패하였습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/profile");
+            return "redirect:/remessage";
+        }
+    }
+    
+
     // 회원 탈퇴 처리 및 세션 삭제
     @GetMapping("/withdraw")
     public String withdraw(HttpSession session, RedirectAttributes redirectAttributes) {
