@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 // 로그인, 회원가입 관련 컨트롤러
@@ -33,13 +36,14 @@ public class UserController {
         return "user/find";
     }
 
+    //로그인 폼 처리
     @PostMapping("/login-check")
     public String login_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         if(userService.login_check(user)) {
             User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
             session.setAttribute("userId", tuser.getId());
-            System.out.println("세션에 userId 저장됨: " + tuser.getId());  // 디버깅용 로그
+            //System.out.println("세션에 userId 저장됨: " + tuser.getId());  // 디버깅용 로그
             //아래는 session과는 다르게, 저장되지는 않는 일회성 메시지 전달이며 리다이렉트 시에도 유지됨
             redirectAttributes.addFlashAttribute("message", (String)tuser.getUserNn() + "님 로그인을 환영합니다.");
             //redirectAttributes.addFlashAttribute("message", "로그인 성공!");
@@ -53,6 +57,7 @@ public class UserController {
         }
     }
 
+    // 회원가입 폼 처리
     @PostMapping("/register")
     public String register_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
@@ -67,14 +72,20 @@ public class UserController {
             redirectAttributes.addFlashAttribute("target", "/user/login");
             return "redirect:/remessage";
         }
+    }
 
-        // session.setAttribute("userId", user.getId());
-        // model.addAttribute("user", userService.createUser(user));
-        // redirectAttributes.addFlashAttribute("message", "회원가입되셨습니다.");
-        // redirectAttributes.addFlashAttribute("target", "/home");
-        // return "redirect:/remessage";
+    // 로그아웃 처리 및 세션 삭제
+    @GetMapping("/logout")
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+        // 세션에서 사용자 정보 삭제
+        session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
+        
+        redirectAttributes.addFlashAttribute("message", "로그아웃 되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "/home");
+        return "redirect:/remessage";
     }
     
+    // id 찾기 TODO
     @PostMapping("/find-id")
     public String find_id_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
@@ -125,16 +136,37 @@ public class UserController {
         }
     }
 
-    // 로그아웃 처리 및 세션 삭제
-    @GetMapping("/logout")
-    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-        // 세션에서 사용자 정보 삭제
-        session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
-        
-        redirectAttributes.addFlashAttribute("message", "로그아웃 되었습니다.");
-        redirectAttributes.addFlashAttribute("target", "/home");
-        return "redirect:/remessage";
+    @GetMapping("/profile/edit-image")
+    public String request_profile_image_edit(Model model) {
+        model.addAttribute("user", new User());
+        return "user/profile/profile-edit-image";
     }
+
+    @GetMapping("/profile/edit")
+    public String request_profile_edit(Model model) {
+        model.addAttribute("user", new User());
+        return "user/profile/profile-edit";
+    }
+
+    //favorites list 만들건지?
+    @GetMapping("/profile/favorites-list")
+    public String request_fav(Model model) {
+        return "user/profile/favorites-list";
+    }
+    
+
+    @GetMapping("/profile/manage-content")
+    public String request_manage_content(Model model) {
+        model.addAttribute("user", new User());
+        return "user/profile/manage-content";
+    }
+
+    @GetMapping("/withdraw")
+    public String request_withdraw(Model model) {
+        model.addAttribute("user", new User());
+        return "user/profile/delete-account";
+    }
+    
 
     @PostMapping("update")
     public String profile_update_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
@@ -166,7 +198,7 @@ public class UserController {
     
 
     // 회원 탈퇴 처리 및 세션 삭제
-    @GetMapping("/withdraw")
+    @PostMapping("/withdraw")
     public String withdraw(HttpSession session, RedirectAttributes redirectAttributes) {
         userService.deleteUser((Long)session.getAttribute("userId"));
         session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리

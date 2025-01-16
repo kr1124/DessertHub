@@ -1,0 +1,36 @@
+<!-- 사이드바 -->
+<div class="sidebar" th:fragment="nav">
+    <a href="/home">
+        <h2>🍰</h2>
+    </a>
+    <a href="/user/profile/edit-image">
+        <div class="menu-item">
+            <i class="fas fa-user"></i>
+            <span class="side-text"> 프로필 이미지 설정</span>
+        </div>
+    </a>
+    <a href="/user/profile/edit">
+        <div class="menu-item">
+            <i class="fas fa-edit"></i>
+            <span class="side-text"> 내 정보 조회/수정</span>
+        </div>
+    </a>
+    <a href="/user/profile/favorites-list">
+        <div class="menu-item">
+            <i class="fas fa-heart"></i>
+            <span class="side-text"> 찜한 목록</span>
+        </div>
+    </a>
+    <a href="/user/profile/manage-content">
+        <div class="menu-item">
+            <i class="fas fa-comments"></i>
+            <span class="side-text"> 게시글 관리</span>
+        </div>
+    </a>
+    <a href="/user/withdraw">
+        <div class="menu-item">
+            <i class="fas fa-user-slash"></i>
+            <span class="side-text"> 회원 탈퇴</span>
+        </div>
+    </a>
+</div>

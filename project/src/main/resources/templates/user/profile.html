@@ -7,9 +7,12 @@
     <title>마이페이지</title>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/fragments/header.css">
     <!-- <link rel="stylesheet" href="/css/fragments/nav.css"> -->
+    <link rel="stylesheet" href="/css/user/nav.css">
     <link rel="stylesheet" href="/css/fragments/footer.css">
     <link rel="stylesheet" href="/css/user/profile.css">
 
@@ -22,25 +25,9 @@
 
     <!-- 마이페이지 구조 -->
     <div class="mypage-container">
-        <!-- 사이드바 -->
-        <div class="sidebar">
-            <h2>🍰</h2>
-            <div class="menu-item active" data-content="./parts/profile-edit-image.html">
-                <i class="fas fa-user"></i>⋆📷⋆<span> 프로필 설정</span>
-            </div>
-            <div class="menu-item" data-content="./parts/profile-edit.html">
-                <i class="fas fa-edit"></i>🙋🏻‍♀️<span> 내 정보 조회/수정</span>
-            </div>
-            <div class="menu-item" data-content="./parts/favorites-list.html">
-                <i class="fas fa-heart"></i>⋆💗⋆<span> 찜한 목록</span>
-            </div>
-            <div class="menu-item" data-content="./parts/manage-content.html">
-                <i class="fas fa-comments"></i>📝<span> 게시글 관리</span>
-            </div>
-            <div class="menu-item" data-content="./parts/delete-account.html">
-                <i class="fas fa-user-slash"></i>⋆🥀⋆<span> 회원 탈퇴</span>
-            </div>
-        </div>
+
+        <!-- 사이드바 포함 -->
+        <nav th:replace="user/profile/profile-nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
         <!--콘텐츠 영역 -->
         <div id="mypage" class="content">
@@ -50,13 +37,14 @@
         </div>
 
         <!-- <div th:replace="user/parts/profile-edit.html :: pedit" class="section edit-section"></div> -->
+
     </div>
 
     <!-- 푸터 포함 -->
     <footer th:replace="fragments/footer.html :: footer"></footer>
 
     <!-- 스크립트 -->
-    <script>
+    <!-- <script>
 
         // 모든 메뉴 항목을 가져옵니다.
         const menuItems = document.querySelectorAll('.menu-item');
@@ -120,7 +108,7 @@
             });
         });
 
-    </script>
+    </script> -->
 </body>
 
 </html>
