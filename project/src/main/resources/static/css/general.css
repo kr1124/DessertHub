@@ -34,7 +34,7 @@ main {
 }
 
 .no-underline:hover {
-    text-decoration: underline;
+    /* text-decoration: underline; */
     /* 호버 시 밑줄 추가 (선택 사항) */
 }
 

@@ -49,13 +49,13 @@ public class UserService {
         }
 
         if(target_user != null) {
-            if (userDetails.getUserPw() != null) {
+            if (userDetails.getUserPw() != null && userDetails.getUserPw() != "") {
                 target_user.setUserPw(userDetails.getUserPw());
             }
-            if (userDetails.getUserEm() != null) {
+            if (userDetails.getUserEm() != null && userDetails.getUserEm() != "") {
                 target_user.setUserEm(userDetails.getUserEm());
             }
-            if (userDetails.getUserNn() != null) {
+            if (userDetails.getUserNn() != null && userDetails.getUserNn() != "") {
                 target_user.setUserNn(userDetails.getUserNn());
             }
 
@@ -71,6 +71,24 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public boolean deleteUser(String userId, String userPw) {
+        User user = null;
+        boolean result = false;
+        try {
+            user = userRepository.findByUserId(userId).orElseThrow(null);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        if (user != null) {
+            if(userId.equals(user.getUserId()) && userPw.equals(user.getUserPw())) {
+                deleteUser(user.getId());
+                result = true;
+            }
+        }
+
+        return result;
+    }
 
     public boolean updateUserProfileImage(Long id, String string) {
         boolean result = false;

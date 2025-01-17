@@ -33,11 +33,11 @@
       
           <!-- 아이디 (고정값) -->
           <label for="userId">아이디</label>
-          <input type="text" id="userId" class="fixed-id" value="${user.userId}" disabled>
+          <input type="text" id="userId" class="fixed-id" th:value="${user.userId}" disabled>
       
           <!-- 현재 비밀번호 -->
-          <label for="currentPassword">현재 비밀번호</label>
-          <input type="password" id="currentPassword" placeholder="현재 비밀번호를 입력하세요">
+          <!-- <label for="currentPassword">현재 비밀번호</label>
+          <input type="password" id="currentPassword" placeholder="현재 비밀번호를 입력하세요"> -->
       
           <form id="profileUpdateForm" action="/user/update" th:object="${user}" method="post">
             <!-- 새 비밀번호 -->
@@ -52,18 +52,18 @@
             <!-- 이메일 입력 -->
             <label for="email">이메일</label>
             <div class="email-container">
-              <input type="text" id="email" class="email-input" placeholder="example" required>
+              <input type="text" id="email" class="email-input" placeholder="example" th:value="${user.userEm.split('@')[0]}" required>
               <span>@</span>
               <select id="emailDomain">
-                <option value="gmail.com">gmail.com</option>
-                <option value="naver.com">naver.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="custom">직접 입력</option>
-              </select>
+                <option value="gmail.com" th:selected="${user.userEm.endsWith('gmail.com')}">gmail.com</option>
+                <option value="naver.com" th:selected="${user.userEm.endsWith('naver.com')}">naver.com</option>
+                <option value="daum.net" th:selected="${user.userEm.endsWith('daum.net')}">daum.net</option>
+                <option value="custom" th:selected="${user.userEm.contains('custom')}">직접 입력</option>
+            </select>
             </div>
             
         <!-- 사용자 정의 도메인 입력란 (디폴트로 숨김) -->
-            <input type="text" id="customDomain" placeholder="도메인을 입력하세요" style="display: none; margin-top: 10px;">
+            <input type="text" id="customDomain" placeholder="도메인을 입력하세요" style="display: none; margin-top: 10px;" th:value="${user.userEm.split('@')[1]}">
             
           <!-- 합쳐진 이메일 필드 (사용자가 볼 필요 없음) -->
           <input type="hidden" id="fullEmail" th:field="*{userEm}" value="">
@@ -74,7 +74,8 @@
             <input type="text" id="nickname" th:field="*{userNn}" placeholder="닉네임을 입력하세요">
       
             <!-- 저장 버튼 -->
-            <button class="button" onclick="saveChanges()">저장</button>
+            <!-- <button class="button" onclick="saveChanges()">저장</button> -->
+            <button type="submit" class="button">저장</button>
           </form>
           
           <div class="info">
@@ -119,7 +120,7 @@
 
 
   // 폼 제출 전에 이메일을 합쳐서 보내기
-  document.getElementById('emailForm').addEventListener('submit', function (event) {
+  document.getElementById('profileUpdateForm').addEventListener('submit', function (event) {
     const emailInput = document.getElementById('email').value;
     const emailDomain = document.getElementById('emailDomain').value;
     const customDomain = document.getElementById('customDomain').value;
@@ -135,36 +136,49 @@
 
     // 합쳐진 이메일을 hidden input에 설정
     document.getElementById('fullEmail').value = fullEmail;
-  });
 
-    // 저장 버튼 클릭 시 처리
-    function saveChanges() {
-      const fields = [
-        { id: 'currentPassword', name: '현재 비밀번호' },
-        { id: 'newPassword', name: '새 비밀번호' },
-        { id: 'confirmPassword', name: '새 비밀번호 확인' },
-        { id: 'email', name: '이메일' },
-        { id: 'nickname', name: '닉네임' }
-      ];
-
-      for (const field of fields) {
-        const input = document.getElementById(field.id);
-        if (!input.value.trim()) {
-          alert(`${field.name}을(를) 입력해주세요.`);
-          input.focus();
-          return;
-        }
-      }
-
-      const confirmSave = confirm("저장하시겠습니까?");
+    
+    const confirmSave = confirm("저장하시겠습니까?");
       if (confirmSave) {
-        alert("변경되었습니다.");
+        //alert("변경되었습니다.");
         document.getElementById("profileUpdateForm").submit();
       } else {
         alert("변경이 취소되었습니다.");
+        event.preventDefault();  // POST 요청을 막음
+        return;
       }
+  });
 
-    }
+    // 저장 버튼 클릭 시 처리
+    // function saveChanges() {
+      // const fields = [
+      //   { id: 'currentPassword', name: '현재 비밀번호' },
+      //   { id: 'newPassword', name: '새 비밀번호' },
+      //   { id: 'confirmPassword', name: '새 비밀번호 확인' },
+      //   { id: 'email', name: '이메일' },
+      //   { id: 'nickname', name: '닉네임' }
+      // ];
+
+      // for (const field of fields) {
+      //   const input = document.getElementById(field.id);
+      //   if (!input.value.trim()) {
+      //     alert(`${field.name}을(를) 입력해주세요.`);
+      //     input.focus();
+      //     return;
+      //   }
+      // }
+
+    //   const confirmSave = confirm("저장하시겠습니까?");
+    //   if (confirmSave) {
+    //     alert("변경되었습니다.");
+    //     document.getElementById("profileUpdateForm").submit();
+    //   } else {
+    //     alert("변경이 취소되었습니다.");
+    //     event.preventDefault();  // POST 요청을 막음
+    //     return;
+    //   }
+
+    // }
   </script>
 
 </body>

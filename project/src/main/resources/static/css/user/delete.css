@@ -1,3 +1,12 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fff5f8;
+  color: #333;
+}
+
+
 .container {
   background-color: #fff;
   padding: 30px;
@@ -8,7 +17,7 @@
   text-align: left;
 }
 
-h2 {
+.h2delete {
   margin-bottom: 20px;
   color: #f06292;
   text-align: center;

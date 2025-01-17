@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import com.desserthub.gallery.Gallery;
 
 
 
@@ -62,7 +60,8 @@ public class UserController {
     public String register_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         if(userService.register_check(user)) {
-            session.setAttribute("userId", user.getId());
+            User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
+            session.setAttribute("userId", tuser.getId());
             redirectAttributes.addFlashAttribute("message", "회원가입되셨습니다.");
             redirectAttributes.addFlashAttribute("target", "/home");
             return "redirect:/remessage";
@@ -137,18 +136,21 @@ public class UserController {
     }
 
     @GetMapping("/profile/edit-image")
-    public String request_profile_image_edit(Model model) {
-        model.addAttribute("user", new User());
+    public String request_profile_image_edit(Model model, HttpSession session) {
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        
+        model.addAttribute("user", user);
         return "user/profile/profile-edit-image";
     }
 
     @GetMapping("/profile/edit")
-    public String request_profile_edit(Model model) {
-        model.addAttribute("user", new User());
+    public String request_profile_edit(Model model, HttpSession session) {
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        
+        model.addAttribute("user", user);
         return "user/profile/profile-edit";
     }
 
-    //favorites list 만들건지?
     @GetMapping("/profile/favorites-list")
     public String request_fav(Model model) {
         return "user/profile/favorites-list";
@@ -156,14 +158,18 @@ public class UserController {
     
 
     @GetMapping("/profile/manage-content")
-    public String request_manage_content(Model model) {
-        model.addAttribute("user", new User());
+    public String request_manage_content(Model model, HttpSession session) {
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        
+        model.addAttribute("user", user);
         return "user/profile/manage-content";
     }
 
     @GetMapping("/withdraw")
-    public String request_withdraw(Model model) {
-        model.addAttribute("user", new User());
+    public String request_withdraw(Model model, HttpSession session) {
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        
+        model.addAttribute("user", user);
         return "user/profile/delete-account";
     }
     
@@ -183,9 +189,9 @@ public class UserController {
     }
 
     @PostMapping("update/image")
-    public String profile_image_update_handler(String image64, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String profile_image_update_handler(@ModelAttribute User user, RedirectAttributes redirectAttributes, HttpSession session) {
 
-        if(userService.updateUserProfileImage((Long)session.getAttribute("userId"), image64)) {
+        if(userService.updateUserProfileImage((Long)session.getAttribute("userId"), user.getUserPi())) {
             redirectAttributes.addFlashAttribute("message", "수정되었습니다.");
             redirectAttributes.addFlashAttribute("target", "/user/profile");
             return "redirect:/remessage";
@@ -198,14 +204,20 @@ public class UserController {
     
 
     // 회원 탈퇴 처리 및 세션 삭제
-    @PostMapping("/withdraw")
-    public String withdraw(HttpSession session, RedirectAttributes redirectAttributes) {
-        userService.deleteUser((Long)session.getAttribute("userId"));
-        session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
+    @PostMapping("/delete")
+    public String withdraw(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
 
-        redirectAttributes.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.");
-        redirectAttributes.addFlashAttribute("target", "/home");
-        return "redirect:/remessage";
+        if(userService.deleteUser(user.getUserId(), user.getUserPw())) {
+            session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
+
+            redirectAttributes.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "아이디나 비밀번호가 일치하지 않습니다.");
+            redirectAttributes.addFlashAttribute("target", "/user/withdraw");
+            return "redirect:/remessage";
+        }
     }
 
     @PostMapping("/upload-pfp") //파일 업로드 예제
