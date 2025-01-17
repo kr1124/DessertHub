@@ -19,11 +19,6 @@
     <header th:replace="fragments/header.html :: header"></header>
 
     
-    <!-- <ul>
-        <li th:each="board : ${board}">
-            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}"></a>
-        </li>
-    </ul> -->
 
     <main>
         <!-- 사이드바 포함 -->
@@ -59,9 +54,25 @@
                         <th style="width: 10%;">찜</th>
                     </tr>
                 </thead>
-                <tbody id="postList"></tbody>
+                <!-- 글 리스트 영역 -->
+                <tbody id="postList">
+                    <a th:href="@{/board/{id}(id=${board.id})}">
+                        <tr th:each="board : ${board}">
+                            <td th:text="${board.id}"></td> <!-- 번호 -->
+                            <td th:text="${board.boardTitle}"></td> <!-- 제목 -->
+                            <td th:text="${board.userNn}"></td> <!-- 작성자 -->
+                            <td th:text="${#dates.format(board.boardWriteday, 'yyyy-MM-dd')}"></td> <!-- 작성일 (날짜 형식 지정) -->
+                            <!-- <td th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd')}"></td> -->
+                            <td th:text="${board.boardView}"></td> <!-- 조회수 -->
+                            <td th:text="${board.boardLiked}"></td> <!-- 좋아요 -->
+                            <!-- <td th:text="${board.boardComment}"></td> 댓글수는 표 뜯어서 칸수 늘려야함 -->
+                        </tr>
+                    </a>
+                </tbody>
             </table>
 
+
+            <!-- 글 영역 하단의 페이지 번호 영역 -->
             <div class="pagination" id="pagination"></div>
 
             <a href="/board/new">
@@ -78,77 +89,79 @@
 
     <!-- JavaScript -->
     <script>
-        const posts = Array.from({ length: 50 }, (_, i) => ({
-            id: i + 1,
-            title: `게시글 제목 ${i + 1}`,
-            author: `작성자 ${i + 1}`,
-            date: '2024-01-01',
-            views: Math.floor(Math.random() * 1000),
-            likes: Math.floor(Math.random() * 50)
-        }));
+        // const posts = Array.from({ length: 50 }, (_, i) => ({
+        //     id: i + 1,
+        //     title: `게시글 제목 ${i + 1}`,
+        //     author: `작성자 ${i + 1}`,
+        //     date: '2024-01-01',
+        //     views: Math.floor(Math.random() * 1000),
+        //     likes: Math.floor(Math.random() * 50)
+        // }));
 
-        const postList = document.getElementById('postList');
-        const pagination = document.getElementById('pagination');
-        const sortOrder = document.getElementById('sortOrder');
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
+        // const postList = document.getElementById('postList');
+        // const pagination = document.getElementById('pagination');
+        // const sortOrder = document.getElementById('sortOrder');
+        // const searchInput = document.getElementById('searchInput');
+        // const searchBtn = document.getElementById('searchBtn');
 
-        let currentPage = 1;
-        const postsPerPage = 15;
+        // let currentPage = 1;
+        // const postsPerPage = 15;
 
-        function renderPosts() {
-            const search = searchInput.value.toLowerCase();
-            const order = sortOrder.value;
+        // function renderPosts() {
+        //     const search = searchInput.value.toLowerCase();
+        //     const order = sortOrder.value;
 
-            let filteredPosts = posts.filter(post =>
-                post.title.toLowerCase().includes(search)
-            );
+        //     let filteredPosts = posts.filter(post =>
+        //         post.title.toLowerCase().includes(search)
+        //     );
 
-            if (order === 'popular') {
-                filteredPosts.sort((a, b) => b.views - a.views);
-            } else {
-                filteredPosts.sort((a, b) => b.id - a.id);
-            }
+        //     if (order === 'popular') {
+        //         filteredPosts.sort((a, b) => b.views - a.views);
+        //     } else {
+        //         filteredPosts.sort((a, b) => b.id - a.id);
+        //     }
 
-            const start = (currentPage - 1) * postsPerPage;
-            const end = start + postsPerPage;
-            const paginatedPosts = filteredPosts.slice(start, end);
+        //     const start = (currentPage - 1) * postsPerPage;
+        //     const end = start + postsPerPage;
+        //     const paginatedPosts = filteredPosts.slice(start, end);
 
-            postList.innerHTML = '';
-            paginatedPosts.forEach(post => {
-                const row = `<tr>
-          <td>${post.id}</td>
-          <td>${post.title}</td>
-          <td>${post.author}</td>
-          <td>${post.date}</td>
-          <td>${post.views}</td>
-          <td>${post.likes}</td>
-        </tr>`;
-                postList.innerHTML += row;
-            });
+        //     postList.innerHTML = '';
+        //     paginatedPosts.forEach(post => {
+        //         const row = `<tr>
+        //   <td>${post.id}</td>
+        //   <td>${post.title}</td>
+        //   <td>${post.author}</td>
+        //   <td>${post.date}</td>
+        //   <td>${post.views}</td>
+        //   <td>${post.likes}</td>
+        // </tr>`;
+        //         postList.innerHTML += row;
+        //     });
 
-            renderPagination(filteredPosts.length);
-        }
+        //     renderPagination(filteredPosts.length);
+        // }
 
-        function renderPagination(totalPosts) {
-            const totalPages = Math.ceil(totalPosts / postsPerPage);
-            pagination.innerHTML = '';
+        // function renderPagination(totalPosts) {
+        //     const totalPages = Math.ceil(totalPosts / postsPerPage);
+        //     pagination.innerHTML = '';
 
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.textContent = i;
-                btn.classList.add(i === currentPage ? 'active' : '');
-                btn.addEventListener('click', () => {
-                    currentPage = i;
-                    renderPosts();
-                });
-                pagination.appendChild(btn);
-            }
-        }
+        //     for (let i = 1; i <= totalPages; i++) {
+        //         const btn = document.createElement('button');
+        //         btn.textContent = i;
+        //         btn.classList.add(i === currentPage ? 'active' : '');
+        //         btn.addEventListener('click', () => {
+        //             currentPage = i;
+        //             renderPosts();
+        //         });
+        //         pagination.appendChild(btn);
+        //     }
+        // }
 
-        searchBtn.addEventListener('click', renderPosts);
-        sortOrder.addEventListener('change', renderPosts);
-        renderPosts();
+        // searchBtn.addEventListener('click', renderPosts);
+        // sortOrder.addEventListener('change', renderPosts);
+        // renderPosts();
+
+
 
         // 스크롤 해도 사이바의 위치가 동일하도록
         const sidebar = document.querySelector('.sidebar');
