@@ -28,11 +28,13 @@
                     <span th:text="${board.boardCategory}"></span>
                 </div>
                 <div class="title" id="post-title"><h1 th:text="${board.boardTitle}"></h1></div>
+
                 <div class="info" id="post-info">
                     작성자: <span th:text="${board.userNn}"></span> | 
                     작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span> | 조회수: <span th:text="${board.boardView}"></span> | 
                     찜:     <span th:text="${board.boardLiked}"></span> | 
                 </div>
+
                 <div class="actions">
                     <a href="/board"><button id="edit-post">목록으로</button></a>
                     <a th:href="@{/board/{id}/edit(id=${board.id})}"><button id="edit-post">수정</button></a>
@@ -48,7 +50,7 @@
             </div>
 
             <div th:if="${board.boardImg}">
-                <img th:src="${board.boardImg}" alt="이미지" /> <!-- 디코딩 필요 없음! -->
+                <img th:src="${board.boardImg}" alt="이미지" style="max-width: 100%; height: auto;" /> <!-- 디코딩 필요 없음! -->
             </div>
 
             <!-- 하트 버튼 위치 조정 -->

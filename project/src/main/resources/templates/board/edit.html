@@ -1,20 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 수정</title>
+
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/fragments/header.css">
+    <link rel="stylesheet" href="/css/fragments/nav.css">
+    <link rel="stylesheet" href="/css/fragments/footer.css">
+    <link rel="stylesheet" href="/css/board/new.css">
 </head>
+
 <body>
-    <h1>게시글 수정</h1>
-    <form th:action="@{/board/{id}/edit(id=${board.id})}" th:object="${board}" method="post">
-        <label for="title">제목</label>
-        <input type="text" th:field="*{boardTitle}" required="required" />
-        <br />
-        <label for="content">내용</label>
-        <textarea th:field="*{boardContent}" required="required"></textarea>
-        <br />
-        <button type="submit">수정</button>
-    </form>
-    <br />
-    <a href="/board">취소</a>
+
+    <!-- 헤더 포함 -->
+    <header th:replace="fragments/header.html :: header"></header>
+
+    <main>
+        <!-- 사이드바 포함 -->
+        <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
+        <div class="container">
+            <h2>
+                글 수정
+            </h2>
+
+            <form th:action="@{/board/{id}/edit(id=${board.id})}" th:object="${board}" method="post">
+                <div class="form-group">
+                    <label for="category">카테고리</label>
+                    <select id="category" th:field="*{boardCategory}">
+                        <option value="notice" th:selected="${board.boardCategory.endsWith('공지사항')}">공지사항</option>
+                        <option value="free" th:selected="${board.boardCategory.endsWith('자유게시판')}">자유게시판</option>
+                        <option value="qna" th:selected="${board.boardCategory.endsWith('Q&A')}">Q&A</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" th:field="*{boardTitle}" th:value="${board.boardTitle}" >
+                </div>
+
+                <div class="info" id="post-info">
+                    작성자: <span th:text="${board.userNn}"></span> | 
+                    작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span> | 조회수: <span th:text="${board.boardView}"></span> | 
+                    찜:     <span th:text="${board.boardLiked}"></span> | 
+                </div>
+
+            <!-- 게시글 내용 -->
+                    <label for="content">내용</label>
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px;">
+                    <textarea id="content" th:text="${board.boardContent}" th:field="*{boardContent}" style="flex-grow: 1;"></textarea>
+
+                    
+                    <!-- 미리보기 이미지 표시 영역 -->
+                    <div th:if="${board.boardImg}" id="previewContainer" style="max-width: 100%; overflow: hidden; margin-top: 10px;">
+                        <img th:src="${board.boardImg}" id="preview-image" src="" alt="업로드할 이미지 미리보기" style="width: 100%; max-width: 300px; height: auto;">
+                    </div>
+                </div>
+                <div class="divider"></div>
+    
+                <div class="media-buttons">
+                    <button type="button" id="upload-photo">사진 업로드</button>
+                    <input type="file" id="photo-input" accept="image/*" style="display: none;"
+                        onchange="encodeImage(event)">
+                </div>
+
+
+                <!-- 숨은 필드에 Base64 이미지 데이터 저장 -->
+                <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{boardImg}">
+
+                <div class="button-group">
+                    <button type="button" id="cancleNewBoard">취소</button>
+                    <button type="submit" id="submit-post">등록</button>
+                </div>
+                </form>
+        </div>
+
+    </main>
+
+
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
+
+    <script>
+
+        // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
+        function encodeImage(event) {
+            var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    // Base64 인코딩된 데이터
+                    var base64data = reader.result;
+
+                    // 숨은 입력 필드에 Base64 데이터 설정
+                    document.getElementById('encodedImage').value = base64data;
+
+                    // 미리보기 이미지 표시
+                    var previewContainer = document.getElementById('previewContainer');
+                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
+                    var imgElement = document.createElement('img');
+                    imgElement.src = base64data;
+                    imgElement.alt = 'Image Preview';
+                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
+                    previewContainer.appendChild(imgElement);
+
+                    // 미리보기 영역 표시
+                    previewContainer.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);  // 파일을 Base64로 읽음
+            }
+        }
+
+        // '사진 업로드' 버튼 클릭 시 파일 선택 창 열기
+        document.getElementById('upload-photo').addEventListener('click', function () {
+            document.getElementById('photo-input').click();
+        });
+
+        document.getElementById('submit-post').addEventListener('click', () => {
+            alert('게시글이 등록되었습니다!');
+        });
+
+    </script>
+
 </body>
+
 </html>

@@ -238,6 +238,8 @@ public class UserController {
     public String withdraw(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
 
         if(userService.deleteUser(user.getUserId(), user.getUserPw())) {
+            // TODO 작성한 글, 갤러리, 등 전부 삭제 조치
+
             session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
 
             redirectAttributes.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.");
@@ -248,11 +250,5 @@ public class UserController {
             redirectAttributes.addFlashAttribute("target", "/user/withdraw");
             return "redirect:/remessage";
         }
-    }
-
-    @PostMapping("/upload-pfp") //파일 업로드 예제
-    public String uploadDessertImage(String image64) {
-        // TODO
-        return "";
     }
 }

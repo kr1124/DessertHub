@@ -42,28 +42,28 @@
                     <input type="text" id="title" th:field="*{boardTitle}" placeholder="제목을 입력하세요">
                 </div>
 
-                <div class="form-group">
-                    <label for="content">내용</label>
-                    <textarea id="content" th:field="*{boardContent}" placeholder="내용을 입력하세요"></textarea>
+                <label for="content">내용</label>
+                <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px;">
+                    <textarea id="content" th:field="*{boardContent}" placeholder="내용을 입력하세요" style="flex-grow: 1;"></textarea>
+
+                    <!-- 미리보기 이미지 표시 영역 -->
+                    <div id="previewContainer" style="display: none; max-width: 100%; overflow: hidden; margin-top: 10px;">
+                        <img id="preview-image" src="" alt="업로드할 이미지 미리보기" style="width: 100%; max-width: 300px; height: auto;">
+                    </div>
                 </div>
                 <div class="divider"></div>
-
+                
                 <div class="media-buttons">
-                    <button id="upload-photo">사진 업로드</button>
-                    <input type="file" id="photo-input" accept="image/*" style="display: none;"
-                        onchange="encodeImage(event)">
+                    <button type="button" id="upload-photo">사진 업로드</button>
+                    <input type="file" id="photo-input" accept="image/*" style="display: none;" onchange="encodeImage(event)">
                 </div>
 
-                <!-- 미리보기 이미지 표시 영역 -->
-                <div id="photo-preview" style="display: none;">
-                    <img id="preview-image" src="" alt="업로드할 이미지 미리보기" style="max-width: 300px; margin-top: 10px;">
-                </div>
 
                 <!-- 숨은 필드에 Base64 이미지 데이터 저장 -->
                 <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{boardImg}">
 
                 <div class="button-group">
-                    <button type="button" id="cancleNewBoard">취소</button>
+                    <button type="button" id="cancleNewBoard" onclick="goBack()">취소</button>
                     <button type="submit" id="submit-post">등록</button>
                 </div>
         </div>
@@ -110,6 +110,14 @@
         }
 
     </script> -->
+        
+    <script>
+        // 취소 버튼 클릭 시 이전 페이지로 돌아가는 함수
+        function goBack() {
+            window.history.back(); // 이전 페이지로 돌아감
+        }
+    </script>
+    
     <script>
 
         // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
@@ -127,12 +135,9 @@
 
                     // 미리보기 이미지 표시
                     var previewContainer = document.getElementById('previewContainer');
-                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
-                    var imgElement = document.createElement('img');
-                    imgElement.src = base64data;
-                    imgElement.alt = 'Image Preview';
-                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
-                    previewContainer.appendChild(imgElement);
+                    previewContainer.style.display = 'block'; // 미리보기 영역을 보이게 설정
+                    var imgElement = document.getElementById('preview-image');
+                    imgElement.src = base64data; // 미리보기 이미지를 설정
 
                     // 미리보기 영역 표시
                     previewContainer.style.display = 'block';
@@ -143,13 +148,14 @@
         }
 
         // '사진 업로드' 버튼 클릭 시 파일 선택 창 열기
-        document.getElementById('upload-photo').addEventListener('click', function () {
+        document.getElementById('upload-photo').addEventListener('click', function (event) {
+            //evetn.preventDefault();
             document.getElementById('photo-input').click();
         });
 
-        document.getElementById('submit-post').addEventListener('click', () => {
-            alert('게시글이 등록되었습니다!');
-        });
+        // document.getElementById('submit-post').addEventListener('click', () => {
+        //     alert('게시글이 등록되었습니다!');
+        // });
 
     </script>
 

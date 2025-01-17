@@ -18,7 +18,7 @@
     <!-- 헤더 포함 -->
     <header th:replace="fragments/header.html :: header"></header>
 
-    
+
 
     <main>
         <!-- 사이드바 포함 -->
@@ -55,19 +55,27 @@
                     </tr>
                 </thead>
                 <!-- 글 리스트 영역 -->
-                <tbody id="postList">
-                    <a th:href="@{/board/{id}(id=${board.id})}">
-                        <tr th:each="board : ${board}">
-                            <td th:text="${board.id}"></td> <!-- 번호 -->
-                            <td th:text="${board.boardTitle}"></td> <!-- 제목 -->
-                            <td th:text="${board.userNn}"></td> <!-- 작성자 -->
-                            <td th:text="${#dates.format(board.boardWriteday, 'yyyy-MM-dd')}"></td> <!-- 작성일 (날짜 형식 지정) -->
-                            <!-- <td th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd')}"></td> -->
-                            <td th:text="${board.boardView}"></td> <!-- 조회수 -->
-                            <td th:text="${board.boardLiked}"></td> <!-- 좋아요 -->
-                            <!-- <td th:text="${board.boardComment}"></td> 댓글수는 표 뜯어서 칸수 늘려야함 -->
-                        </tr>
-                    </a>
+                <tbody id="postList" th:if="${board != null}">
+                    <tr th:each="board : ${board}">
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.id}" class="no-underline"></a> <!-- 번호 -->
+                        </td>
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardTitle}" class="no-underline"></a> <!-- 제목 -->
+                        </td>
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.userNn}" class="no-underline"></a> <!-- 작성자 -->
+                        </td>
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd')}" class="no-underline"></a> <!-- 작성일 -->
+                        </td>
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardView}" class="no-underline"></a> <!-- 조회수 -->
+                        </td>
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.boardLiked}" class="no-underline"></a> <!-- 좋아요 -->
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
