@@ -39,10 +39,14 @@
       <h1>회원가입</h1>
       <form id="registerForm" action="/user/register" th:object="${user}" method="post">
         <div class="inline-container">
-          <input type="text" id="signup-username" name="reg_name" th:field="*{userId}" placeholder="아이디">
-          <button type="button" class="check-btn" onclick="checkUsername()">중복 확인</button>
+          <input type="text" id="username" name="username" th:field="*{userId}" placeholder="아이디">
+          <button type="button" id="checkUsernameBtn" class="check-btn">중복 확인</button>
         </div>
-        <small id="username-feedback"></small>
+         <!-- 중복 여부를 표시할 영역 -->
+        <!-- <small id="username-feedback"></small> -->
+        <small id="usernameResult"></small>
+        <!-- <span id="usernameResult"></span> -->
+
         <input type="password" id="signup-password" name="reg_pass" th:field="*{userPw}" placeholder="비밀번호">
         <input type="password" id="confirm-password" placeholder="비밀번호 확인" oninput="validatePassword()">
         <small id="password-feedback"></small>
@@ -79,6 +83,7 @@
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     function toggleForm() {
       const loginForm = document.getElementById('login-form');
@@ -115,11 +120,11 @@
       }
     }
 
-    function checkUsername() {
-      const feedback = document.getElementById('username-feedback');
-      feedback.textContent = '아이디가 사용 가능합니다.';
-      feedback.className = 'valid';
-    }
+    // function checkUsername() {
+    //   const feedback = document.getElementById('username-feedback');
+    //   feedback.textContent = '아이디가 사용 가능합니다.';
+    //   feedback.className = 'valid';
+    // }
 
     document.getElementById('emailDomain').addEventListener('change', function() {
       const customEmail = document.getElementById('customEmailDomain');
@@ -159,6 +164,36 @@
       }
   }
 
+  </script>
+  <script> //아이디 확인 비동기 체크
+    $(document).ready(function() {
+        $('#checkUsernameBtn').click(function() {
+            var username = $('#username').val();
+
+            if (username.trim() === "") {
+                alert("아이디를 입력해주세요.");
+                return;
+            }
+
+            // Ajax 요청 보내기
+            $.ajax({
+                url: '/user/check-username',  // 요청을 보낼 URL
+                method: 'GET',
+                data: { username: username },
+                success: function(response) {
+                    // 아이디 중복 여부에 따라 결과 표시
+                    if (response.exists) {
+                        $('#usernameResult').text('이미 사용 중인 아이디입니다.').css('color', 'red');
+                    } else {
+                        $('#usernameResult').text('사용 가능한 아이디입니다.').css('color', 'green');
+                    }
+                },
+                error: function() {
+                    alert("서버 오류가 발생했습니다.");
+                }
+            });
+        });
+    });
   </script>
 </body>
 </html>

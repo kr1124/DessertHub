@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class UserService {
@@ -131,6 +132,15 @@ public class UserService {
         return result;
     }
 
+    public boolean id_check(String userId) {
+        boolean result = false;
+
+        if(userRepository.existsByUserId(userId)) {
+            result = true;
+        }
+
+        return result;
+    }
 
     public boolean register_check(User user) {
         boolean result = false;
@@ -156,4 +166,19 @@ public class UserService {
 
         return result;
     }
+    
+    public User find_id(String userNn, String userEm) {
+        // 입력한 닉네임과 이메일로 사용자 조회
+        User user = userRepository.findByUserNnAndUserEm(userNn, userEm);
+
+        return user;
+    }
+
+    public User find_pw(String userId, String userEm) {
+        // 아이디와 이메일로 사용자 조회
+        User user = userRepository.findByUserIdAndUserEm(userId, userEm);
+
+        return user;
+    }
+        
 }

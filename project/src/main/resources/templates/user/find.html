@@ -15,7 +15,9 @@
         <h1>아이디 찾기</h1>
         <input type="text" id="nickname" placeholder="닉네임" th:field="*{userNn}" required>
         <input type="email" id="email-id" placeholder="이메일" th:field="*{userEm}" required>
-        <button type="button" onclick="findId()">확인</button>
+        <small id="idResult"></small>
+        <br>
+        <button type="button" id="findIdBtn">확인</button>
       </form>
     </div>
 
@@ -25,7 +27,9 @@
         <h1>비밀번호 찾기</h1>
       <input type="text" id="username" placeholder="아이디" required>
       <input type="email" id="email-password" placeholder="이메일" required>
-      <button onclick="findPassword()">확인</button>
+      <small id="pwResult"></small>
+      <br>
+      <button type="button" id="findPwBtn">확인</button>
       </form>
     </div>
 
@@ -57,30 +61,90 @@
       switchToId.style.display = 'none';
     });
 
-    // 아이디 찾기 기능
-    function findId() {
-      const nickname = document.getElementById('nickname').value;
-      const email = document.getElementById('email-id').value;
-      if (!nickname || !email) {
-        alert('모든 필드를 입력해주세요!');
-      } else {
-        // TODO 아이디 받아와야함. AJAX?
-        alert('닉네임 요청 완료하였습니다.');
-        document.getElementById("findIdForm").submit();
-      }
-    }
-
     // 비밀번호 찾기 기능
-    function findPassword() {
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('email-password').value;
-      if (!username || !email) {
-        alert('모든 필드를 입력해주세요!');
-      } else {
-        alert('이메일로 임시 비밀번호를 전송하였습니다.');
-        document.getElementById("findPwForm").submit();
-      }
-    }
+    // function findPassword() {
+    //   const username = document.getElementById('username').value;
+    //   const email = document.getElementById('email-password').value;
+    //   if (!username || !email) {
+    //     alert('모든 필드를 입력해주세요!');
+    //   } else {
+    //     alert('이메일로 임시 비밀번호를 전송하였습니다.');
+    //     document.getElementById("findPwForm").submit();
+    //   }
+    // }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // '확인' 버튼 클릭 이벤트
+      $('#findIdBtn').click(function() {
+        var nickname = $('#nickname').val().trim();
+        var email = $('#email-id').val().trim();
+  
+        // 필수 입력 필드 검증
+        if (nickname === "" || email === "") {
+          alert("닉네임과 이메일을 모두 입력해주세요.");
+          return;
+        }
+  
+        // Ajax 요청 보내기
+        $.ajax({
+          url: '/user/find-id',  // 요청을 보낼 URL
+          method: 'POST',
+          data: {
+            userNn: nickname,   // 닉네임
+            userEm: email       // 이메일
+          },
+          success: function(response) {
+            // 서버에서 반환된 결과에 따라 처리
+            if (response.success) {
+              $('#idResult').text('아이디를 찾았습니다: ' + response.userId).css('color', 'green');
+            } else {
+              $('#idResult').text('입력한 정보와 일치하는 아이디가 없습니다.').css('color', 'red');
+            }
+          },
+          error: function() {
+            alert("서버 오류가 발생했습니다.");
+          }
+        });
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+      // '확인' 버튼 클릭 이벤트
+      $('#findPwBtn').click(function() {
+        var username = $('#username').val().trim();
+        var email = $('#email-password').val().trim();
+  
+        // 필수 입력 필드 검증
+        if (username === "" || email === "") {
+          alert("아이디와 이메일을 모두 입력해주세요.");
+          return;
+        }
+  
+        // Ajax 요청 보내기
+        $.ajax({
+          url: '/user/find-pw',  // 요청을 보낼 URL
+          method: 'POST',
+          data: {
+            userId: username,    // 아이디
+            userEm: email        // 이메일
+          },
+          success: function(response) {
+            // 서버에서 반환된 결과에 따라 처리
+            if (response.success) {
+              $('#pwResult').text('비밀번호를 찾았습니다.' + response.userPw).css('color', 'green');
+            } else {
+              $('#pwResult').text('입력한 정보와 일치하는 계정이 없습니다.').css('color', 'red');
+            }
+          },
+          error: function() {
+            alert("서버 오류가 발생했습니다.");
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>

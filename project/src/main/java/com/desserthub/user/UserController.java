@@ -1,5 +1,8 @@
 package com.desserthub.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -55,6 +58,19 @@ public class UserController {
         }
     }
 
+    // 아이디 중복 확인
+    @GetMapping("/check-username")
+    @ResponseBody
+    public Map<String, Object> checkUsername(@RequestParam String username) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // 아이디가 이미 존재하는지 확인
+        boolean exists = userService.id_check(username);
+        response.put("exists", exists);  // exists: true/false
+        
+        return response;  // JSON 형태로 반환
+    }
+
     // 회원가입 폼 처리
     @PostMapping("/register")
     public String register_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
@@ -84,32 +100,46 @@ public class UserController {
         return "redirect:/remessage";
     }
     
-    // id 찾기 TODO
+    // id 찾기
     @PostMapping("/find-id")
-    public String find_id_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
-
-        if(userService.login_check(user)) {
-            User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
-            session.setAttribute("userId", tuser.getId());
-            System.out.println("세션에 userId 저장됨: " + tuser.getId());  // 디버깅용 로그
-            //아래는 session과는 다르게, 저장되지는 않는 일회성 메시지 전달이며 리다이렉트 시에도 유지됨
-            redirectAttributes.addFlashAttribute("message", (String)tuser.getUserNn() + "님 로그인을 환영합니다.");
-            //redirectAttributes.addFlashAttribute("message", "로그인 성공!");
-            redirectAttributes.addFlashAttribute("target", "/home");
-            return "redirect:/remessage";
+    @ResponseBody
+    public Map<String, Object> findId(@RequestParam String userNn, @RequestParam String userEm) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // 입력한 닉네임과 이메일로 사용자 조회
+        User user = userService.find_id(userNn, userEm);
+        
+        if (user != null) {
+            // 일치하는 사용자가 있으면 아이디 반환
+            response.put("success", true);
+            response.put("userId", user.getUserId());
         } else {
-            // 로그인 실패 시 다시 login.html로 이동
-            redirectAttributes.addFlashAttribute("message", "아이디나 비밀번호가 맞지 않습니다.");
-            redirectAttributes.addFlashAttribute("target", "/user/login");
-            return "redirect:/remessage";
+            // 일치하는 사용자가 없으면 실패 메시지 반환
+            response.put("success", false);
         }
+
+        return response;  // JSON 형태로 반환
     }
 
+    //비밀번호 찾기
     @PostMapping("/find-pw")
-    public String find_pw_handler(@RequestBody String entity) {
-        //TODO: process POST request
+    @ResponseBody
+    public Map<String, Object> findPassword(@RequestParam String userId, @RequestParam String userEm) {
+        Map<String, Object> response = new HashMap<>();
         
-        return entity;
+        // 아이디와 이메일로 사용자 조회
+        User user = userService.find_pw(userId, userEm);
+        
+        if (user != null) {
+            // 일치하는 사용자가 있으면 비밀번호 찾기 성공
+            response.put("success", true);
+            response.put("userPw", user.getUserPw());
+        } else {
+            // 일치하는 사용자가 없으면 실패 메시지 반환
+            response.put("success", false);
+        }
+
+        return response;  // JSON 형태로 반환
     }
     
 
