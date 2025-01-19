@@ -1,32 +1,37 @@
+CREATE DATABASE desserthub
+    DEFAULT CHARACTER SET = 'utf8mb4';
+
 CREATE TABLE gallery(  
-    gallery_id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     user_id VARCHAR(255),
     user_nn VARCHAR(255),
     gallery_title VARCHAR(255),
     gallery_hashtag VARCHAR(255),
-    gallery_img TEXT,
-    gallery_liked INT,
+    gallery_img LONGTEXT,
+    gallery_liked INT DEFAULT 0,
     gallery_writeday DATETIME
 ) COMMENT '';
 CREATE TABLE board(
-    board_code int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     user_id VARCHAR(255),
     user_nn VARCHAR(255),
+    board_category VARCHAR(255),
     board_title VARCHAR(255),
     board_content TEXT,
-    board_img TEXT,
+    board_img LONGTEXT,
     board_writeday DATETIME,
-    board_liked INT,
-    board_comment INT
+    board_view INT DEFAULT 0,
+    board_liked INT DEFAULT 0,
+    board_comment INT DEFAULT 0
 ) COMMENT '';
 
 CREATE TABLE user(
-    user_code int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     user_id VARCHAR(255),
     user_pw VARCHAR(255),
     user_em VARCHAR(255),
     user_nn VARCHAR(255),
-    user_pi TEXT
+    user_pi LONGTEXT
 ) COMMENT '';
 
 SELECT * FROM gallery;

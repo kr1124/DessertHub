@@ -50,25 +50,16 @@ public class BoardController {
 
     @PostMapping("/upload")
     public String createBoard(@ModelAttribute Board board, HttpSession session, RedirectAttributes redirectAttributes) {
-        System.out.println("일단 업로드 실행은 됨");
-        
-        //UserService userService = new UserService(null);
-        //System.out.println("일단 서비스까지도 됨");
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
 
-        System.out.println("일단 유저 관련 클래스 로드도 됨");
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
 
         board.setUserId(user.getUserId());
         board.setUserNn(user.getUserNn());
         boardService.createBoard(board);
 
-        System.out.println("일단 저장까지도 됨");
-
         redirectAttributes.addFlashAttribute("message", "등록되었습니다.");
         redirectAttributes.addFlashAttribute("target", "/board");
         return "redirect:/remessage";
-
-        // return "redirect:/board";
     }
 
     @GetMapping("/{id}")
