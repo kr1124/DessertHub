@@ -52,10 +52,14 @@
                 <div id="modal-hashtag" class="modal-hashtags-container"></div>
                 <br>
                 
-                <div class="actions">
-                    <button type="button" class="like-btn" id="likeBtn">♥</button>
-                    <button onclick="closeModal()">닫기</button>
-                </div>
+                
+                <!-- 하트 버튼 위치 조정 -->
+                <form th:action="@{/like/gallery/{id}(id=${item.id})}" method="post">
+                    <div class="actions">
+                        <button type="button" class="like-btn" id="likeBtn" onclick="post_like()">♥</button>
+                        <button type="button" onclick="closeModal()">닫기</button>
+                    </div>
+                </form>
             </div>
         </div>
 

@@ -54,9 +54,11 @@
             </div>
 
             <!-- 하트 버튼 위치 조정 -->
-            <div class="heart-container">
-                <div id="heart" class="button"></div>
-            </div>
+            <form action="/like/board" th:object="${board}" method="post">
+                <div class="heart-container">
+                    <div id="heart" class="button"></div>
+                </div>
+            </form>
 
             <!-- 댓글 섹션 -->
             <div class="comments-container">
