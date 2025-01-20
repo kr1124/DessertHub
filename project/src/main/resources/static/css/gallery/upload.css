@@ -34,8 +34,7 @@ html {
 }
 
 .upload-container input,
-.upload-container textarea,
-.upload-container button {
+.upload-container textarea {
     width: calc(100% - 20px);
     margin: 10px 0;
     padding: 10px;
@@ -44,15 +43,22 @@ html {
     border-radius: 25px;
 }
 
-.upload-container button {
+.upload-button {
     background: linear-gradient(135deg, #ff9a9e, #fecfef);
     color: white;
     border: none;
     cursor: pointer;
     transition: 0.3s;
+    
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
 }
 
-.upload-container button:hover {
+.upload-button:hover {
     transform: scale(1.05);
 }
 
@@ -144,6 +150,8 @@ html {
     cursor: pointer;
 }
 
+
+
 .hashtags-container {
     margin-top: 10px;
     padding: 10px;
@@ -156,18 +164,22 @@ html {
     gap: 5px;
 }
 
+/* .hashtags-container span { */
 .hashtag {
     background: #ff9a9e;
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 14px;
+    font-weight: bold;
+    display: inline-block;       /* 인라인 블록 요소로 표시 */
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: transform 0.3s ease; /* 마우스 오버 시 애니메이션 */
 }
 
-.hashtag .remove-tag {
-    cursor: pointer;
-    font-weight: bold;
+.hashtag:hover {
+    transform: scale(1.1);       /* 마우스를 올리면 크기 증가 */
+    cursor: pointer;            /* 마우스를 올렸을 때 손 모양 커서 */
 }

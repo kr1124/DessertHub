@@ -25,115 +25,166 @@
 
     <div class="upload-container">
       <h2>사진 업로드</h2>
-      <form id="uploadForm">
-        <input type="text" id="title" placeholder="제목 입력" required />
+      <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post"
+        enctype="multipart/form-data">
+        <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
+
         <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
         <div class="hashtags-container" id="hashtagsContainer"></div>
-        <input type="file" id="imageUpload" accept="image/*" multiple required />
-        <button type="button" id="locationBtn">주소 선택</button>
-        <div class="preview-container" id="previewContainer"></div>
+        <input type="hidden" id="encodedHashtags" name="encodedHashtags" th:field="*{galleryHashtag}">
+        <!-- 해시태그를 담을 숨겨진 필드 -->
+
+
+        <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
+        <div class="preview-container" id="previewContainer" onclick="showModal()"></div>
+        <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}">
+
+
+        <!--  미리보기 모달 -->
+        <div id="modal" class="preview-modal" style="display: none;" onclick="close_modal()">
+          <button type="button" id="closeModal" class="close-btn" onclick="close_modal()">닫기</button>
+          <!-- <button id="prevBtn" class="slider-btn prev-btn">&#9664;</button> -->
+          <img id="modalImage" src="" alt="미리보기 이미지">
+          <!-- <button id="nextBtn" class="slider-btn next-btn">&#9654;</button> -->
+        </div>
+        
+        <!-- <button type="button" id="locationBtn">주소 선택</button> -->
+        <!-- <div class="preview-container" id="previewContainer"></div> -->
         <div class="button-container">
-          <button type="button" id="cancelBtn">취소</button>
-          <button type="submit" id="submitBtn">등록</button>
+          <button type="button" id="cancelBtn" class="upload-button">취소</button>
+          <button type="submit" id="submitBtn" class="upload-button">등록</button>
         </div>
       </form>
     </div>
 
-    <!--  미리보기 모달 -->
-    <div id="previewModal" class="preview-modal" style="display: none;">
-      <button id="closePreview" class="close-btn">닫기</button>
-      <button id="prevBtn" class="slider-btn prev-btn">&#9664;</button>
-      <img id="previewImg" src="" alt="미리보기 이미지">
-      <button id="nextBtn" class="slider-btn next-btn">&#9654;</button>
-    </div>
 
   </div>
 
   <!-- 푸터 포함 -->
   <footer th:replace="fragments/footer.html :: footer"></footer>
 
+  <!-- 해시태그 처리 스크립트 -->
   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const hashtagsInput = document.getElementById('hashtags');
+      const hashtagsContainer = document.getElementById('hashtagsContainer');
+      const encodedHashtagsField = document.getElementById('encodedHashtags');
+      let hashtags = [];
 
-    const hashtagsInput = document.getElementById('hashtags');
-    const hashtagsContainer = document.getElementById('hashtagsContainer');
+      // 해시태그 입력 처리
+      hashtagsInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && hashtagsInput.value.trim() !== '') {
+          const hashtag = "#" + hashtagsInput.value.trim();
 
-    hashtagsInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const value = hashtagsInput.value.trim();
-        if (value) {
-          const tag = document.createElement('span');
-          tag.classList.add('hashtag');
-          tag.innerHTML = `${value} <span class='remove-tag'>&times;</span>`;
-          tag.querySelector('.remove-tag').addEventListener('click', () => tag.remove());
-          hashtagsContainer.appendChild(tag);
-          hashtagsInput.value = '';
+          // 해시태그가 #으로 시작하는지 확인
+          // if (hashtag.startsWith('#') && !hashtags.includes(hashtag)) {
+          if (!hashtags.includes(hashtag)) {
+            hashtags.push(hashtag);  // 해시태그를 배열에 추가
+            displayHashtags(); // 해시태그 목록 업데이트
+            hashtagsInput.value = '';  // 입력 필드 초기화
+          }
+          event.preventDefault(); // 기본 엔터 키 동작(폼 제출)을 방지
         }
-      }
-    });
-
-
-    const previewContainer = document.getElementById('previewContainer');
-    const imageUpload = document.getElementById('imageUpload');
-    const previewModal = document.getElementById('previewModal');
-    const previewImg = document.getElementById('previewImg');
-    const closePreview = document.getElementById('closePreview');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    let previewImages = [];
-    let currentIndex = 0;
-
-    imageUpload.addEventListener('change', (e) => {
-      const files = e.target.files;
-      previewContainer.innerHTML = '';
-      previewImages = [];
-      Array.from(files).forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          previewImages.push(event.target.result);
-          img.addEventListener('click', () => {
-            currentIndex = index;
-            showPreviewImage();
-            previewModal.style.display = 'flex';
-          });
-          previewContainer.appendChild(img);
-        };
-        reader.readAsDataURL(file);
       });
+
+      // 해시태그 목록을 화면에 표시
+      function displayHashtags() {
+        hashtagsContainer.innerHTML = ''; // 기존 해시태그 목록을 비움
+        hashtags.forEach(function (hashtag, index) {
+          const hashtagElement = document.createElement('span');
+          hashtagElement.textContent = hashtag;
+          hashtagElement.classList.add('hashtag');  // hashtag 클래스를 추가
+          hashtagElement.addEventListener('click', function () {
+            removeHashtag(index);  // 해당 해시태그 삭제
+          });
+
+          hashtagsContainer.appendChild(hashtagElement);
+        });
+
+        // 해시태그를 #으로 구분된 문자열로 변환하여 hidden input에 설정
+        encodedHashtagsField.value = hashtags.join('');  // 으로 구분된 문자열로 설정
+      }
+
+
+      // 해시태그 삭제 처리
+      function removeHashtag(index) {
+        hashtags.splice(index, 1);  // 해당 해시태그 제거
+        displayHashtags();           // 화면에 반영
+      }
+
+      // 취소 버튼 클릭 시 해시태그 목록 초기화
+      document.getElementById('cancelBtn').addEventListener('click', function () {
+        hashtags = [];
+        displayHashtags();
+      });
+
     });
 
-    function showPreviewImage() {
-      previewImg.src = previewImages[currentIndex];
+  </script>
+
+  <!-- 모달 처리 -->
+  <script>
+    // 모달 열기
+    function showModal() {
+      const imageSrc = document.getElementById('previewContainer').querySelector('img') ? document.getElementById('previewContainer').querySelector('img').src : '';
+      const modal = document.getElementById('modal');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = imageSrc;  // 모달 이미지 소스 설정
+      modal.style.display = 'flex';  // 모달 보이기
     }
 
-    prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + previewImages.length) % previewImages.length;
-      showPreviewImage();
-    });
 
-    nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % previewImages.length;
-      showPreviewImage();
-    });
+    // 모달 닫기
+    function close_modal(event) {
+      // 배경을 클릭했을 때도 모달을 닫을 수 있게 하기 위해 이벤트 객체를 사용
+      // 근데 안됨
+      if (event.target === document.getElementById('modal') || event.target.id === 'closeModal') {
+        document.getElementById('modal').style.display = 'none';  // 모달 숨기기
+      }
+    }
 
-    closePreview.addEventListener('click', () => {
-      previewModal.style.display = 'none';
-    });
+    // 모달 닫기
+    function close_modal() {
+      document.getElementById('modal').style.display = 'none';  // 모달 숨기기
+    }
+  </script>
 
-    // 등록 버튼 클릭 시 알림 및 페이지 이동
-    uploadForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('등록 완료되었습니다!');
-      window.location.href = 'gallery.html'; // 갤러리 페이지로 이동
-    });
-
+  <!-- 취소 버튼 -->
+  <script>
     // 취소 버튼 클릭 시 알림
     cancelBtn.addEventListener('click', () => {
       alert('취소되었습니다!');
     });
+  </script>
+
+  <!-- 이미지 인코딩 -->
+  <script>
+    // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
+    function encodeImage(event) {
+      var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
+
+      if (file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          // Base64 인코딩된 데이터
+          var base64data = reader.result;
+
+          // 숨은 입력 필드에 Base64 데이터 설정
+          document.getElementById('encodedImage').value = base64data;
+
+          // 미리보기 이미지 표시
+          var previewContainer = document.getElementById('previewContainer');
+          previewContainer.innerHTML = '';  // 기존 미리보기 제거
+          var imgElement = document.createElement('img');
+          imgElement.src = base64data;
+          imgElement.alt = 'Image Preview';
+          imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
+          previewContainer.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(file);  // 파일을 Base64로 읽음
+      }
+    }
   </script>
 </body>
 

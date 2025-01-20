@@ -1,112 +1,128 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>갤러리 사이트</title>
+<html lang="ko">
 
-  <link rel="stylesheet" href="/css/general.css">
-  <link rel="stylesheet" href="/css/fragments/header.css">
-  <link rel="stylesheet" href="/css/fragments/nav.css">
-  <link rel="stylesheet" href="/css/fragments/footer2.css">
-  <link rel="stylesheet" href="/css/gallery/main.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>갤러리</title>
+
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/fragments/header.css">
+    <link rel="stylesheet" href="/css/fragments/nav.css">
+    <link rel="stylesheet" href="/css/fragments/footer2.css">
+    <link rel="stylesheet" href="/css/gallery/main.css">
 
 </head>
+
 <body>
+    <!-- 헤더 포함 -->
+    <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 헤더 포함 -->
-  <header th:replace="fragments/header.html :: header"></header>
+    <div class="main-layout">
+        <!-- 사이드바 포함 -->
+        <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <main>
-    <!-- 사이드바 포함 -->
-    <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+        <div class="photo-grid">
+            <!-- galleryList를 반복문으로 처리 -->
+            <div th:each="item : ${galleryList}" class="photo-item" onclick="open_modal(event)">
+                <!-- <div th:each="item : ${galleryList}" class="photo-item"
+                onclick="openModal('${item.galleryImg}', '${item.galleryTitle}', '${item.galleryHashtag}')"> -->
+                <img th:src="@{${item.galleryImg}}" th:alt="${item.galleryTitle}" />
+                <h3 class="modal-title" th:text="${item.galleryTitle}"></h3>
 
-  <a href="/gallery/upload" class="register-btn">갤러리 등록</a>
+                <!-- <div class="hashtags-container" id="hashtagsContainer">
 
-  <div class="gallery-container" id="gallery">
-    
+                </div> -->
 
-  </div>
+                <p class="modal-hashtag" th:text="${item.galleryHashtag}"></p>
 
-  <div class="modal" id="modal">
-    <span class="close" id="closeModal">&times;</span>
-    <div class="modal-content">
-      <button class="slider-btn prev-btn" id="prevBtn">&#9664;</button>
-      <img id="modalImg" />
-      <h3 id="modalTitle"></h3>
-      <p id="modalTags"></p>
-      <div class="actions">
-        <button class="like-btn" id="likeBtn">♥</button>
-        <button id="shareBtn">공유</button>
-      </div>
-      <button class="slider-btn next-btn" id="nextBtn">&#9654;</button>
+                <!-- <div class="actions">
+                    <button type="button" class="like-btn" id="likeBtn">♥</button> -->
+                    <!-- <button id="shareBtn">공유</button> -->
+                <!-- </div> -->
+                <!-- <button class="slider-btn next-btn" id="nextBtn">&#9654;</button> -->
+            </div>
+        </div>
+
+        <!-- 모달 창 -->
+        <div id="modal" class="modal" onclick="closeModal()" style="display:none;">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <img id="modal-image" src="" alt="Modal Image" />
+                <p id="modal-title"></p>
+                <div id="modal-hashtag" class="modal-hashtags-container"></div>
+                <br>
+                
+                <div class="actions">
+                    <button type="button" class="like-btn" id="likeBtn">♥</button>
+                    <button onclick="closeModal()">닫기</button>
+                </div>
+            </div>
+        </div>
+
+        <a href="/gallery/upload" class="register-btn">갤러리 등록</a>
     </div>
-  </div>
-  </main>
 
-  <!-- 푸터 포함 -->
-  <footer th:replace="fragments/footer.html :: footer"></footer>
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const gallery = document.getElementById('gallery');
-      const modal = document.getElementById('modal');
-      const modalImg = document.getElementById('modalImg');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalTags = document.getElementById('modalTags');
-      const likeBtn = document.getElementById('likeBtn');
-      const shareBtn = document.getElementById('shareBtn');
-      const closeModal = document.getElementById('closeModal');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
 
-      let currentIndex = 0;
-      const galleryData = [
-        { img: 'https://via.placeholder.com/500', title: '사진 1', hashtags: ['#맛집', '#핫플'], liked: false },
-        { img: 'https://via.placeholder.com/500', title: '사진 2', hashtags: ['#풍경', '#여행'], liked: false },
-        { img: 'https://via.placeholder.com/500', title: '사진 3', hashtags: ['#음식', '#카페'], liked: false }
-      ];
+    <!-- 해시태그 처리 스크립트 -->
 
-      const galleryItem = document.createElement('div');
-      //galleryItem.innerHTML = `<div class=container>`;
-      galleryData.forEach((item, index) => {
-        galleryItem.classList.add('gallery-item');
-        galleryItem.innerHTML += `
-          <img src="${item.img}" alt="${item.title}" style="height: 250px;">
-            <h3>${item.title}</h3>
-            <p>${item.hashtags.join(' ')} </p>`;
-        galleryItem.onclick = () => {
-          currentIndex = index;
-          showImage(currentIndex);
-          modal.style.display = 'flex';
-        };
-        gallery.appendChild(galleryItem);
-      });
 
-      //galleryItem.innerHTML += `</div>`;
+    <script>
+        // 모달 열기
+        function open_modal(event) {
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            const modalHashtag = document.getElementById('modal-hashtag');
 
-      function showImage(index) {
-        const item = galleryData[index];
-        modalImg.src = item.img;
-        modalTitle.textContent = item.title;
-        modalTags.textContent = item.hashtags.join(' ');
-        likeBtn.classList.toggle('liked', item.liked);
-      }
+            // 클릭한 요소에서 필요한 데이터 가져오기
+            const photoItem = event.currentTarget;  // 클릭된 요소 (photo-item)
+            const imageSrc = photoItem.querySelector('img').getAttribute('src');
+            const title = photoItem.querySelector('.modal-title').innerText;
+            // const hashtagString = photoItem.querySelector('.modal-hashtag').getAttribute('data-hashtag'); // data-hashtag 속성 값
+            const hashtag = photoItem.querySelector('.modal-hashtag').innerText;
 
-      likeBtn.onclick = () => {
-        const item = galleryData[currentIndex];
-        item.liked = !item.liked;
-        likeBtn.classList.toggle('liked', item.liked);
-      };
+            // 해시태그 문자열을 '#'을 기준으로 split하여 배열로 만듭니다.
+            const hashtags = hashtag.split('#').filter(tag => tag !== ""); // 공백이 포함된 항목 제거
 
-      shareBtn.onclick = () => alert(`${galleryData[currentIndex].title} 공유하기!`);
-      closeModal.onclick = () => modal.style.display = 'none';
-      prevBtn.onclick = () => showImage((currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length));
-      nextBtn.onclick = () => showImage((currentIndex = (currentIndex + 1) % galleryData.length));
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-      });
-    });
-  </script>
+            // 해시태그를 <span> 태그로 감싸서 표시
+            modalHashtag.innerHTML = ''; // 이전에 표시된 해시태그들 초기화
+            hashtags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'hashtag';  // 스타일을 위한 클래스 추가
+                span.innerText = "#" + tag;
+                modalHashtag.appendChild(span);
+            });
+
+
+            // 모달에 정보 넣기
+            modalImage.src = imageSrc;
+            modalTitle.innerText = title;
+            // modalHashtag.innerText = hashtag;
+
+            // 모달 보이게 하기
+            modal.style.display = 'block';
+        }
+
+
+        function open_modal_leg(galleryImg, galleryTitle, galleryHashtag) {
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("modal-image").src = galleryImg;
+            document.getElementById("modal-title").src = galleryTitle;
+            document.getElementById("modal-hashtag").innerText = galleryHashtag;
+        }
+
+
+
+
+        // 모달 창 닫기
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+    </script>
 </body>
+
 </html>

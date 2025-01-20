@@ -33,9 +33,7 @@ public class BoardController {
     public String createBoardForm(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 
         if(session.getAttribute("userId") != null) {
-            System.out.println("글 작성 페이지로 이동 1");
             model.addAttribute("board", new Board());
-            System.out.println("글 작성 페이지로 이동 2");
             return "board/new";
         } else {
             // 잘못된 접근이므로 경고와 함께 home으로 보내야함
@@ -43,9 +41,6 @@ public class BoardController {
             redirectAttributes.addFlashAttribute("target", "/user/login");
             return "redirect:/remessage";
         }
-            
-        // model.addAttribute("board", new Board());
-        // return "board/new";
     }
 
     @PostMapping("/upload")
@@ -93,11 +88,6 @@ public class BoardController {
 
     @PostMapping("/{id}/edit")
     public String updateBoard(@PathVariable Long id, HttpSession session, @ModelAttribute Board board, RedirectAttributes redirectAttributes) {
-
-        // UserService userService = new UserService(null);
-        // User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        // board.setUserId(user.getUserId());
-        // board.setUserNn(user.getUserNn());
 
         boardService.updateBoard(id, board);
         
