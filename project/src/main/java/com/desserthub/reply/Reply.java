@@ -1,4 +1,4 @@
-package com.desserthub.comment;
+package com.desserthub.reply;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,20 +7,20 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class Comment {
+public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private Long userId;
     private String userNn;
     private Long boardId;
-    private String commentBody;
-    private LocalDateTime commentTime;
+    private String replyBody;
+    private LocalDateTime replyTime;
 
-    public Comment() {
-        this.commentTime = LocalDateTime.now();
+    public Reply() {
+        this.replyTime = LocalDateTime.now();
     }
     
     public Long getId() {
@@ -29,10 +29,10 @@ public class Comment {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
     public String getUserNn() {
@@ -52,17 +52,17 @@ public class Comment {
     }
     
     
-    public String getCommentBody() {
-        return commentBody;
+    public String getReplyBody() {
+        return replyBody;
     }
-    public void setCommentBody(String commentBody) {
-        this.commentBody = commentBody;
+    public void setReplyBody(String replyBody) {
+        this.replyBody = replyBody;
     }
-    public LocalDateTime getCommentTime() {
-        return commentTime;
+    public LocalDateTime getReplyTime() {
+        return replyTime;
     }
-    public void setCommentTime(LocalDateTime commentTime) {
-        this.commentTime = commentTime;
+    public void setReplyTime(LocalDateTime replyTime) {
+        this.replyTime = replyTime;
     }
 
     

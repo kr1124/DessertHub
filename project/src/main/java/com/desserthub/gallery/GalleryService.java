@@ -29,4 +29,22 @@ public class GalleryService {
     public void deleteGallery(Long id) {
         galleryRepository.deleteById(id);
     }
+
+    public void increaseLike(Long id) {
+        Gallery gallery = galleryRepository.findById(id).orElseThrow(null);
+
+        gallery.setGalleryLiked(gallery.getGalleryLiked() + 1);
+
+        galleryRepository.save(gallery);
+    }
+
+    public void decreaseLike(Long id) {
+        Gallery gallery = galleryRepository.findById(id).orElseThrow(null);
+
+        if(gallery.getGalleryLiked() > 0) {
+            gallery.setGalleryLiked(gallery.getGalleryLiked() - 1);
+        }
+
+        galleryRepository.save(gallery);
+    }
 }

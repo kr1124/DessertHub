@@ -1,4 +1,4 @@
-package com.desserthub.like;
+package com.desserthub.dlike;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Like {
+public class Dlike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

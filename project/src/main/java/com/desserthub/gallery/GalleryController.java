@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.desserthub.board.Board;
+import com.desserthub.dlike.DlikeService;
 import com.desserthub.user.User;
 import com.desserthub.user.UserService;
 
@@ -21,15 +21,18 @@ public class GalleryController {
 
     private final GalleryService galleryService;
     private final UserService userService;
+    private final DlikeService dlikeService;
 
-    public GalleryController(GalleryService galleryService, UserService userService) {
+    public GalleryController(GalleryService galleryService, UserService userService, DlikeService dlikeService) {
         this.galleryService = galleryService;
         this.userService = userService;
+        this.dlikeService = dlikeService;
     }
 
     @GetMapping
     public String getAllGallerys(Model model) {
         model.addAttribute("galleryList", galleryService.getAllGallerys());
+        model.addAttribute("likeList", dlikeService.getAllLikes());
         return "gallery/main";
     }
 

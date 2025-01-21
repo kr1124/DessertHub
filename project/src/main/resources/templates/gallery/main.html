@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -24,10 +24,9 @@
 
         <div class="photo-grid">
             <!-- galleryList를 반복문으로 처리 -->
-            <div th:each="item : ${galleryList}" class="photo-item" onclick="open_modal(event)">
-                <!-- <div th:each="item : ${galleryList}" class="photo-item"
-                onclick="openModal('${item.galleryImg}', '${item.galleryTitle}', '${item.galleryHashtag}')"> -->
-                <img th:src="@{${item.galleryImg}}" th:alt="${item.galleryTitle}" />
+            <div th:each="item : ${galleryList}" class="photo-item">
+                <img th:src="@{${item.galleryImg}}" th:alt="${item.galleryTitle}" th:hash="${item.galleryHashtag}"
+                th:onclick="open_modal(this.getAttribute('src'), this.getAttribute('alt'), this.getAttribute('hash'))"/>
                 <h3 class="modal-title" th:text="${item.galleryTitle}"></h3>
 
                 <!-- <div class="hashtags-container" id="hashtagsContainer">
@@ -35,33 +34,37 @@
                 </div> -->
 
                 <p class="modal-hashtag" th:text="${item.galleryHashtag}"></p>
-
-                <!-- <div class="actions">
-                    <button type="button" class="like-btn" id="likeBtn">♥</button> -->
-                    <!-- <button id="shareBtn">공유</button> -->
-                <!-- </div> -->
-                <!-- <button class="slider-btn next-btn" id="nextBtn">&#9654;</button> -->
-            </div>
-        </div>
-
-        <!-- 모달 창 -->
-        <div id="modal" class="modal" onclick="closeModal()" style="display:none;">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <img id="modal-image" src="" alt="Modal Image" />
-                <p id="modal-title"></p>
-                <div id="modal-hashtag" class="modal-hashtags-container"></div>
-                <br>
-                
                 
                 <!-- 하트 버튼 위치 조정 -->
-                <form th:action="@{/like/gallery/{id}(id=${item.id})}" method="post">
-                    <div class="actions">
-                        <button type="button" class="like-btn" id="likeBtn" onclick="post_like()">♥</button>
-                        <button type="button" onclick="closeModal()">닫기</button>
+                <button type="button" class="like-btn" th:id="'likeBtn' + ${item.id}" th:gurl="${item.id}"
+                th:onclick="get_like(event, this.getAttribute('gurl'))">♥</button>
+                <button type="button" class="unlike-btn" th:id="'unlikeBtn' + ${item.id}" 
+                th:gurl="${item.id}" th:onclick="get_unlike(event, this.getAttribute('gurl'))" style="display: none;">♥</button>
+                
+
+
+    <!-- <div th:unless="${session.userId}">
+        
+    </div>
+
+    <div class="auth-buttons" th:if="${session.userId}">
+    </div> -->
+
+                <!-- 모달 창 -->
+                <div id="modal" class="modal" style="display:none;" >
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <img id="modal-image" src="" alt="Modal Image" />
+                        <p id="modal-title"></p>
+                        <div id="modal-hashtag" class="modal-hashtags-container"></div>
+                        <br>
+                        <div class="actions">            
+                            <button type="button" class="close-btn" onclick="closeModal()">닫기</button>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
+
 
         <a href="/gallery/upload" class="register-btn">갤러리 등록</a>
     </div>
@@ -70,23 +73,89 @@
     <footer th:replace="fragments/footer.html :: footer"></footer>
 
 
-    <!-- 해시태그 처리 스크립트 -->
+    <script th:inline="javascript">
+        function init_like_set() {
+            /* [[${likeList}]]를 사용하여 likeList를 JavaScript로 전달 */
+            var likeList = [[${likeList}]]; // `likeList`는 서버에서 전달된 엔티티 리스트
+            var userId = [[${session.userId}]];
 
+            console.log(likeList); // 서버에서 전달된 데이터가 JavaScript에서 확인 가능합니다.
+            console.log(userId); // 서버에서 전달된 데이터가 JavaScript에서 확인 가능합니다.
 
-    <script>
+            for(let i = 0 ; i < likeList.length; i++) {
+                console.log(likeList[i]);
+                if(likeList[i].userId == userId) {
+                    console.log("일치 존재");
+                    document.getElementById("unlikeBtn" + likeList[i].targetId).style.display = "";
+                    document.getElementById("likeBtn" + likeList[i].targetId).style.display = "none";
+                }
+            }
+        }
+
+        init_like_set();
+    </script>
+
+    <script th:inline="javascript">
+        function get_like(event, id) {
+            // 좋아요 요청을 위한 URL 생성
+            // const url = `/like/gallery/${itemId}/like(id=${itemId})`;
+            const url = `/like/gallery/` + id + `/like`;
+
+            // fetch를 이용해 GET 요청 보내기
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+            .then(data => {
+                // 성공적인 응답 후 처리 (예: UI 업데이트)
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('Error:', error);
+            });
+
+            document.getElementById("unlikeBtn" + id).style.display = "";
+            document.getElementById("likeBtn" + id).style.display = "none";
+        }
+
+        function get_unlike(event, id) {
+            // 좋아요 요청을 위한 URL 생성
+            // const url = `/like/gallery/${itemId}/like(id=${itemId})`;
+            const url = `/like/gallery/` + id + `/unlike`;
+
+            // fetch를 이용해 GET 요청 보내기
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+            .then(data => {
+                // 성공적인 응답 후 처리 (예: UI 업데이트)
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('Error:', error);
+            });
+
+            document.getElementById("unlikeBtn" + id).style.display = "none";
+            document.getElementById("likeBtn" + id).style.display = "";
+        }
+    </script>
+
+<!-- 모달 -->
+    <script th:inline="javascript">
         // 모달 열기
-        function open_modal(event) {
+        function open_modal(imageUrl, title, hashtag) {
             const modal = document.getElementById('modal');
             const modalImage = document.getElementById('modal-image');
             const modalTitle = document.getElementById('modal-title');
             const modalHashtag = document.getElementById('modal-hashtag');
 
-            // 클릭한 요소에서 필요한 데이터 가져오기
-            const photoItem = event.currentTarget;  // 클릭된 요소 (photo-item)
-            const imageSrc = photoItem.querySelector('img').getAttribute('src');
-            const title = photoItem.querySelector('.modal-title').innerText;
-            // const hashtagString = photoItem.querySelector('.modal-hashtag').getAttribute('data-hashtag'); // data-hashtag 속성 값
-            const hashtag = photoItem.querySelector('.modal-hashtag').innerText;
+            // 전달받은 데이터로 모달 내용 업데이트
+            modalImage.src = imageUrl;
+            modalTitle.textContent = title;
+            modalHashtag.textContent = hashtag;
 
             // 해시태그 문자열을 '#'을 기준으로 split하여 배열로 만듭니다.
             const hashtags = hashtag.split('#').filter(tag => tag !== ""); // 공백이 포함된 항목 제거
@@ -100,26 +169,16 @@
                 modalHashtag.appendChild(span);
             });
 
-
-            // 모달에 정보 넣기
-            modalImage.src = imageSrc;
-            modalTitle.innerText = title;
-            // modalHashtag.innerText = hashtag;
-
             // 모달 보이게 하기
             modal.style.display = 'block';
         }
 
-
-        function open_modal_leg(galleryImg, galleryTitle, galleryHashtag) {
+        function open_modal_legacy(galleryImg, galleryTitle, galleryHashtag) {
             document.getElementById("modal").style.display = "block";
             document.getElementById("modal-image").src = galleryImg;
             document.getElementById("modal-title").src = galleryTitle;
             document.getElementById("modal-hashtag").innerText = galleryHashtag;
         }
-
-
-
 
         // 모달 창 닫기
         function closeModal() {

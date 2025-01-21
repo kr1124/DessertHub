@@ -150,8 +150,8 @@ html {
     right: 10px;
 }
 
-.modal-content button {
-    background-color: #4CAF50;
+.like-btn {
+    background-color: #838383;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -160,10 +160,36 @@ html {
     border-radius: 4px;
 }
 
-.modal-content button:hover {
-    background-color: #45a049;
+.like-btn:hover {
+    background-color: #ff4b4b;
 }
 
+.unlike-btn {
+    background-color: #ff2323;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.unlike-btn:hover {
+    background-color: #ff9292;
+}
+
+.close-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.close-btn:hover {
+    background-color: #45a049;
+}
 
 @keyframes burst {
     0% {

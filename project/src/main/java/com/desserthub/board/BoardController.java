@@ -1,5 +1,7 @@
 package com.desserthub.board;
 
+import java.time.LocalDateTime;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -7,8 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.desserthub.dlike.DlikeService;
+import com.desserthub.reply.Reply;
+import com.desserthub.reply.ReplyService;
 import com.desserthub.user.User;
 import com.desserthub.user.UserService;
+
 
 @Controller
 @RequestMapping("/board")
@@ -16,16 +22,32 @@ public class BoardController {
 
     private final BoardService boardService;
     private final UserService userService;
+    private final DlikeService dlikeService;
+    private final ReplyService replyService;
     
 
-    public BoardController(BoardService boardService, UserService userService) {
+    public BoardController(BoardService boardService, UserService userService, DlikeService dlikeService, ReplyService replyService) {
         this.boardService = boardService;
         this.userService = userService;
+        this.dlikeService = dlikeService;
+        this.replyService = replyService;
     }
 
     @GetMapping
     public String getAllBoards(Model model) {
         model.addAttribute("board", boardService.getAllBoards());
+        return "board/list";
+    }
+
+    @GetMapping("/search")
+    public String getAllBoardsBySearch(@RequestParam(name = "search", defaultValue = "title") String search, @RequestParam(name = "stext", defaultValue = "") String stext, Model model) {
+        if(search.equals("title")) {
+            model.addAttribute("board", boardService.searchBoardsByTitle(stext));
+        } else if(search.equals("content")) {
+            model.addAttribute("board", boardService.searchBoardsByContent(stext));
+        } else if(search.equals("nick")) {
+            model.addAttribute("board", boardService.searchBoardsByNick(stext));
+        }
         return "board/list";
     }
 
@@ -62,6 +84,10 @@ public class BoardController {
         boardService.increaseView(id);//조회수 증가
 
         model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
+        model.addAttribute("isLike", dlikeService.getLike(id, "board"));
+        model.addAttribute("replyList", replyService.getReplys(id));
+        model.addAttribute("reply", new Reply());
+
         return "board/detail";
     }
 
@@ -116,5 +142,44 @@ public class BoardController {
     public void unlikeBoard(@PathVariable Long id) {
         boardService.decreaseLike(id);
     }
+
+    @PostMapping("/{id}/reply")
+    public String addReply(@PathVariable Long id, @ModelAttribute Reply reply, HttpSession session, RedirectAttributes redirectAttributes) {
+
+        if(session.getAttribute("userId") != null) {
+            User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+    
+            reply.setUserId(user.getId());
+            reply.setUserNn(user.getUserNn());
+            reply.setBoardId(id);
+    
+            replyService.createReply(reply);
+            boardService.increaseComment(id);
+            
+            // redirectAttributes.addFlashAttribute("message", "작성되었습니다.");
+            redirectAttributes.addFlashAttribute("target", "board/" + id);
+            return "redirect:/remessage";
+        } else {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "댓글 작성은 로그인해야 할 수 있습니다.");
+            redirectAttributes.addFlashAttribute("target", "board/" + id);
+            return "redirect:/remessage";
+        }
+    }
+
+    @PostMapping("/{id}/dereply") //this id is reply's id
+    public String deleteReply(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        System.out.println("일단 호출은 됨?");
+        Reply reply = replyService.getReply(id).orElseThrow(null);
+        Long boardId = reply.getBoardId();
+        boardService.decreaseComment(boardId);
+
+        replyService.deleteReply(id);
+        
+        // redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "board/" + boardId);
+        return "redirect:/remessage";
+    }
+    
 
 }

@@ -179,6 +179,8 @@ public class UserController {
         
         model.addAttribute("user", user);
         return "user/profile/profile-edit";
+
+        
     }
 
     @GetMapping("/profile/favorites-list")

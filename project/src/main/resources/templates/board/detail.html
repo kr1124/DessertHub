@@ -25,7 +25,9 @@
         <div class="container">
             <div class="header">
                 <div class="category" id="post-category">
-                    <span th:text="${board.boardCategory}"></span>
+                    <span th:if="${board.boardCategory == 'notice'}">공지사항</span>
+                    <span th:if="${board.boardCategory == 'free'}">자유게시판</span>
+                    <span th:if="${board.boardCategory == 'qna'}">Q&A</span>
                 </div>
                 <div class="title" id="post-title"><h1 th:text="${board.boardTitle}"></h1></div>
 
@@ -53,21 +55,36 @@
                 <img th:src="${board.boardImg}" alt="이미지" style="max-width: 100%; height: auto;" /> <!-- 디코딩 필요 없음! -->
             </div>
 
-            <!-- 하트 버튼 위치 조정 -->
-            <form action="/like/board" th:object="${board}" method="post">
-                <div class="heart-container">
-                    <div id="heart" class="button"></div>
-                </div>
-            </form>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <!-- 하트 버튼 위치 조정 -->
+                <button type="button" class="like-btn" th:id="likeBtn" th:gurl="${board.id}"
+                th:onclick="get_like(event, this.getAttribute('gurl'))">♥</button>
+                <button type="button" class="unlike-btn" th:id="unlikeBtn" 
+                th:gurl="${board.id}" th:onclick="get_unlike(event, this.getAttribute('gurl'))" style="display: none;">♥</button>
+            </div>
+            
+                
 
             <!-- 댓글 섹션 -->
             <div class="comments-container">
-                <h3>댓글 (<span id="comment-count">0</span>)</h3>
-                <ul id="comment-list" class="comment-list"></ul> <!-- 이 부분 확인 -->
-                <div class="comment-input">
-                    <input type="text" id="comment-input" placeholder="댓글을 입력하세요">
-                    <button id="add-comment">등록</button>
-                </div>
+                <h3>댓글 (<span id="comment-count" th:text="${board.boardComment}"></span>)</h3>
+
+                <ul id="comment-list" class="comment-list">
+                    <li th:each="replyItem : ${replyList}">
+                        <span th:text="${replyItem.replyBody}"></span>
+
+                        <form th:action="@{/board/{id}/dereply(id=${replyItem.id})}" th:if="${session.userId == replyItem.userId}" method="post">
+                            <button class="delete-btn" type="submit">삭제</button>
+                        </form>
+                    </li>
+                </ul>
+                
+                <form th:action="@{/board/{id}/reply(id=${board.id})}" th:object="${reply}" method="post">
+                    <div class="comment-input-div">
+                            <input class="comment-input" type="text" id="comment-input" th:field="*{replyBody}" placeholder="댓글을 입력하세요">
+                            <button class="comment-button" id="add-comment" type="submit">등록</button>
+                    </div>
+                </form>
             </div>
 
         </div>
@@ -81,8 +98,76 @@
     <!-- JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mo-js/0.288.2/mo.min.js"></script>
+    
+    
+    <script th:inline="javascript">
+        function init_like_set() {
+            /* [[${likeList}]]를 사용하여 likeList를 JavaScript로 전달 */
+            var isLike = [[${isLike}]]; // `likeList`는 서버에서 전달된 엔티티 리스트
+            var userId = [[${session.userId}]];
+
+            console.log(isLike); // 서버에서 전달된 데이터가 JavaScript에서 확인 가능합니다.
+            console.log(userId); // 서버에서 전달된 데이터가 JavaScript에서 확인 가능합니다.
+
+            if(isLike.userId == userId) {
+                console.log("일치 존재");
+                document.getElementById("unlikeBtn").style.display = "";
+                document.getElementById("likeBtn").style.display = "none";
+            }
+        }
+
+        init_like_set();
+    </script>
+
+    <script th:inline="javascript">
+        function get_like(event, id) {
+            // 좋아요 요청을 위한 URL 생성
+            const url = `/like/board/` + id + `/like`;
+
+            // fetch를 이용해 GET 요청 보내기
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+            .then(data => {
+                // 성공적인 응답 후 처리 (예: UI 업데이트)
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('Error:', error);
+            });
+
+            document.getElementById("unlikeBtn").style.display = "";
+            document.getElementById("likeBtn").style.display = "none";
+        }
+
+        function get_unlike(event, id) {
+            // 좋아요 요청을 위한 URL 생성
+            const url = `/like/board/` + id + `/unlike`;
+
+            // fetch를 이용해 GET 요청 보내기
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+            .then(data => {
+                // 성공적인 응답 후 처리 (예: UI 업데이트)
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('Error:', error);
+            });
+
+            document.getElementById("unlikeBtn").style.display = "none";
+            document.getElementById("likeBtn").style.display = "";
+        }
+    </script>
+    
+    
     <!-- 하트 애니메이션 js -->
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             // 애니메이션 경로 설정
             var scaleCurve = mojs.easing.path('M0,100 L25,99.9999983 C26.2328835,75.0708847 19.7847843,0 100,0');
@@ -151,7 +236,7 @@
             });
         });
 
-    </script>
+    </script> -->
 
     <!-- 게시글 내용 자동 생성 파트 -->
     <!-- <script>

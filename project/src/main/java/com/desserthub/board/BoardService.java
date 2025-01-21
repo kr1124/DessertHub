@@ -18,6 +18,18 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
+    public List<Board> searchBoardsByTitle(String boardTitle) {
+        return boardRepository.findByBoardTitleContaining(boardTitle);
+    }
+
+    public List<Board> searchBoardsByContent(String boardContent) {
+        return boardRepository.findByBoardContentContaining(boardContent);
+    }
+
+    public List<Board> searchBoardsByNick(String userNn) {
+        return boardRepository.findByUserNnContaining(userNn);
+    }
+
     public Optional<Board> getBoard(Long id) {
         return boardRepository.findById(id);
     }
@@ -56,6 +68,22 @@ public class BoardService {
 
         if(board.getBoardLiked() > 0) {
             board.setBoardLiked(board.getBoardLiked() - 1);
+        }
+        return boardRepository.save(board);
+    }
+
+    public Board increaseComment(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+
+        board.setBoardComment(board.getBoardComment() + 1);
+        return boardRepository.save(board);
+    }
+
+    public Board decreaseComment(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+
+        if(board.getBoardComment() > 0) {
+            board.setBoardComment(board.getBoardComment() - 1);
         }
         return boardRepository.save(board);
     }
