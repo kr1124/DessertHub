@@ -25,4 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // user_id로 User를 검색하는 메서드
     Optional<User> findByUserId(String userId);
+    
+    boolean existsByUserId(String userId);
+
+    User findByUserNnAndUserEm(String userNn, String userEm);
+    User findByUserIdAndUserEm(String userId, String userEm);
 }

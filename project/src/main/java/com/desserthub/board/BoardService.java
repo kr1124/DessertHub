@@ -36,4 +36,27 @@ public class BoardService {
     public void deleteBoard(Long id) {
         boardRepository.deleteById(id);
     }
+
+    public Board increaseView(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+
+        board.setBoardView(board.getBoardView() + 1);
+        return boardRepository.save(board);
+    }
+
+    public Board increaseLike(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+
+        board.setBoardLiked(board.getBoardLiked() + 1);
+        return boardRepository.save(board);
+    }
+
+    public Board decreaseLike(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(null);
+
+        if(board.getBoardLiked() > 0) {
+            board.setBoardLiked(board.getBoardLiked() - 1);
+        }
+        return boardRepository.save(board);
+    }
 }

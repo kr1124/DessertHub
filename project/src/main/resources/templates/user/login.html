@@ -1,135 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인/회원가입</title>
   <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet"> -->
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Montserrat', sans-serif;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .container {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-      overflow: hidden;
-      width: 768px;
-      max-width: 100%;
-      min-height: 480px;
-      display: flex;
-    }
-
-    .form-container {
-      flex: 1;
-      padding: 40px;
-      transition: all 0.6s ease-in-out;
-      text-align: center;
-    }
-
-    .form-container h1 {
-      font-weight: bold;
-      color: #6c63ff;
-      margin-bottom: 20px;
-    }
-
-    input, select {
-      margin: 10px 0;
-      padding: 12px;
-      width: 100%;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-    }
-
-    .email-container {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .inline-container{
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    button {
-      margin-top: 20px;
-      border-radius: 25px;
-      border: 1px solid #6c63ff;
-      background-color: #6c63ff;
-      color: #FFFFFF;
-      padding: 12px 15px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .check-btn {
-    margin:5px;
-    padding: 5px 15px; /* 더 작은 크기 설정 */
-    font-size: 10px;   /* 글씨 크기 조절 */
-    border-radius: 25px;
-    } 
-
-    button:hover {
-      background: #a6c1ee;
-      transform: scale(1.05);
-    }
-
-    .overlay-container {
-      background: linear-gradient(to right, #a6c1ee, #fbc2eb);
-      color: #FFFFFF;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 40px;
-    }
-
-    .overlay-container button {
-      margin-top: 15px;
-      background: transparent;
-      border: 1px solid #FFFFFF;
-      padding: 12px 20px;
-      border-radius: 25px;
-      color: white;
-    }
-
-    .overlay-container button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .valid {
-      color: green;
-    }
-
-    .invalid {
-      color: red;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/user/login.css">
 </head>
 
 <body>
@@ -161,27 +37,42 @@
     <!-- 회원가입 -->
     <div class="form-container" id="signup-form" style="display:none;">
       <h1>회원가입</h1>
-      <form action="/user/register" th:object="${user}" method="post">
+      <form id="registerForm" action="/user/register" th:object="${user}" method="post">
         <div class="inline-container">
-          <input type="text" id="signup-username" name="reg_name" th:field="*{userId}" placeholder="아이디">
-          <button type="button" class="check-btn" onclick="checkUsername()">중복 확인</button>
+          <input type="text" id="username" name="username" th:field="*{userId}" placeholder="아이디">
+          <button type="button" id="checkUsernameBtn" class="check-btn">중복 확인</button>
         </div>
-        <small id="username-feedback"></small>
+         <!-- 중복 여부를 표시할 영역 -->
+        <!-- <small id="username-feedback"></small> -->
+        <small id="usernameResult"></small>
+        <!-- <span id="usernameResult"></span> -->
+
         <input type="password" id="signup-password" name="reg_pass" th:field="*{userPw}" placeholder="비밀번호">
         <input type="password" id="confirm-password" placeholder="비밀번호 확인" oninput="validatePassword()">
         <small id="password-feedback"></small>
         <input type="text" id="nickname" name="reg_nickname" th:field="*{userNn}" placeholder="닉네임">
+
+
+            <!-- 이메일 입력 -->
         <div class="email-container">
-          <input type="text" id="email" name="reg_email" th:field="*{userEm}" placeholder="이메일">
+          <input type="text" id="email" name="reg_email" placeholder="이메일">
           <span>@</span>
           <select id="emailDomain">
             <option value="gmail.com">gmail.com</option>
             <option value="naver.com">naver.com</option>
+            <option value="daum.net">daum.net</option>
             <option value="custom">직접 입력</option>
           </select>
-          <input type="text" id="customEmailDomain" placeholder="직접 입력" style="display:none;">
+          <!-- 사용자 정의 도메인 입력란 (디폴트로 숨김) -->
+          <input type="text" id="customDomain" placeholder="직접 입력" style="display:none;">
         </div>
-        <button type="submit">회원가입</button>
+
+          <!-- 합쳐진 이메일 필드 (사용자가 볼 필요 없음) -->
+          <input type="hidden" id="fullEmail" th:field="*{userEm}" value="">
+      
+      
+
+        <button type="button" onclick="registerSubmit()">회원가입</button>
       </form>
     </div>
 
@@ -192,6 +83,7 @@
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     function toggleForm() {
       const loginForm = document.getElementById('login-form');
@@ -212,7 +104,7 @@
           return;
         }
       }
-      alert('회원가입 성공!');
+      //alert('회원가입 성공!');
     }
 
     function validatePassword() {
@@ -228,17 +120,80 @@
       }
     }
 
-    function checkUsername() {
-      const feedback = document.getElementById('username-feedback');
-      feedback.textContent = '아이디가 사용 가능합니다.';
-      feedback.className = 'valid';
-    }
+    // function checkUsername() {
+    //   const feedback = document.getElementById('username-feedback');
+    //   feedback.textContent = '아이디가 사용 가능합니다.';
+    //   feedback.className = 'valid';
+    // }
 
     document.getElementById('emailDomain').addEventListener('change', function() {
       const customEmail = document.getElementById('customEmailDomain');
       customEmail.style.display = this.value === 'custom' ? 'block' : 'none';
     });
+  
+  function registerSubmit() {
+    const emailInput = document.getElementById('email').value;
+    const emailDomain = document.getElementById('emailDomain').value;
+    const customDomain = document.getElementById('customDomain').value;
 
+    let fullEmail = emailInput;
+
+    // '직접 입력'을 선택한 경우
+    if (emailDomain === 'custom') {
+      if (!customDomain) {  // customDomain이 비어 있으면 경고
+        alert('사용자 지정 도메인을 입력해주세요.');
+        return;
+      }
+      fullEmail += '@' + customDomain;
+    } else {
+      fullEmail += '@' + emailDomain;
+    }
+
+    // 합쳐진 이메일을 hidden input에 설정
+    document.getElementById('fullEmail').value = fullEmail;
+
+    
+    const confirmSave = confirm("회원가입 하시겠습니까?");
+      if (confirmSave) {
+        //alert("변경되었습니다.");
+    // 폼을 수동으로 제출
+        document.getElementById("registerForm").submit();
+      } else {
+        alert("회원가입이 취소되었습니다.");
+        return;
+      }
+  }
+
+  </script>
+  <script> //아이디 확인 비동기 체크
+    $(document).ready(function() {
+        $('#checkUsernameBtn').click(function() {
+            var username = $('#username').val();
+
+            if (username.trim() === "") {
+                alert("아이디를 입력해주세요.");
+                return;
+            }
+
+            // Ajax 요청 보내기
+            $.ajax({
+                url: '/user/check-username',  // 요청을 보낼 URL
+                method: 'GET',
+                data: { username: username },
+                success: function(response) {
+                    // 아이디 중복 여부에 따라 결과 표시
+                    if (response.exists) {
+                        $('#usernameResult').text('이미 사용 중인 아이디입니다.').css('color', 'red');
+                    } else {
+                        $('#usernameResult').text('사용 가능한 아이디입니다.').css('color', 'green');
+                    }
+                },
+                error: function() {
+                    alert("서버 오류가 발생했습니다.");
+                }
+            });
+        });
+    });
   </script>
 </body>
 </html>

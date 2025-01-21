@@ -15,6 +15,7 @@ public class Comment {
 
     private String userId;
     private String userNn;
+    private Long boardId;
     private String commentBody;
     private LocalDateTime commentTime;
 
@@ -40,6 +41,17 @@ public class Comment {
     public void setUserNn(String userNn) {
         this.userNn = userNn;
     }
+
+    
+    public Long getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(Long boardId) {
+        this.boardId = boardId;
+    }
+    
+    
     public String getCommentBody() {
         return commentBody;
     }
@@ -52,7 +64,7 @@ public class Comment {
     public void setCommentTime(LocalDateTime commentTime) {
         this.commentTime = commentTime;
     }
-    
+
     
 
 }

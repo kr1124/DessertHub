@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class UserService {
@@ -30,25 +31,83 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long userCode, User userDetails) {
-        User user = userRepository.findById(userCode).orElseThrow(null);
+    public boolean updateUser(Long id, User userDetails) {
+        // User user = userRepository.findById(userCode).orElseThrow(null);
 
-        user.setUserPw(userDetails.getUserPw());
-        user.setUserEm(userDetails.getUserEm());
-        user.setUserNn(userDetails.getUserNn());
+        // user.setUserPw(userDetails.getUserPw());
+        // user.setUserEm(userDetails.getUserEm());
+        // user.setUserNn(userDetails.getUserNn());
 
-        return userRepository.save(user);
+        // return userRepository.save(user);
+
+        boolean result = false;
+        User target_user = null;
+        
+        try {
+            target_user = userRepository.findById(id).orElseThrow(null);
+        } catch (Exception e) {
+            // null
+        }
+
+        if(target_user != null) {
+            if (userDetails.getUserPw() != null && userDetails.getUserPw() != "") {
+                target_user.setUserPw(userDetails.getUserPw());
+            }
+            if (userDetails.getUserEm() != null && userDetails.getUserEm() != "") {
+                target_user.setUserEm(userDetails.getUserEm());
+            }
+            if (userDetails.getUserNn() != null && userDetails.getUserNn() != "") {
+                target_user.setUserNn(userDetails.getUserNn());
+            }
+
+            userRepository.save(target_user);
+
+            result = true;
+        }
+
+        return result;
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    public boolean deleteUser(String userId, String userPw) {
+        User user = null;
+        boolean result = false;
+        try {
+            user = userRepository.findByUserId(userId).orElseThrow(null);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
 
-    public User updateUserProfileImage(Long id, User userDetails) {
-        User user = userRepository.findById(id).orElseThrow(null);
-        user.setUserPi(userDetails.getUserPi());
-        return userRepository.save(user);
+        if (user != null) {
+            if(userId.equals(user.getUserId()) && userPw.equals(user.getUserPw())) {
+                deleteUser(user.getId());
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    public boolean updateUserProfileImage(Long id, String string) {
+        boolean result = false;
+        User target_user = null;
+        
+        try {
+            target_user = userRepository.findById(id).orElseThrow(null);
+        } catch (Exception e) {
+            // null
+        }
+
+        if(target_user != null) {
+            target_user.setUserPi(string);
+            userRepository.save(target_user);
+            result = true;
+        }
+
+        return result;
     }
 
     public boolean login_check(User login_user) {
@@ -73,6 +132,15 @@ public class UserService {
         return result;
     }
 
+    public boolean id_check(String userId) {
+        boolean result = false;
+
+        if(userRepository.existsByUserId(userId)) {
+            result = true;
+        }
+
+        return result;
+    }
 
     public boolean register_check(User user) {
         boolean result = false;
@@ -98,4 +166,19 @@ public class UserService {
 
         return result;
     }
+    
+    public User find_id(String userNn, String userEm) {
+        // 입력한 닉네임과 이메일로 사용자 조회
+        User user = userRepository.findByUserNnAndUserEm(userNn, userEm);
+
+        return user;
+    }
+
+    public User find_pw(String userId, String userEm) {
+        // 아이디와 이메일로 사용자 조회
+        User user = userRepository.findByUserIdAndUserEm(userId, userEm);
+
+        return user;
+    }
+        
 }

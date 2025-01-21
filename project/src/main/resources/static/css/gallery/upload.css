@@ -1,0 +1,185 @@
+/* body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+    background-color: #fff8f0;
+    /* 부드러운 피치 배경 */
+}
+
+.upload-container {
+    width: 600px;
+    padding: 30px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.upload-container h2 {
+    margin-bottom: 20px;
+}
+
+.upload-container input,
+.upload-container textarea {
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+}
+
+.upload-button {
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+}
+
+.upload-button:hover {
+    transform: scale(1.05);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preview-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    /* 화면 중간 위치 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 수평, 수직으로 정확히 가운데 정렬 */
+    width: 600px;
+    /* 고정된 너비 */
+    height: 400px;
+    /* 고정된 높이 */
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    /* 다른 콘텐츠 위에 표시되도록 */
+    display: flex;
+    justify-content: center;
+    /* 이미지가 중앙에 오도록 설정 */
+    align-items: center;
+    /* 이미지가 수직 중앙에 오도록 설정 */
+}
+
+/* 이미지 크기 제한 */
+.preview-modal img {
+    max-width: 100%;
+    /* 이미지가 모달을 벗어나지 않게 */
+    max-height: 100%;
+    /* 이미지가 모달을 벗어나지 않게 */
+    object-fit: contain;
+    /* 이미지 비율을 유지하면서 크기 조정 */
+    border-radius: 10px;
+}
+
+.preview-modal .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6f61;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.preview-modal .slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.preview-modal .prev-btn {
+    left: 20px;
+}
+
+.preview-modal .next-btn {
+    right: 20px;
+}
+
+.preview-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.preview-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
+.hashtags-container {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 40px;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* .hashtags-container span { */
+.hashtag {
+    background: #ff9a9e;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;       /* 인라인 블록 요소로 표시 */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.3s ease; /* 마우스 오버 시 애니메이션 */
+}
+
+.hashtag:hover {
+    transform: scale(1.1);       /* 마우스를 올리면 크기 증가 */
+    cursor: pointer;            /* 마우스를 올렸을 때 손 모양 커서 */
+}

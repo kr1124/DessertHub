@@ -1,12 +1,8 @@
 package com.desserthub.home;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 
 // @RestController //메서드에서 반환하는 데이터가 자동으로 HTTP 응답 본문으로 변환됩니다.
@@ -44,7 +40,12 @@ public class HomeController {
     public String redirect_handler() {
         return "remessage";
     }
-    
+
+    @GetMapping("/test-frag")
+    public String test_frag() {
+        return "test-fragments";
+    }
+
 
     // @GetMapping("/greet") // /home/greet URL로 GET 요청을 처리하는 메서드를 정의합니다.
     // public String greet() {
