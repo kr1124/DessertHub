@@ -1,0 +1,22 @@
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 35px;
+    background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    z-index: 1000;
+    border-radius: 10px;
+    position: fixed;
+    /* 고정 위치 */
+    bottom: 0;
+    /* 화면 하단에 고정 */
+    width: 100%;
+    /* 화면 너비를 채우도록 설정 */
+    height: 20px;
+}
+
+footer p {
+    font-size: 14px;
+    color: #fff;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 이제 Gallery 객체에 맞는 HTML 폼을 작성할 때, input 필드의 name 속성을 Java 객체의 필드와 일치하도록 설정해야 합니다. -->
+    <div class="upload-container">
+        <h2>사진 업로드</h2>
+        <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post" enctype="multipart/form-data">
+            <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
+            <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
+            <div class="hashtags-container" id="hashtagsContainer"></div>
+
+            <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
+            <div class="preview-container" id="previewContainer"></div>
+            
+            <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}" >
+        
+            <!-- <input type="file" id="imageUpload" accept="image/*" th:field="*{g_img}" required />
+            <div class="preview-container" id="previewContainer"></div> -->
+
+            <div class="button-container">
+                <button type="button" id="cancelBtn">취소</button>
+                <button type="submit" id="submitBtn">등록</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
+        function encodeImage(event) {
+            var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
+            
+            if (file) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    // Base64 인코딩된 데이터
+                    var base64data = reader.result;
+    
+                    // 숨은 입력 필드에 Base64 데이터 설정
+                    document.getElementById('encodedImage').value = base64data;
+    
+                    // 미리보기 이미지 표시
+                    var previewContainer = document.getElementById('previewContainer');
+                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
+                    var imgElement = document.createElement('img');
+                    imgElement.src = base64data;
+                    imgElement.alt = 'Image Preview';
+                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
+                    previewContainer.appendChild(imgElement);
+                };
+    
+                reader.readAsDataURL(file);  // 파일을 Base64로 읽음
+            }
+        }
+    
+        // 해시태그 입력 처리 (엔터로 구분된 해시태그 추가)
+        // document.getElementById('hashtags').addEventListener('keypress', function(event) {
+        //     if (event.key === 'Enter') {
+        //         event.preventDefault();  // 엔터키 기본 동작 방지
+        //         var hashtag = event.target.value.trim();
+        //         if (hashtag) {
+        //             var hashtagsContainer = document.getElementById('hashtagsContainer');
+        //             var newHashtag = document.createElement('span');
+        //             newHashtag.classList.add('hashtag');
+        //             newHashtag.textContent = hashtag;
+        //             hashtagsContainer.appendChild(newHashtag);
+        //             event.target.value = '';  // 입력 필드 초기화
+        //         }
+        //     }
+        // });
+    </script>
+</body>
+
+</html>

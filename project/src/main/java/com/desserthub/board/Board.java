@@ -9,19 +9,21 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Board {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //post_id + post_num
-    
+    private Long id; // post_id + post_num
+
     private String userId;
     private String userNn;
-    private String boardTitle; //post_title
-    private String boardContent; //post_body
-    private String boardImg; //encode as base64
-    private LocalDateTime boardWriteday; //post_writeday
-    private int boardLiked; //좋아요 수
-    private int boardComment; //댓글 수
+    private String boardCategory; // 종류
+    private String boardTitle; // post_title
+    private String boardContent; // post_body
+    private String boardImg; // encode as base64
+    private LocalDateTime boardWriteday; // post_writeday
+    private int boardView; // 조회수
+    private int boardLiked; // 좋아요 수
+    private int boardComment; // 댓글 수
 
     public Board() {
         this.boardWriteday = LocalDateTime.now();
@@ -49,6 +51,14 @@ public class Board {
 
     public void setUserNn(String userNn) {
         this.userNn = userNn;
+    }
+
+    public String getBoardCategory() {
+        return boardCategory;
+    }
+
+    public void setBoardCategory(String boardCategory) {
+        this.boardCategory = boardCategory;
     }
 
     public String getBoardTitle() {
@@ -83,6 +93,14 @@ public class Board {
         this.boardWriteday = boardWriteday;
     }
 
+    public int getBoardView() {
+        return boardView;
+    }
+
+    public void setBoardView(int boardView) {
+        this.boardView = boardView;
+    }
+
     public int getBoardLiked() {
         return boardLiked;
     }
@@ -99,5 +117,4 @@ public class Board {
         this.boardComment = boardComment;
     }
 
-    
 }

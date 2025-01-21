@@ -1,80 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사진 업로드 페이지</title>
+
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/fragments/header.css">
+  <link rel="stylesheet" href="/css/fragments/nav.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
+  <link rel="stylesheet" href="/css/gallery/upload.css">
+
 </head>
 
 <body>
-    <!-- 이제 Gallery 객체에 맞는 HTML 폼을 작성할 때, input 필드의 name 속성을 Java 객체의 필드와 일치하도록 설정해야 합니다. -->
+
+  <!-- 헤더 포함 -->
+  <header th:replace="fragments/header.html :: header"></header>
+
+  <div class="main-layout">
+    <!-- 사이드바 포함 -->
+    <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
     <div class="upload-container">
-        <h2>사진 업로드</h2>
-        <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post" enctype="multipart/form-data">
-            <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
-            <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
-            <div class="hashtags-container" id="hashtagsContainer"></div>
+      <h2>사진 업로드</h2>
+      <form id="uploadForm" th:action="@{/gallery/upload}" th:object="${gallery}" method="post"
+        enctype="multipart/form-data">
+        <input type="text" id="title" th:field="*{galleryTitle}" placeholder="제목 입력" required />
 
-            <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
-            <div class="preview-container" id="previewContainer"></div>
-            
-            <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}" >
+        <input type="text" id="hashtags" placeholder="#해시태그 입력 후 엔터" />
+        <div class="hashtags-container" id="hashtagsContainer"></div>
+        <input type="hidden" id="encodedHashtags" name="encodedHashtags" th:field="*{galleryHashtag}">
+        <!-- 해시태그를 담을 숨겨진 필드 -->
+
+
+        <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
+        <div class="preview-container" id="previewContainer" onclick="showModal()"></div>
+        <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{galleryImg}">
+
+
+        <!--  미리보기 모달 -->
+        <div id="modal" class="preview-modal" style="display: none;" onclick="close_modal()">
+          <button type="button" id="closeModal" class="close-btn" onclick="close_modal()">닫기</button>
+          <!-- <button id="prevBtn" class="slider-btn prev-btn">&#9664;</button> -->
+          <img id="modalImage" src="" alt="미리보기 이미지">
+          <!-- <button id="nextBtn" class="slider-btn next-btn">&#9654;</button> -->
+        </div>
         
-            <!-- <input type="file" id="imageUpload" accept="image/*" th:field="*{g_img}" required />
-            <div class="preview-container" id="previewContainer"></div> -->
-
-            <div class="button-container">
-                <button type="button" id="cancelBtn">취소</button>
-                <button type="submit" id="submitBtn">등록</button>
-            </div>
-        </form>
+        <!-- <button type="button" id="locationBtn">주소 선택</button> -->
+        <!-- <div class="preview-container" id="previewContainer"></div> -->
+        <div class="button-container">
+          <button type="button" id="cancelBtn" class="upload-button">취소</button>
+          <button type="submit" id="submitBtn" class="upload-button">등록</button>
+        </div>
+      </form>
     </div>
 
-    <script>
-        // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
-        function encodeImage(event) {
-            var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
-            
-            if (file) {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    // Base64 인코딩된 데이터
-                    var base64data = reader.result;
-    
-                    // 숨은 입력 필드에 Base64 데이터 설정
-                    document.getElementById('encodedImage').value = base64data;
-    
-                    // 미리보기 이미지 표시
-                    var previewContainer = document.getElementById('previewContainer');
-                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
-                    var imgElement = document.createElement('img');
-                    imgElement.src = base64data;
-                    imgElement.alt = 'Image Preview';
-                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
-                    previewContainer.appendChild(imgElement);
-                };
-    
-                reader.readAsDataURL(file);  // 파일을 Base64로 읽음
-            }
+
+  </div>
+
+  <!-- 푸터 포함 -->
+  <footer th:replace="fragments/footer.html :: footer"></footer>
+
+  <!-- 해시태그 처리 스크립트 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const hashtagsInput = document.getElementById('hashtags');
+      const hashtagsContainer = document.getElementById('hashtagsContainer');
+      const encodedHashtagsField = document.getElementById('encodedHashtags');
+      let hashtags = [];
+
+      // 해시태그 입력 처리
+      hashtagsInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && hashtagsInput.value.trim() !== '') {
+          const hashtag = "#" + hashtagsInput.value.trim();
+
+          // 해시태그가 #으로 시작하는지 확인
+          // if (hashtag.startsWith('#') && !hashtags.includes(hashtag)) {
+          if (!hashtags.includes(hashtag)) {
+            hashtags.push(hashtag);  // 해시태그를 배열에 추가
+            displayHashtags(); // 해시태그 목록 업데이트
+            hashtagsInput.value = '';  // 입력 필드 초기화
+          }
+          event.preventDefault(); // 기본 엔터 키 동작(폼 제출)을 방지
         }
-    
-        // 해시태그 입력 처리 (엔터로 구분된 해시태그 추가)
-        // document.getElementById('hashtags').addEventListener('keypress', function(event) {
-        //     if (event.key === 'Enter') {
-        //         event.preventDefault();  // 엔터키 기본 동작 방지
-        //         var hashtag = event.target.value.trim();
-        //         if (hashtag) {
-        //             var hashtagsContainer = document.getElementById('hashtagsContainer');
-        //             var newHashtag = document.createElement('span');
-        //             newHashtag.classList.add('hashtag');
-        //             newHashtag.textContent = hashtag;
-        //             hashtagsContainer.appendChild(newHashtag);
-        //             event.target.value = '';  // 입력 필드 초기화
-        //         }
-        //     }
-        // });
-    </script>
+      });
+
+      // 해시태그 목록을 화면에 표시
+      function displayHashtags() {
+        hashtagsContainer.innerHTML = ''; // 기존 해시태그 목록을 비움
+        hashtags.forEach(function (hashtag, index) {
+          const hashtagElement = document.createElement('span');
+          hashtagElement.textContent = hashtag;
+          hashtagElement.classList.add('hashtag');  // hashtag 클래스를 추가
+          hashtagElement.addEventListener('click', function () {
+            removeHashtag(index);  // 해당 해시태그 삭제
+          });
+
+          hashtagsContainer.appendChild(hashtagElement);
+        });
+
+        // 해시태그를 #으로 구분된 문자열로 변환하여 hidden input에 설정
+        encodedHashtagsField.value = hashtags.join('');  // 으로 구분된 문자열로 설정
+      }
+
+
+      // 해시태그 삭제 처리
+      function removeHashtag(index) {
+        hashtags.splice(index, 1);  // 해당 해시태그 제거
+        displayHashtags();           // 화면에 반영
+      }
+
+      // 취소 버튼 클릭 시 해시태그 목록 초기화
+      document.getElementById('cancelBtn').addEventListener('click', function () {
+        hashtags = [];
+        displayHashtags();
+      });
+
+    });
+
+  </script>
+
+  <!-- 모달 처리 -->
+  <script>
+    // 모달 열기
+    function showModal() {
+      const imageSrc = document.getElementById('previewContainer').querySelector('img') ? document.getElementById('previewContainer').querySelector('img').src : '';
+      const modal = document.getElementById('modal');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = imageSrc;  // 모달 이미지 소스 설정
+      modal.style.display = 'flex';  // 모달 보이기
+    }
+
+
+    // 모달 닫기
+    function close_modal(event) {
+      // 배경을 클릭했을 때도 모달을 닫을 수 있게 하기 위해 이벤트 객체를 사용
+      // 근데 안됨
+      if (event.target === document.getElementById('modal') || event.target.id === 'closeModal') {
+        document.getElementById('modal').style.display = 'none';  // 모달 숨기기
+      }
+    }
+
+    // 모달 닫기
+    function close_modal() {
+      document.getElementById('modal').style.display = 'none';  // 모달 숨기기
+    }
+  </script>
+
+  <!-- 취소 버튼 -->
+  <script>
+    // 취소 버튼 클릭 시 알림
+    cancelBtn.addEventListener('click', () => {
+      alert('취소되었습니다!');
+    });
+  </script>
+
+  <!-- 이미지 인코딩 -->
+  <script>
+    // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
+    function encodeImage(event) {
+      var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
+
+      if (file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          // Base64 인코딩된 데이터
+          var base64data = reader.result;
+
+          // 숨은 입력 필드에 Base64 데이터 설정
+          document.getElementById('encodedImage').value = base64data;
+
+          // 미리보기 이미지 표시
+          var previewContainer = document.getElementById('previewContainer');
+          previewContainer.innerHTML = '';  // 기존 미리보기 제거
+          var imgElement = document.createElement('img');
+          imgElement.src = base64data;
+          imgElement.alt = 'Image Preview';
+          imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
+          previewContainer.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(file);  // 파일을 Base64로 읽음
+      }
+    }
+  </script>
 </body>
 
 </html>

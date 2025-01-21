@@ -1,0 +1,209 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+    background-color: #fff8f0;
+    /* 부드러운 피치 배경 */
+}
+
+.container {
+    padding: 20px;
+    width: 1000px;
+    margin: 40px auto;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ffb6c1;
+    position: relative;
+}
+
+.category {
+    font-size: 14px;
+    color: #ff6f91;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff6b81;
+}
+
+.info {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.content {
+    margin: 20px 0;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #5d4037;
+}
+
+/* 하트 애니메이션 */
+
+/* 하트 버튼 컨테이너 정렬 조정 */
+
+/* 하트 버튼 컨테이너 중앙 정렬 */
+.heart-container {
+    display: flex;
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    margin: 20px 0;
+    /* 위아래 여백 조정 */
+    height: 80px;
+    /* 하트 크기에 맞춰 조정 */
+    position: relative;
+}
+
+.button {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+    transition: background 0.5s ease;
+}
+
+.active#heart:before,
+.active#heart:after {
+    background: red !important;
+}
+
+/* 하트 버튼 스타일 */
+#heart {
+    width: 10px;
+    height: 10px;
+    position: relative;
+    /* 애니메이션 위치 조정 */
+    transition: background 0.5s ease;
+}
+
+#heart:before,
+#heart:after {
+    transition: background 0.5s ease;
+    position: absolute;
+    content: "";
+    left: 25px;
+    top: 0;
+    width: 25px;
+    height: 40px;
+    background: dimgrey;
+    border-radius: 25px 25px 0 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+#heart:after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+}
+
+/* 버튼 스타일 */
+.actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #ff6b81;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.actions button:hover {
+    background-color: #e91e63;
+}
+
+/* 댓글 스타일 */
+.comments-container {
+    margin-top: 20px;
+}
+
+.comment-input {
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comment-input button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #ff6b81;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.comment-input button:hover {
+    background-color: #e91e63;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-list li {
+    padding: 12px;
+    border-bottom: 1px solid #ffe4e1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}

@@ -1,0 +1,105 @@
+
+/* 사이드바 */
+.sidebar {
+    position: fixed;
+    width: 84px;
+    height: 100%;
+    background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 100%);
+    z-index: 9999;
+    transition: width 0.4s;
+    padding: 10px 0;
+    overflow: hidden;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.sidebar:hover {
+    width: 250px;
+}
+
+.sidebar h2 {
+    margin: 20px 0 40px 0;
+    font-size: 20px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* 메뉴 아이템 */
+.menu-item {
+    padding: 12px 20px;
+    margin: 16px 15px;
+    background-color: #FFD1DC;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item:hover {
+    background-color: #FF6B81;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.menu-item.active {
+    background-color: #ff8598;
+    color: white;
+    font-weight: bold;
+}
+
+.menu-item i {
+    font-size: 20px;
+    color: #FF6B81;
+    width: 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.menu-item:hover i {
+    color: white;
+}
+
+.menu-item:hover span {
+    color: white;
+}
+
+.side-text {
+    opacity: 0;
+    transition: opacity 0.3s, margin-left 0.3s;
+    margin-left: 0;
+}
+
+.sidebar:hover .side-text {
+    opacity: 1;
+    margin-left: 10px;
+}
+
+
+/* 기본 링크 색 */
+.side-text {
+    color: #FF6B81; /* 기본 색은 파란색 */
+    text-decoration: none;
+}
+
+/* 링크가 클릭되었을 때 (visited 상태) */
+.side-text:visited {
+    color: #FF6B81; /* 클릭 후 색도 파란색으로 고정 */
+}
+
+/* 링크에 마우스를 올렸을 때 (hover 상태) */
+.side-text:hover {
+    color: white; /* hover 상태에서도 색을 파란색으로 고정 */
+}
+
+/* 링크를 클릭한 후 포커스 상태에서도 색을 고정 */
+.side-text:focus {
+    color: #FF6B81; /* focus 상태에서도 색을 파란색으로 고정 */
+}

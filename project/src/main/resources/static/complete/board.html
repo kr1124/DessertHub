@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판</title>
+  
+ <link rel="stylesheet" href="/bar.css">  <!-- 없어도 됨 -->
+  <!-- CSS -->
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      padding: 20px;
+      width: 1000px;
+      margin: 40px auto;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box {
+      padding: 10px 15px;
+      border: 1px solid #FFB6C1;
+      border-radius: 20px;
+      width: 200px;
+    }
+
+    .search-btn {
+      padding: 10px 15px;
+      border: none;
+      background-color: #FF6B81;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .search-btn:hover {
+      background-color: #FF6B81;
+      background-color: #ff3d66;
+      transform: scale(1.1);
+    }
+
+    /* 드롭다운을 버튼 스타일과 통일 */
+    .filter-box select {
+      padding: 10px 15px;
+      border: none; /* 테두리 제거 */
+      background-color: white; /* 버튼과 동일한 배경색 */
+      color: #FF4B61;; /* 버튼과 동일한 텍스트 색상 */
+      border-radius: 20px; /* 버튼과 동일한 둥근 모서리 */
+      cursor: pointer; /* 포인터 커서 추가 */
+      transition: 0.3s; /* 부드러운 효과 */
+    }
+
+    .filter-box select:hover {
+      background-color: white; /* 버튼과 동일한 호버 효과 */
+    }
+
+    .filter-box select:focus {
+      outline: none; /* 포커스 시 테두리 제거 */
+    }
+
+    .filter-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-box select, .sort-box select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .post-list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .post-list th, .post-list td {
+      padding: 15px;
+      border-bottom: 1px solid #FFB6C1;
+      text-align: center;
+    }
+
+    .post-list th {
+      background-color: #FFB6C1;
+    }
+
+    .post-list tr:hover {
+      background-color: #FFB6C1;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 10px 15px;
+      margin: 0 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background-color: #FF6B81;
+      color: white;
+    }
+
+    .write-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 50px;
+      background-color: #FF6B81;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .write-btn:hover{
+      background-color: #ff3d66;
+      transform: scale(1.1);
+      transition: 0.3s;
+    }
+    
+  </style>
+</head>
+<body>
+
+
+  <header>
+    <div class="logo">
+      <a href="new_index.html" class="no-underline">Dessert Hub</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="Login_Join.html">
+        <button>Login</button>
+      </a>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header> 
+
+  <div class="main-layout">
+  <nav class="sidebar">
+    <a href="#recommend" class="menu-item">
+      🍩 <span>추천 디저트</span>
+    </a>
+    <a href="#store" class="menu-item">
+      🍰 <span>가게</span>
+    </a>
+    <a href="#map" class="menu-item">
+      🗺️ <span>지도</span>
+    </a>
+    <a href="#community" class="menu-item">
+      📋 <span>게시판</span>
+    </a>
+    <a href="#about" class="menu-item">
+      ℹ️ <span>About</span>
+    </a>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <div class="filter-box">
+        <select id="categoryFilter">
+          <option value="all">전체</option>
+          <option value="notice">공지</option>
+          <option value="free">자유게시판</option>
+        </select>
+        <select id="sortOrder">
+          <option value="latest">최신순</option>
+          <option value="popular">인기순</option>
+        </select>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="검색어 입력" />
+        <button id="searchBtn" class="search-btn">검색</button>
+      </div>
+    </div>
+
+    <table class="post-list">
+      <thead>
+        <tr>
+          <th style="width: 10%;">번호</th>
+          <th style="width: 40%;">제목</th>
+          <th style="width: 15%;">작성자</th>
+          <th style="width: 15%;">작성일</th>
+          <th style="width: 10%;">조회수</th>
+          <th style="width: 10%;">찜</th>
+        </tr>
+      </thead>
+      <tbody id="postList"></tbody>
+    </table>
+
+    <div class="pagination" id="pagination"></div>
+
+    <button class="write-btn">글쓰기</button>
+  </div>
+
+</div>
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const posts = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1,
+      title: `게시글 제목 ${i + 1}`,
+      author: `작성자 ${i + 1}`,
+      date: '2024-01-01',
+      views: Math.floor(Math.random() * 1000),
+      likes: Math.floor(Math.random() * 50)
+    }));
+
+    const postList = document.getElementById('postList');
+    const pagination = document.getElementById('pagination');
+    const sortOrder = document.getElementById('sortOrder');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    let currentPage = 1;
+    const postsPerPage = 15;
+
+    function renderPosts() {
+      const search = searchInput.value.toLowerCase();
+      const order = sortOrder.value;
+
+      let filteredPosts = posts.filter(post =>
+        post.title.toLowerCase().includes(search)
+      );
+
+      if (order === 'popular') {
+        filteredPosts.sort((a, b) => b.views - a.views);
+      } else {
+        filteredPosts.sort((a, b) => b.id - a.id);
+      }
+
+      const start = (currentPage - 1) * postsPerPage;
+      const end = start + postsPerPage;
+      const paginatedPosts = filteredPosts.slice(start, end);
+
+      postList.innerHTML = '';
+      paginatedPosts.forEach(post => {
+        const row = `<tr>
+          <td>${post.id}</td>
+          <td>${post.title}</td>
+          <td>${post.author}</td>
+          <td>${post.date}</td>
+          <td>${post.views}</td>
+          <td>${post.likes}</td>
+        </tr>`;
+        postList.innerHTML += row;
+      });
+
+      renderPagination(filteredPosts.length);
+    }
+
+    function renderPagination(totalPosts) {
+      const totalPages = Math.ceil(totalPosts / postsPerPage);
+      pagination.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.classList.add(i === currentPage ? 'active' : '');
+        btn.addEventListener('click', () => {
+          currentPage = i;
+          renderPosts();
+        });
+        pagination.appendChild(btn);
+      }
+    }
+
+    searchBtn.addEventListener('click', renderPosts);
+    sortOrder.addEventListener('change', renderPosts);
+    renderPosts();
+
+      // 스크롤 해도 사이바의 위치가 동일하도록
+      const sidebar = document.querySelector('.sidebar');
+    const initialTop = 0; // 초기 위치 설정
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      
+      // 스크롤 방향에 따라 이동
+      if (currentScrollY > lastScrollY) {
+        // 아래로 스크롤
+        sidebar.style.transform = `translateY(${currentScrollY}px)`;
+      } else {
+        // 위로 스크롤
+        sidebar.style.transform = `translateY(${currentScrollY}px)`;
+      }
+
+      lastScrollY = currentScrollY; // 현재 스크롤 위치 저장
+    });
+  </script>
+</body>
+</html>

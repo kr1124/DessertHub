@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세</title>
+  <link rel="stylesheet" href="/back.css">
+  <!-- CSS -->
+  <style>
+    /* 기본 스타일 */
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      box-sizing: border-box;
+      background-color: #fff8f0;
+      /* 부드러운 피치 배경 */
+    }
+
+    .container {
+      padding: 20px;
+      width: 1000px;
+      margin: 40px auto;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* 애니메이션 효과 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ffb6c1;
+      position: relative;
+    }
+
+    .category {
+      font-size: 14px;
+      color: #ff6f91;
+      margin-bottom: 5px;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #ff6b81;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .content {
+      margin: 20px 0;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #5d4037;
+    }
+
+    /* 하트 애니메이션 */
+
+    /* 하트 버튼 컨테이너 정렬 조정 */
+
+    /* 하트 버튼 컨테이너 중앙 정렬 */
+    .heart-container {
+      display: flex;
+      justify-content: center;
+      /* 수평 중앙 정렬 */
+      align-items: center;
+      /* 수직 중앙 정렬 */
+      margin: 20px 0;
+      /* 위아래 여백 조정 */
+      height: 80px;
+      /* 하트 크기에 맞춰 조정 */
+      position: relative;
+    }
+
+    .button {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      background: none;
+      cursor: pointer;
+      transition: background 0.5s ease;
+    }
+
+    .active#heart:before,
+    .active#heart:after {
+      background: red !important;
+    }
+
+    /* 하트 버튼 스타일 */
+    #heart {
+      width: 10px;
+      height: 10px;
+      position: relative;
+      /* 애니메이션 위치 조정 */
+      transition: background 0.5s ease;
+    }
+
+    #heart:before,
+    #heart:after {
+      transition: background 0.5s ease;
+      position: absolute;
+      content: "";
+      left: 25px;
+      top: 0;
+      width: 25px;
+      height: 40px;
+      background: dimgrey;
+      border-radius: 25px 25px 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    #heart:after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    /* 버튼 스타일 */
+    .actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .actions button {
+      padding: 10px 15px;
+      border: none;
+      background-color: #ff6b81;
+      color: white;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .actions button:hover {
+      background-color: #e91e63;
+    }
+
+    /* 댓글 스타일 */
+    .comments-container {
+      margin-top: 20px;
+    }
+
+    .comment-input {
+      display: flex;
+      margin-top: 10px;
+      gap: 10px;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-input button {
+      padding: 10px 15px;
+      border: none;
+      background-color: #ff6b81;
+      color: white;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .comment-input button:hover {
+      background-color: #e91e63;
+    }
+
+    .comment-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .comment-list li {
+      padding: 12px;
+      border-bottom: 1px solid #ffe4e1;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .delete-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+
+<body>
+<!-- <h1 th:text="${board.boardTitle}"></h1>
+    <p th:text="${board.boardContent}"></p>
+    <small>작성일: <span th:text="${#temporals.format(board.boardWriteday, 'yyyy-MM-dd HH:mm')}"></span></small>
+    <br />
+    <a th:href="@{/board/{id}/edit(id=${board.id})}">수정</a>
+    <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
+        <button type="submit">삭제</button>
+    </form>
+    <br />
+    <a href="/board">목록으로</a> -->
+  <header>
+    <div class="logo">
+      <a href="new_index.html" class="no-underline">Dessert Hub</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="Login_Join.html">
+        <button>Login</button>
+      </a>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <nav class="sidebar">
+      <a href="#recommend" class="menu-item">
+        🍩 <span>추천 디저트</span>
+      </a>
+      <a href="#store" class="menu-item">
+        🍰 <span>가게</span>
+      </a>
+      <a href="#map" class="menu-item">
+        🗺️ <span>지도</span>
+      </a>
+      <a href="#community" class="menu-item">
+        📋 <span>게시판</span>
+      </a>
+      <a href="#about" class="menu-item">
+        ℹ️ <span>About</span>
+      </a>
+    </nav>
+
+    <div class="container">
+      <div class="header">
+        <div class="category" id="post-category">공지사항</div>
+        <div class="title" id="post-title">게시글 제목</div>
+        <div class="info" id="post-info">작성자: 작성자 1 | 작성일: 2024-01-01 | 조회수: 123 | 찜: 0</div>
+        <div class="actions">
+          <button id="edit-post">수정</button>
+          <button id="delete-post">삭제</button>
+        </div>
+      </div>
+
+      <div class="content" id="post-content">
+        게시글 내용이 여기에 표시됩니다.
+      </div>
+
+      <!-- 하트 버튼 위치 조정 -->
+      <div class="heart-container">
+        <div id="heart" class="button"></div>
+      </div>
+
+      <!-- 댓글 섹션 -->
+      <div class="comments-container">
+        <h3>댓글 (<span id="comment-count">0</span>)</h3>
+        <ul id="comment-list" class="comment-list"></ul> <!-- 이 부분 확인 -->
+        <div class="comment-input">
+          <input type="text" id="comment-input" placeholder="댓글을 입력하세요">
+          <button id="add-comment">등록</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>© Dessert Hub, All rights reserved.</p>
+  </footer>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mo-js/0.288.2/mo.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // 애니메이션 경로 설정
+      var scaleCurve = mojs.easing.path('M0,100 L25,99.9999983 C26.2328835,75.0708847 19.7847843,0 100,0');
+
+      // 하트 버튼 선택
+      var el = document.querySelector('#heart');
+      var timeline = new mojs.Timeline();
+
+      // 애니메이션 정의 1: 붉은 하트 퍼짐
+      var tween1 = new mojs.Burst({
+        parent: el,
+        radius: { 0: 100 },
+        angle: { 0: 45 },
+        y: -10,
+        count: 10,
+        children: {
+          shape: 'circle',
+          radius: 30,
+          fill: ['red', 'white'],
+          strokeWidth: 15,
+          duration: 500,
+        },
+      });
+
+      // 애니메이션 정의 2: 스케일 변환
+      var tween2 = new mojs.Tween({
+        duration: 900,
+        onUpdate: function (progress) {
+          var scaleProgress = scaleCurve(progress);
+          el.style.transform = 'scale3d(' + scaleProgress + ',' + scaleProgress + ',1)';
+        },
+      });
+
+      // 애니메이션 정의 3: 반대 방향 퍼짐
+      var tween3 = new mojs.Burst({
+        parent: el,
+        radius: { 0: 125 },
+        angle: { 0: -45 },
+        y: -10,
+        count: 10,
+        children: {
+          shape: 'circle',
+          radius: 30,
+          fill: ['white', 'red'],
+          strokeWidth: 15,
+          duration: 400,
+        },
+      });
+
+      // 타임라인 애니메이션 추가
+      timeline.add(tween1, tween2, tween3);
+
+      // 하트 클릭 이벤트 통합
+      $("#heart").click(function () {
+        if ($(this).hasClass('active')) {
+          $(this).removeClass('active'); // 비활성화
+          post.liked = false; // 상태 비활성화
+          post.likesCount -= 1; // 찜 수 감소
+        } else {
+          timeline.replay(); // 애니메이션 실행
+          $(this).addClass('active'); // 활성화 상태 추가
+          post.liked = true; // 상태 활성화
+          post.likesCount += 1; // 찜 수 증가
+        }
+        renderPost(); // 상태 업데이트 반영
+      });
+    });
+
+    // 게시글 데이터 초기화 및 상태 업데이트
+    const post = {
+      id: 1,
+      category: '공지사항',
+      title: '게시글 제목 예시',
+      author: '작성자 1',
+      date: '2024-01-01',
+      views: 123,
+      content: '이곳은 게시글의 본문 내용입니다.',
+      liked: false,
+      likesCount: 0,
+      comments: []
+    };
+
+    // 게시글 렌더링 함수
+    const postCategory = document.getElementById('post-category');
+    const postTitle = document.getElementById('post-title');
+    const postInfo = document.getElementById('post-info');
+    const postContent = document.getElementById('post-content');
+    const heart = document.getElementById('heart');
+    const commentList = document.getElementById('comment-list');
+    const commentInput = document.getElementById('comment-input');
+    const commentCount = document.getElementById('comment-count');
+
+    function renderPost() {
+      postCategory.innerText = post.category;
+      postTitle.innerText = post.title;
+      postInfo.innerText = `작성자: ${post.author} | 작성일: ${post.date} | 조회수: ${post.views} | 찜: ${post.likesCount}`;
+      heart.classList.toggle('active', post.liked);
+    }
+
+    // DOM 로드 완료 후 실행
+    document.addEventListener('DOMContentLoaded', function () {
+      const commentList = document.getElementById('comment-list'); // 댓글 목록
+      const commentInput = document.getElementById('comment-input'); // 댓글 입력창
+      const commentCount = document.getElementById('comment-count'); // 댓글 수 표시
+
+      // 댓글 데이터 저장
+      const comments = [];
+
+      // 댓글 추가 함수
+      function addComment() {
+        const commentText = commentInput.value.trim(); // 공백 제거
+        if (!commentText) { // 빈 입력 처리
+          alert('댓글을 입력하세요!');
+          return;
+        }
+
+        const comment = { id: Date.now(), text: commentText }; // 고유 ID 생성
+        comments.push(comment); // 댓글 리스트에 추가
+        renderComments(); // 댓글 렌더링 업데이트
+        commentInput.value = ''; // 입력 필드 초기화
+      }
+
+      // 댓글 삭제 함수
+      function deleteComment(id) {
+        const index = comments.findIndex(comment => comment.id === id); // ID 기반 검색
+        if (index > -1) {
+          comments.splice(index, 1); // 댓글 삭제
+        }
+        renderComments(); // 삭제 후 렌더링 업데이트
+      }
+
+      // 댓글 렌더링 함수
+      function renderComments() {
+        commentList.innerHTML = ''; // 기존 댓글 초기화
+        comments.forEach(comment => {
+          const li = document.createElement('li'); // <li> 태그 생성
+          li.innerHTML = `
+        <span>${comment.text}</span>
+        <button class="delete-btn" onclick="deleteComment(${comment.id})">삭제</button>
+      `;
+          commentList.appendChild(li); // 댓글 추가
+        });
+        commentCount.innerText = comments.length; // 댓글 수 업데이트
+      }
+
+      // 댓글 등록 버튼 클릭 이벤트
+      document.getElementById('add-comment').addEventListener('click', addComment);
+
+      // Enter 키로 댓글 추가
+      commentInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          addComment();
+        }
+      });
+
+      // 전역 함수로 deleteComment 등록 (onClick에서 사용)
+      window.deleteComment = deleteComment;
+    });
+
+    // 초기 렌더링
+    renderPost();
+
+
+
+  </script>
+</body>
+
+</html>
