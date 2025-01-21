@@ -11,65 +11,70 @@ public class Gallery {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long g_id;
+    private Long id;
 
-    private String user_id;
-    private String user_nn;
-    private String g_title;
-    private String g_hashtag;
-    private String g_img;
-    private int g_liked;
-    private LocalDateTime g_writeday;
+    private String userId;
+    private String userNn;
+    private String galleryTitle;
+    private String galleryHashtag;
+    private String galleryImg;
+    private int galleryLiked;
+    private LocalDateTime galleryWriteday;
 
-    public Long getG_id() {
-        return g_id;
+    public Gallery() {
+        this.galleryWriteday = LocalDateTime.now();
     }
-    public void setG_id(Long g_id) {
-        this.g_id = g_id;
+
+    public Long getId() {
+        return id;
     }
-    public String getUser_id() {
-        return user_id;
+    public void setId(Long id) {
+        this.id = id;
     }
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public String getUserId() {
+        return userId;
     }
-    public String getUser_nn() {
-        return user_nn;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-    public void setUser_nn(String user_nn) {
-        this.user_nn = user_nn;
+    public String getUserNn() {
+        return userNn;
     }
-    public String getG_title() {
-        return g_title;
+    public void setUserNn(String userNn) {
+        this.userNn = userNn;
     }
-    public void setG_title(String g_title) {
-        this.g_title = g_title;
+    public String getGalleryTitle() {
+        return galleryTitle;
     }
-    public String getG_hashtag() {
-        return g_hashtag;
+    public void setGalleryTitle(String galleryTitle) {
+        this.galleryTitle = galleryTitle;
     }
-    public void setG_hashtag(String g_hashtag) {
-        this.g_hashtag = g_hashtag;
+    public String getGalleryHashtag() {
+        return galleryHashtag;
     }
-    public String getG_img() {
-        return g_img;
+    public void setGalleryHashtag(String galleryHashtag) {
+        this.galleryHashtag = galleryHashtag;
     }
-    public void setG_img(String g_img) {
-        this.g_img = g_img;
+    public String getGalleryImg() {
+        return galleryImg;
     }
-    public int getG_liked() {
-        return g_liked;
+    public void setGalleryImg(String galleryImg) {
+        this.galleryImg = galleryImg;
     }
-    public void setG_liked(int g_liked) {
-        this.g_liked = g_liked;
+    public int getGalleryLiked() {
+        return galleryLiked;
     }
-    public LocalDateTime getG_writeday() {
-        return g_writeday;
+    public void setGalleryLiked(int galleryLiked) {
+        this.galleryLiked = galleryLiked;
     }
-    public void setG_writeday(LocalDateTime g_writeday) {
-        this.g_writeday = g_writeday;
+    public LocalDateTime getGalleryWriteday() {
+        return galleryWriteday;
     }
+    public void setGalleryWriteday(LocalDateTime galleryWriteday) {
+        this.galleryWriteday = galleryWriteday;
+    }
+
     public void set_now() {
-        this.g_writeday = LocalDateTime.now();
+        this.galleryWriteday = LocalDateTime.now();
     }
 }

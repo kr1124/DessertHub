@@ -1,6 +1,4 @@
 package com.desserthub.comment;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +13,14 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String user_id;
-    private String user_nn;
-    private String c_body;
-    private LocalDateTime createdAt;
+    private String userId;
+    private String userNn;
+    private String commentBody;
+    private LocalDateTime commentTime;
+
+    public Comment() {
+        this.commentTime = LocalDateTime.now();
+    }
     
     public Long getId() {
         return id;
@@ -26,31 +28,31 @@ public class Comment {
     public void setId(Long id) {
         this.id = id;
     }
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-    public String getUser_nn() {
-        return user_nn;
+    public String getUserNn() {
+        return userNn;
     }
-    public void setUser_nn(String user_nn) {
-        this.user_nn = user_nn;
+    public void setUserNn(String userNn) {
+        this.userNn = userNn;
     }
-    public String getC_body() {
-        return c_body;
+    public String getCommentBody() {
+        return commentBody;
     }
-    public void setC_body(String c_body) {
-        this.c_body = c_body;
+    public void setCommentBody(String commentBody) {
+        this.commentBody = commentBody;
     }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCommentTime() {
+        return commentTime;
     }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCommentTime(LocalDateTime commentTime) {
+        this.commentTime = commentTime;
     }
-
+    
     
 
 }

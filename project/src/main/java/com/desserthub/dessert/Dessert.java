@@ -7,14 +7,14 @@ import javax.persistence.Id;
 
 @Entity
 public class Dessert {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int d_index;
-    private String d_name;
-    private String d_image;
-    private String d_chara;
+    private String dessertName; //이름
+    private String dessertImage; //이미지
+    private String dessertChara; //특징
 
     public Long getId() {
         return id;
@@ -22,29 +22,22 @@ public class Dessert {
     public void setId(Long id) {
         this.id = id;
     }
-    public int getD_index() {
-        return d_index;
+    public String getDessertName() {
+        return dessertName;
     }
-    public void setD_index(int d_index) {
-        this.d_index = d_index;
+    public void setDessertName(String dessertName) {
+        this.dessertName = dessertName;
     }
-    public String getD_name() {
-        return d_name;
+    public String getDessertImage() {
+        return dessertImage;
     }
-    public void setD_name(String d_name) {
-        this.d_name = d_name;
+    public void setDessertImage(String dessertImage) {
+        this.dessertImage = dessertImage;
     }
-    public String getD_image() {
-        return d_image;
+    public String getDessertChara() {
+        return dessertChara;
     }
-    public void setD_image(String d_image) {
-        this.d_image = d_image;
+    public void setDessertChara(String dessertChara) {
+        this.dessertChara = dessertChara;
     }
-    public String getD_chara() {
-        return d_chara;
-    }
-    public void setD_chara(String d_chara) {
-        this.d_chara = d_chara;
-    }    
-
 }
