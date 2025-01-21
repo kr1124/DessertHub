@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/gallery")
@@ -37,7 +38,7 @@ public class GalleryController {
         
         // TODO 유저 아이디와 닉네임을 가져와 필드에 추가해야함.
 
-        gallery.setG_liked(0);
+        gallery.setGalleryLiked(0);
         gallery.set_now();
 
         galleryService.createGallery(gallery);
@@ -87,8 +88,11 @@ public class GalleryController {
     // }
 
     @PostMapping("/{id}/delete")
-    public String deleteGallery(@PathVariable Long id) {
+    public String deleteGallery(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         galleryService.deleteGallery(id);
-        return "redirect:/gallery/main";
+        
+        redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "gallery/main");
+        return "redirect:/remessage";
     }
 }

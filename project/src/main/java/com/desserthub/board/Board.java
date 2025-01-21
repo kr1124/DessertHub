@@ -14,17 +14,17 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //post_id + post_num
     
-    private String user_id;
-    private String user_nn;
-    private String title; //post_title
-    private String content; //post_body
-    private String post_img; //encode as base64
-    private LocalDateTime post_writeday; //post_writeday
-    private int post_liked; //좋아요 수
-    private int post_comment; //댓글 수
+    private String userId;
+    private String userNn;
+    private String boardTitle; //post_title
+    private String boardContent; //post_body
+    private String boardImg; //encode as base64
+    private LocalDateTime boardWriteday; //post_writeday
+    private int boardLiked; //좋아요 수
+    private int boardComment; //댓글 수
 
     public Board() {
-        this.post_writeday = LocalDateTime.now();
+        this.boardWriteday = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -35,67 +35,69 @@ public class Board {
         this.id = id;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getUser_nn() {
-        return user_nn;
+    public String getUserNn() {
+        return userNn;
     }
 
-    public void setUser_nn(String user_nn) {
-        this.user_nn = user_nn;
+    public void setUserNn(String userNn) {
+        this.userNn = userNn;
     }
 
-    public String getTitle() {
-        return title;
+    public String getBoardTitle() {
+        return boardTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setBoardTitle(String boardTitle) {
+        this.boardTitle = boardTitle;
     }
 
-    public String getContent() {
-        return content;
+    public String getBoardContent() {
+        return boardContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBoardContent(String boardContent) {
+        this.boardContent = boardContent;
     }
 
-    public String getPost_img() {
-        return post_img;
+    public String getBoardImg() {
+        return boardImg;
     }
 
-    public void setPost_img(String post_img) {
-        this.post_img = post_img;
+    public void setBoardImg(String boardImg) {
+        this.boardImg = boardImg;
     }
 
-    public int getPost_liked() {
-        return post_liked;
+    public LocalDateTime getBoardWriteday() {
+        return boardWriteday;
     }
 
-    public void setPost_liked(int post_liked) {
-        this.post_liked = post_liked;
+    public void setBoardWriteday(LocalDateTime boardWriteday) {
+        this.boardWriteday = boardWriteday;
     }
 
-    public int getPost_comment() {
-        return post_comment;
+    public int getBoardLiked() {
+        return boardLiked;
     }
 
-    public void setPost_comment(int post_comment) {
-        this.post_comment = post_comment;
+    public void setBoardLiked(int boardLiked) {
+        this.boardLiked = boardLiked;
     }
 
-    public LocalDateTime getPost_writeday() {
-        return post_writeday;
+    public int getBoardComment() {
+        return boardComment;
     }
 
-    public void setPost_writeday(LocalDateTime post_writeday) {
-        this.post_writeday = post_writeday;
+    public void setBoardComment(int boardComment) {
+        this.boardComment = boardComment;
     }
+
+    
 }

@@ -328,13 +328,25 @@ footer p {
 </head>
 <body>
   <!-- 로그인 성공 메시지 -->
-  <script th:if="${message == 'Login success'}"th:inline="javascript">
+  <!-- <script th:if="${message == 'Login success'}"th:inline="javascript">
     alert('로그인에 성공했습니다!')
-  </script>
+  </script> -->
   <!-- 회원 가입 성공 메시지 -->
-  <script th:if="${message == 'Register success'}"th:inline="javascript">
+  <!-- <script th:if="${message == 'Register success'}"th:inline="javascript">
     alert('회원가입에 성공했습니다!')
-  </script>
+  </script> -->
+  
+  <!-- <div th:if="${message}" th:text="${message}" id="flashMessage" style="display: none;"></div>
+  <script th:if="${message}" th:inline="javascript">
+    window.onload = function() {
+      // alert을 띄우기 전에 메시지 요소가 존재하는지 확인
+      var message = document.getElementById("flashMessage");
+      if (message) {
+        alert(message.innerText);  // 메시지를 alert로 띄움
+        message.style.display = 'block';  // 메시지 표시 (선택 사항)
+      }
+    };
+  </script> -->
 
   <header>
     <div class="logo">
