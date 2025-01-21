@@ -21,4 +21,8 @@ public class DessertService {
         return dessertRepository.findById(id);
     }
 
+    public Dessert findid(String dessertChara, String dessertName){
+        return dessertRepository.findByDescriptionOrName(dessertChara, dessertName);
+    }
+
 }
