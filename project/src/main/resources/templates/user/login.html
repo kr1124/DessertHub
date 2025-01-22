@@ -67,11 +67,10 @@
           <input type="text" id="customDomain" placeholder="직접 입력" style="display:none;">
         </div>
 
-          <!-- 합쳐진 이메일 필드 (사용자가 볼 필요 없음) -->
-          <input type="hidden" id="fullEmail" th:field="*{userEm}" value="">
-      
-      
-
+        <!-- 합쳐진 이메일 필드 (사용자가 볼 필요 없음) -->
+        <input type="hidden" id="fullEmail" th:field="*{userEm}" value="">
+        
+        <button type="button" onclick="toggleForm()">로그인</button>
         <button type="button" onclick="registerSubmit()">회원가입</button>
       </form>
     </div>
@@ -79,7 +78,9 @@
     <!-- 전환 버튼 -->
     <div class="overlay-container">
       <p><h1>Welcome to the dessert hub</h1></p>
-      <button onclick="toggleForm()">HELLO</button>
+      <a href="/home" class="no-underline">
+        <button type="button">HELLO</button>
+      </a>
     </div>
   </div>
 

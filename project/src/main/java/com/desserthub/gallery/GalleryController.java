@@ -30,9 +30,14 @@ public class GalleryController {
     }
 
     @GetMapping
-    public String getAllGallerys(Model model) {
+    public String getAllGallerys(Model model, HttpSession session) {
+        Long uid = (Long)session.getAttribute("userId");
+
+        if(uid != null) {
+            model.addAttribute("likeListGallery", dlikeService.getUserLikes(uid, "gallery"));
+        }
+
         model.addAttribute("galleryList", galleryService.getAllGallerys());
-        model.addAttribute("likeList", dlikeService.getAllLikes());
         return "gallery/main";
     }
 
@@ -71,17 +76,19 @@ public class GalleryController {
     
     // 특정 이미지 조회 (GET 요청)
     @GetMapping("/gview/{id}")
-    public String viewImage(@PathVariable Long id, Model model) {
+    public String viewImage(@PathVariable Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         // id에 해당하는 Gallery 객체 찾기
         Gallery gallery = galleryService.getGallery(id).orElseThrow(() -> new RuntimeException("Gallery not found"));
 
         if (gallery != null) {
             // Gallery 객체를 모델에 추가
             model.addAttribute("gallery", gallery);
+            model.addAttribute("isLike", dlikeService.getLike(id, "gallery"));
             return "gallery/galleryView"; // galleryView.html로 이동
         } else {
-            model.addAttribute("message", "이미지를 찾을 수 없습니다.");
-            return "error"; // error.html로 이동 (이미지가 없을 경우)
+            redirectAttributes.addFlashAttribute("message", "이미지를 찾을 수 없습니다..");
+            redirectAttributes.addFlashAttribute("target", "/gallery");
+            return "redirect:/remessage";
         }
     }
 

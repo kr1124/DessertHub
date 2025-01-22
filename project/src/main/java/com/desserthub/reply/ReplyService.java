@@ -1,6 +1,7 @@
 package com.desserthub.reply;
 
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,10 @@ public class ReplyService {
 
     public List<Reply> getReplys(Long boardId) {
         return replyRepository.findByBoardId(boardId);
+    }
+
+    
+    public List<Reply> getUserReply(Long uid) {
+        return replyRepository.findByUserId(uid);
     }
 }

@@ -44,21 +44,36 @@
       <div id="postsContainer" class="list-container active">
         <div class="item" th:each="likeBoard : ${likeListBoard}">
           <div class="item-details">
-            <h3 th:text="${likeBoard.targetTitle}"></h3>
-            <p th:text="${#strings.length(likeBoard.targetContent) > 10 ? #strings.substring(board.title, 0, 10) + '...' : likeBoard.targetContent}">게시글 내용입니다.</p>
+            <a th:href="@{/board/{id}(id=${likeBoard.targetId})}" class="no-underline">
+              <h3 th:text="${likeBoard.targetTitle}"></h3>
+            </a>
+            <p th:text="${#strings.length(likeBoard.targetContent) > 10 ? #strings.substring(likeBoard.targetContent, 0, 10) + '...' : likeBoard.targetContent}">게시글 내용입니다.</p>
           </div>
-          <button class="heart-btn"></button>
+
+          <button type="button" class="heart-btn" th:id="'likeBtn' + ${likeBoard.id}" th:lid="${likeBoard.id}" th:gurl="${likeBoard.targetId}" th:onclick="get_unlike_board(event, this.getAttribute('lid'), this.getAttribute('gurl'))"></button>
+          <button type="button" class="heart-btn-gray" th:id="'unlikeBtn' + ${likeBoard.id}" th:lid="${likeBoard.id}" th:gurl="${likeBoard.targetId}" th:onclick="get_like_board(event, this.getAttribute('lid'), this.getAttribute('gurl'))" style="display: none;"></button>
+          
         </div>
       </div>
 
       <!-- 갤러리 -->
       <div id="galleryContainer" class="list-container">
-        <div class="item" th:each="likeBoard : ${likeListGallery}">
+        <div class="item" th:each="likeGallery : ${likeListGallery}">
           <div class="item-details">
-            <h3 th:text="${likeBoard.targetTitle}"></h3>
-            <img th:src="${likeBoard.targetContent}" alt="갤러리 이미지" style="width: 20%; border-radius: 8px;">
+            <a th:href="@{/gallery/gview/{id}(id=${likeGallery.targetId})}" class="no-underline">
+              <h3 th:text="${likeGallery.targetTitle}"></h3>
+            </a>
+            
+              <button type="button" class="heart-btn" th:id="'likeBtn' + ${likeGallery.id}" th:lid="${likeGallery.id}" th:gurl="${likeGallery.targetId}" th:onclick="get_unlike_gallery(event, this.getAttribute('lid'), this.getAttribute('gurl'))"></button>
+              <button type="button" class="heart-btn-gray" th:id="'unlikeBtn' + ${likeGallery.id}" th:lid="${likeGallery.id}" th:gurl="${likeGallery.targetId}" th:onclick="get_like_gallery(event, this.getAttribute('lid'), this.getAttribute('gurl'))" style="display: none;"></button>
+
+            <a th:href="@{/gallery/gview/{id}(id=${likeGallery.targetId})}" class="no-underline">
+              <img th:src="${likeGallery.targetContent}" alt="갤러리 이미지" style="width: 20%; border-radius: 8px;">
+            </a>
+
+            
           </div>
-          <button class="heart-btn"></button>
+          <!-- <button class="heart-btn"></button> -->
         </div>
       </div>
 
@@ -82,6 +97,55 @@
   <!-- 애니메이션 및 동작 추가 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mo-js/0.288.2/mo.min.js"></script>
+
+  
+<script th:inline="javascript">
+  function get_like_board(event, id, tid) {
+      const url = `/like/board/` + tid + `/like`;
+
+      // fetch를 이용해 GET 요청 보내기
+      fetch(url, {
+          method: 'GET',
+      })
+      .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+      .then(data => {
+          // 성공적인 응답 후 처리 (예: UI 업데이트)
+          console.log('Success:', data);
+      })
+      .catch(error => {
+          // 오류 처리
+          console.error('Error:', error);
+      });
+
+      document.getElementById("unlikeBtn" + id).style.display = "none";
+      document.getElementById("likeBtn" + id).style.display = "";
+  }
+
+  function get_unlike_board(event, id, tid) {
+      // 좋아요 요청을 위한 URL 생성
+      // const url = `/like/gallery/${itemId}/like(id=${itemId})`;
+      const url = `/like/board/` + tid + `/unlike`;
+
+      // fetch를 이용해 GET 요청 보내기
+      fetch(url, {
+          method: 'GET',
+      })
+      .then(response => response.json())  // 서버에서 JSON 응답이 올 경우 처리
+      .then(data => {
+          // 성공적인 응답 후 처리 (예: UI 업데이트)
+          console.log('Success:', data);
+      })
+      .catch(error => {
+          // 오류 처리
+          console.error('Error:', error);
+      });
+
+      document.getElementById("unlikeBtn" + id).style.display = "";
+      document.getElementById("likeBtn" + id).style.display = "none";
+  }
+</script>
+  
+
   <script>
     $(document).ready(function () {
       // 카테고리 전환
@@ -95,46 +159,21 @@
         });
       });
 
-      // 하트 애니메이션 설정
-      $('.heart-btn').each(function () {
-        const el = this;
-        const timeline = new mojs.Timeline();
-
-        const burst1 = new mojs.Burst({
-          parent: el,
-          radius: { 0: 50 },
-          count: 8,
-          children: {
-            shape: 'circle',
-            radius: 10,
-            fill: ['red', 'white'],
-            duration: 300
-          }
-        });
-
-        timeline.add(burst1);
-
-        $(el).click(function () {
-          $(el).toggleClass('active');
-          if ($(el).hasClass('active')) timeline.play();
-        });
-      });
-
       // 검색 기능
-      document.getElementById('searchBtn').addEventListener('click', () => {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const items = document.querySelectorAll('.list-container.active .item');
+      // document.getElementById('searchBtn').addEventListener('click', () => {
+      //   const query = document.getElementById('searchInput').value.toLowerCase();
+      //   const items = document.querySelectorAll('.list-container.active .item');
 
-        items.forEach(item => {
-          const title = item.querySelector('h3').textContent.toLowerCase();
-          const content = item.querySelector('p')?.textContent.toLowerCase() || '';
-          if (title.includes(query) || content.includes(query)) {
-            item.style.display = 'block';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
+      //   items.forEach(item => {
+      //     const title = item.querySelector('h3').textContent.toLowerCase();
+      //     const content = item.querySelector('p')?.textContent.toLowerCase() || '';
+      //     if (title.includes(query) || content.includes(query)) {
+      //       item.style.display = 'block';
+      //     } else {
+      //       item.style.display = 'none';
+      //     }
+      //   });
+      // });
     });
   </script>
 </body>

@@ -22,4 +22,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findByUserNnContaining(String userNn);
 
+    
+    List<Board> findByUserId(Long userId);
+
 }

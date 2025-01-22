@@ -121,4 +121,8 @@ public class BoardService {
         }
         return boardRepository.save(board);
     }
+
+    public List<Board> getUserBoard(Long uid) {
+        return boardRepository.findByUserId(uid);
+    }
 }

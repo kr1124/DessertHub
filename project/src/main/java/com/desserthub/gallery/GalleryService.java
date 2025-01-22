@@ -47,4 +47,8 @@ public class GalleryService {
 
         galleryRepository.save(gallery);
     }
+    
+    public List<Gallery> getUserGallery(Long uid) {
+        return galleryRepository.findByUserId(uid);
+    }
 }

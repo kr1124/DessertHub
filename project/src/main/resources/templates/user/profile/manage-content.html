@@ -39,16 +39,23 @@
         </div>
       </div>
 
+
       <div id="postsContainer" class="list-container active">
-        <div class="item">
-          <input type="checkbox" class="select-item">
+        <div class="item" th:each="board : ${boardList}">
+          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
-            <h3>게시글 제목 1</h3>
-            <p>게시글 내용입니다.</p>
+            <a th:href="@{/board/{id}(id=${board.id})}" class="no-underline">
+              <h3 th:text="${board.boardTitle}">게시글 제목</h3>
+              <p th:text="${#strings.length(board.boardContent) > 10 ? #strings.substring(board.boardContent, 0, 10) + '...' : board.boardContent}">게시글 내용입니다.</p>
+            </a>
           </div>
           <div class="item-actions">
-            <button class="edit-btn">수정</button>
-            <button class="delete-btn">삭제</button>
+            <a th:href="@{/board/{id}/edit(id=${board.id})}">
+                <button id="edit-post" class="edit-btn" th:if="${board.userId == session.userId}">수정</button>
+            </a>
+            <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
+                <button id="delete-post" class="delete-btn" type="submit" th:if="${board.userId == session.userId}">삭제</button>
+            </form>
           </div>
         </div>
       </div>
@@ -56,32 +63,40 @@
 
       <!-- 갤러리 -->
       <div id="galleryContainer" class="list-container">
-        <div class="item">
-          <input type="checkbox" class="select-item">
+        <div class="item" th:each="gallery : ${galleryList}">
+          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
-            <h3>갤러리 제목 1</h3>
-            <img src="example.jpg" alt="갤러리 이미지" style="width: 20%; border-radius: 8px;">
+            <a th:href="@{/gallery/gview/{id}(id=${gallery.id})}" class="no-underline">
+              <h3 th:text="${gallery.galleryTitle}"></h3>
+              <img th:src="${gallery.galleryImg}" alt="갤러리 이미지" style="width: 20%; border-radius: 8px;">
+            </a>
           </div>
+
           <div class="item-actions">
-            <button class="edit-btn">수정</button>
-            <button class="delete-btn">삭제</button>
+            <form th:action="@{/gallery/{id}/delete(id=${gallery.id})}" th:if="${session.userId == gallery.userId}" method="post">
+                <button class="delete-btn" type="submit">삭제</button>
+            </form>
           </div>
         </div>
       </div>
 
       <!-- 댓글 -->
-      <div id="commentsContainer" class="list-container">
-        <div class="item">
-          <input type="checkbox" class="select-item">
+      <div id="commentsContainer" class="list-container">        
+        <div class="item" th:each="reply : ${replyList}">
+          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
-            <h3>댓글 제목 1</h3>
-            <p>댓글 내용입니다.</p>
+            <a th:href="@{/board/{id}(id=${reply.boardId})}" class="no-underline">
+              <p th:text="${#strings.length(reply.replyBody) > 10 ? #strings.substring(reply.replyBody, 0, 10) + '...' : reply.replyBody}">댓글 내용입니다.</p>
+            </a>
           </div>
           <div class="item-actions">
-            <button class="edit-btn">수정</button>
-            <button class="delete-btn">삭제</button>
+            <form th:action="@{/board/{id}/dereply(id=${reply.id})}" th:if="${session.userId == reply.userId}" method="post">
+                <button class="delete-btn" type="submit">삭제</button>
+            </form>
           </div>
         </div>
+
+
       </div>
 
       <button id="deleteSelectedBtn">전체 삭제</button>

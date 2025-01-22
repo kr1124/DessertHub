@@ -53,8 +53,8 @@
                 <p th:text="${board.boardContent}"></p>
             </div>
 
-            <div th:if="${board.boardImg}">
-                <img th:src="${board.boardImg}" style="max-width: 100%; height: auto;" /> <!-- 디코딩 필요 없음! -->
+            <div th:if="${board.boardImg}" style="display: flex; justify-content: center; align-items: center;">
+                <img th:src="${board.boardImg}" style="max-width: 70%; height: auto;" /> <!-- 디코딩 필요 없음! -->
             </div>
 
             <div style="display: flex; justify-content: center; align-items: center;">

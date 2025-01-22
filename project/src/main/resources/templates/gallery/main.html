@@ -35,14 +35,13 @@
 
                 <p class="modal-hashtag" th:text="${item.galleryHashtag}"></p>
                 
+                <button type="button" class="close-btn" th:onclick="|location.href='@{/gallery/gview/{id}(id=${item.id})}'|">상세보기</button>
                 <!-- 하트 버튼 위치 조정 -->
                 <button type="button" class="like-btn" th:id="'likeBtn' + ${item.id}" th:gurl="${item.id}"
                 th:onclick="get_like(event, this.getAttribute('gurl'))">♥</button>
                 <button type="button" class="unlike-btn" th:id="'unlikeBtn' + ${item.id}" 
                 th:gurl="${item.id}" th:onclick="get_unlike(event, this.getAttribute('gurl'))" style="display: none;">♥</button>
                 
-
-
     <!-- <div th:unless="${session.userId}">
         
     </div>
@@ -53,11 +52,11 @@
                 <!-- 모달 창 -->
                 <div id="modal" class="modal" style="display:none;" >
                     <div class="modal-content" onclick="event.stopPropagation()">
-                        <img id="modal-image" src="" alt="Modal Image" />
+                        <img id="modal-image" src="" alt="Modal Image" style="max-width: 100%; max-height: 400px; height: auto; width: auto;"/>
                         <p id="modal-title"></p>
                         <div id="modal-hashtag" class="modal-hashtags-container"></div>
                         <br>
-                        <div class="actions">            
+                        <div class="actions">
                             <button type="button" class="close-btn" onclick="closeModal()">닫기</button>
                         </div>
                     </div>
@@ -76,7 +75,7 @@
     <script th:inline="javascript">
         function init_like_set() {
             /* [[${likeList}]]를 사용하여 likeList를 JavaScript로 전달 */
-            var likeList = [[${likeList}]]; // `likeList`는 서버에서 전달된 엔티티 리스트
+            var likeList = [[${likeListGallery}]]; // `likeList`는 서버에서 전달된 엔티티 리스트
             var userId = [[${session.userId}]];
 
             console.log(likeList); // 서버에서 전달된 데이터가 JavaScript에서 확인 가능합니다.

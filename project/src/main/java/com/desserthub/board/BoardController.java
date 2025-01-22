@@ -90,7 +90,7 @@ public class BoardController {
         boardService.increaseView(id);//조회수 증가
 
         model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
-        model.addAttribute("isLike", dlikeService.getLike(id, "board")); // TODO
+        model.addAttribute("isLike", dlikeService.getLike(id, "board"));
         model.addAttribute("replyList", replyService.getReplys(id));
         model.addAttribute("reply", new Reply());
 
@@ -135,7 +135,6 @@ public class BoardController {
         redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
         redirectAttributes.addFlashAttribute("target", "/board");
         return "redirect:/remessage";
-        //return "redirect:/board";
     }
 
     
@@ -179,7 +178,7 @@ public class BoardController {
 
     @PostMapping("/{id}/dereply") //this id is reply's id
     public String deleteReply(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        System.out.println("일단 호출은 됨?");
+        //System.out.println("일단 호출은 됨?");
         Reply reply = replyService.getReply(id).orElseThrow(null);
         Long boardId = reply.getBoardId();
         boardService.decreaseComment(boardId);
