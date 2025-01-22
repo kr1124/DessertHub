@@ -46,6 +46,7 @@ CREATE TABLE dlike(
     user_id int,
     target VARCHAR(255),
     target_id INT,
+    target_title VARCHAR(255),
     target_content longtext
 ) COMMENT '';
 

@@ -61,6 +61,7 @@ public class DlikeController {
                 dlike.setUserId(userId);
                 dlike.setTarget("board");
                 dlike.setTargetId(id);
+                dlike.setTargetTitle(boardService.getBoard(userId).orElseThrow(null).getBoardTitle());
                 dlike.setTargetContent(boardService.getBoard(userId).orElseThrow(null).getBoardContent());
                 
                 boardService.increaseLike(id);
@@ -98,6 +99,7 @@ public class DlikeController {
                 dlike.setUserId(userId);
                 dlike.setTarget("gallery");
                 dlike.setTargetId(id);
+                dlike.setTargetTitle(galleryService.getGallery(userId).orElseThrow(null).getGalleryTitle());
                 dlike.setTargetContent(galleryService.getGallery(userId).orElseThrow(null).getGalleryImg());
                 
                 galleryService.increaseLike(id);

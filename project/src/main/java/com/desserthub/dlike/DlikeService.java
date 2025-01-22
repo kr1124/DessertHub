@@ -30,7 +30,7 @@ public class DlikeService {
     }
 
     //for board detail
-    public Dlike getLike(Long targetId, String target) {
+    public List<Dlike> getLike(Long targetId, String target) {
         return dlikeRepository.findByTargetIdAndTarget(targetId, target);
     }
 

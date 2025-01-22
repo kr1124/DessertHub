@@ -16,6 +16,7 @@ public class Dlike {
     private Long userId;
     private String target;
     private Long targetId;
+    private String targetTitle;
     private String targetContent;
 
     public Long getId() {
@@ -56,5 +57,14 @@ public class Dlike {
 
     public void setTargetContent(String targetContent) {
         this.targetContent = targetContent;
+    }
+
+    public String getTargetTitle() {
+        return targetTitle;
+    }
+
+    public void setTargetTitle(String targetTitle) {
+        this.targetTitle = targetTitle;
     }    
+
 }

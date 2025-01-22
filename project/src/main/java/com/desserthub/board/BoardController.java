@@ -86,11 +86,11 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String getBoard(@PathVariable Long id, Model model) {
+    public String getBoard(@PathVariable Long id, Model model, HttpSession session) {
         boardService.increaseView(id);//조회수 증가
 
         model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
-        model.addAttribute("isLike", dlikeService.getLike(id, "board"));
+        model.addAttribute("isLike", dlikeService.getLike(id, "board")); // TODO
         model.addAttribute("replyList", replyService.getReplys(id));
         model.addAttribute("reply", new Reply());
 
@@ -101,9 +101,9 @@ public class BoardController {
     public String editBoardForm(@PathVariable Long id, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         Board board = boardService.getBoard(id).orElseThrow(null);
         
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        //User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
 
-        if(board.getUserId().equals(user.getUserId())) {
+        if(board.getUserId().equals((Long)session.getAttribute("userId"))) {
             model.addAttribute("board", boardService.getBoard(id).orElseThrow(null));
             return "board/edit";
         } else {
@@ -139,27 +139,31 @@ public class BoardController {
     }
 
     
-    @GetMapping("/{id}/like")
-    public void likeBoard(@PathVariable Long id) {
-        boardService.increaseLike(id);
-    }
+    // @GetMapping("/{id}/like")
+    // public void likeBoard(@PathVariable Long id) {
+    //     boardService.increaseLike(id);
+    // }
     
-    @GetMapping("/{id}/unlike")
-    public void unlikeBoard(@PathVariable Long id) {
-        boardService.decreaseLike(id);
-    }
+    // @GetMapping("/{id}/unlike")
+    // public void unlikeBoard(@PathVariable Long id) {
+    //     boardService.decreaseLike(id);
+    // }
 
     @PostMapping("/{id}/reply")
     public String addReply(@PathVariable Long id, @ModelAttribute Reply reply, HttpSession session, RedirectAttributes redirectAttributes) {
 
-        if(session.getAttribute("userId") != null) {
-            User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        Long uid = (Long)session.getAttribute("userId");
+        Reply nr = new Reply();
+
+        if(uid != null) {
+            User user = userService.getUser(uid).orElseThrow(null);
+            
+            nr.setUserId(uid);
+            nr.setUserNn(user.getUserNn());
+            nr.setBoardId(id);
+            nr.setReplyBody(reply.getReplyBody());
     
-            reply.setUserId(user.getId());
-            reply.setUserNn(user.getUserNn());
-            reply.setBoardId(id);
-    
-            replyService.createReply(reply);
+            replyService.createReply(nr);
             boardService.increaseComment(id);
             
             // redirectAttributes.addFlashAttribute("message", "작성되었습니다.");
