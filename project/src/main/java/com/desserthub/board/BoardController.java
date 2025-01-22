@@ -73,10 +73,10 @@ public class BoardController {
 
     @PostMapping("/upload")
     public String createBoard(@ModelAttribute Board board, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long userId = (Long)session.getAttribute("userId");
+        User user = userService.getUser(userId).orElseThrow(null);
 
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-
-        board.setUserId(user.getUserId());
+        board.setUserId(userId);
         board.setUserNn(user.getUserNn());
         boardService.createBoard(board);
 

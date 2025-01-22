@@ -45,7 +45,8 @@ CREATE TABLE dlike(
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     user_id int,
     target VARCHAR(255),
-    target_id INT
+    target_id INT,
+    target_content longtext
 ) COMMENT '';
 
 CREATE TABLE reply(
@@ -57,7 +58,11 @@ CREATE TABLE reply(
     reply_time DATETIME
 ) COMMENT '';
 
-
+ALTER TABLE board AUTO_INCREMENT=1;
+ALTER TABLE gallery AUTO_INCREMENT=1;
+ALTER TABLE user AUTO_INCREMENT=1;
+ALTER TABLE reply AUTO_INCREMENT=1;
+ALTER TABLE dlike AUTO_INCREMENT=1;
 
 SELECT * FROM gallery;
 SELECT * FROM board;

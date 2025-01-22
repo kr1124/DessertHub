@@ -58,9 +58,10 @@ public class DlikeController {
         if(userId != null) {
             if(dlikeService.getLike(userId, id, "board") == null) {
                 Dlike dlike = new Dlike();
-                dlike.setUserId((Long)session.getAttribute("userId"));
+                dlike.setUserId(userId);
                 dlike.setTarget("board");
                 dlike.setTargetId(id);
+                dlike.setTargetContent(boardService.getBoard(userId).orElseThrow(null).getBoardContent());
                 
                 boardService.increaseLike(id);
 
@@ -94,9 +95,10 @@ public class DlikeController {
         if(userId != null) {
             if(dlikeService.getLike(userId, id, "gallery") == null) {
                 Dlike dlike = new Dlike();
-                dlike.setUserId((Long)session.getAttribute("userId"));
+                dlike.setUserId(userId);
                 dlike.setTarget("gallery");
                 dlike.setTargetId(id);
+                dlike.setTargetContent(galleryService.getGallery(userId).orElseThrow(null).getGalleryImg());
                 
                 galleryService.increaseLike(id);
 

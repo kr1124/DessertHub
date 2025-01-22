@@ -39,4 +39,9 @@ public class DlikeService {
         return dlikeRepository.findByUserIdAndTargetIdAndTarget(userId, targetId, target);
     }
 
+    // for mypage
+    public List<Dlike> getUserLikes(Long userId, String target) {
+        return dlikeRepository.findByUserIdAndTarget(userId, target);
+    }
+
 }

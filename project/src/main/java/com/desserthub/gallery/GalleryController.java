@@ -51,9 +51,11 @@ public class GalleryController {
 
     @PostMapping("/upload")
     public String createGallery(@ModelAttribute Gallery gallery, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        Long uid = (Long)session.getAttribute("userId");
+
+        User user = userService.getUser(uid).orElseThrow(null);
         
-        gallery.setUserId(user.getUserId());
+        gallery.setUserId(uid);
         gallery.setUserNn(user.getUserNn());
 
         gallery.setGalleryLiked(0);

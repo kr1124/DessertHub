@@ -10,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.desserthub.gallery.Gallery;
-
+import com.desserthub.dlike.DlikeService;
 
 
 // 로그인, 회원가입 관련 컨트롤러
@@ -20,9 +19,11 @@ import com.desserthub.gallery.Gallery;
 public class UserController {
 
     private final UserService userService;
+    private final DlikeService dlikeService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, DlikeService dlikeService) {
         this.userService = userService;
+        this.dlikeService = dlikeService;
     }
 
     @GetMapping("/login")
@@ -184,7 +185,12 @@ public class UserController {
     }
 
     @GetMapping("/profile/favorites-list")
-    public String request_fav(Model model) {
+    public String request_fav(Model model, HttpSession session) {
+        Long uid = (Long)session.getAttribute("userId");
+
+        model.addAttribute("likeLIstBoard", dlikeService.getUserLikes(uid, "board"));
+        model.addAttribute("likeLIstGallery", dlikeService.getUserLikes(uid, "gallery"));
+
         return "user/profile/favorites-list";
     }
     
