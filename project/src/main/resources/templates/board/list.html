@@ -26,41 +26,34 @@
 
         <div class="container">
             <div class="header">
-                <div class="filter-box">
-                    <select id="categoryFilter">
-                        <option value="all">전체</option>
-                        <option value="notice">공지</option>
-                        <option value="free">자유게시판</option>
-                        <option value="qna">Q&A</option>
-                    </select>
-                    <select id="sortOrder">
-                        <option value="latest">최신순</option>
-                        <option value="popular">인기순</option>
-                    </select>
-                </div>
-
-                <!-- <form th:action="@{/board/{search}/{text}(search=${search}, text=${stext})}" method="post">
-                    <div class="search-container">
-                        <div class="form-group">
-                            <label for="category">카테고리</label>
-                            <select id="category" th:name="search">
-                                <option value="title" th:selected="${search == 'title'}">제목</option>
-                                <option value="content" th:selected="${search == 'content'}">내용</option>
-                                <option value="nick" th:selected="${search == 'nick'}">작성자</option>
-                            </select>
-                        </div>
-    
-                        <input type="text" id="searchInput" class="search-box" th:name="stext" placeholder="검색어 입력" />
-                        <button id="searchBtn" class="search-btn">검색</button>
+                <form action="/board/order" method="get">
+                    <div class="filter-box">
+                        <select id="categoryFilter" name="cate" onchange="this.form.submit()">
+                            <option value="all" th:if="${selected1 == 'all'}" selected>전체</option>
+                            <option value="all" th:unless="${selected1 == 'all'}">전체</option>
+                            <option value="notice" th:if="${selected1 == 'notice'}" selected>공지</option>
+                            <option value="notice" th:unless="${selected1 == 'notice'}">공지</option>
+                            <option value="free" th:if="${selected1 == 'free'}" selected>자유게시판</option>
+                            <option value="free" th:unless="${selected1 == 'free'}">자유게시판</option>
+                            <option value="qna" th:if="${selected1 == 'qna'}" selected>Q&A</option>
+                            <option value="qna" th:unless="${selected1 == 'qna'}">Q&A</option>
+                        </select>
+                        <select id="sortOrder" name="ord" onchange="this.form.submit()">
+                            <option value="latest" th:if="${selected2 == 'latest'}" selected>최신순</option>
+                            <option value="latest" th:unless="${selected2 == 'latest'}">최신순</option>
+                            <option value="popular" th:if="${selected2 == 'popular'}" selected>인기순</option>
+                            <option value="popular" th:unless="${selected2 == 'popular'}">인기순</option>
+                            <option value="oldest" th:if="${selected2 == 'oldest'}" selected>오래된순</option>
+                            <option value="oldest" th:unless="${selected2 == 'oldest'}">오래된순</option>
+                        </select>
                     </div>
-                </form> -->
+                </form>
 
                 <form action="/board/search" method="get">
                     <div class="search-container">
                         <div class="form-group">
-                            <!-- <label for="category">카테고리</label> -->
                             <select name="search">
-                                <option value="title">제목</option>
+                                <option value="title" selected>제목</option>
                                 <option value="content">내용</option>
                                 <option value="nick">작성자</option>
                             </select>
@@ -75,17 +68,23 @@
             <table class="post-list">
                 <thead>
                     <tr>
+                        <th style="width: 8%;">종류</th>
                         <th style="width: 10%;">번호</th>
-                        <th style="width: 40%;">제목</th>
-                        <th style="width: 15%;">작성자</th>
-                        <th style="width: 15%;">작성일</th>
+                        <th style="width: 44%;">제목</th>
+                        <th style="width: 10%;">작성자</th>
+                        <th style="width: 12%;">작성일</th>
                         <th style="width: 10%;">조회수</th>
-                        <th style="width: 10%;">찜</th>
+                        <th style="width: 6%;">찜</th>
                     </tr>
                 </thead>
                 <!-- 글 리스트 영역 -->
                 <tbody id="postList" th:if="${board != null}">
                     <tr th:each="board : ${board}">
+                        <td>
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:if="${board.boardCategory == 'notice'}" class="no-underline">공지</a> <!-- 카테고리 -->
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:if="${board.boardCategory == 'free'}" class="no-underline">자유</a> <!-- 카테고리 -->
+                            <a th:href="@{/board/{id}(id=${board.id})}" th:if="${board.boardCategory == 'qna'}" class="no-underline">Q&A</a> <!-- 카테고리 -->
+                        </td>
                         <td>
                             <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.id}" class="no-underline"></a> <!-- 번호 -->
                         </td>

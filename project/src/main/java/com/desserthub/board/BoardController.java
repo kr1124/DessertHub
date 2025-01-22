@@ -35,19 +35,25 @@ public class BoardController {
 
     @GetMapping
     public String getAllBoards(Model model) {
-        model.addAttribute("board", boardService.getAllBoards());
+        model.addAttribute("selected1", "all");
+        model.addAttribute("selected2", "latest");
+        model.addAttribute("board", boardService.getAllBoardsDesc());
+        return "board/list";
+    }
+
+    @GetMapping("/order")
+    public String getAllBoards(@RequestParam(name = "cate", defaultValue = "all") String category, @RequestParam(name = "ord", defaultValue = "latest") String order, Model model) {
+        
+        model.addAttribute("selected1", category);
+        model.addAttribute("selected2", order);
+        model.addAttribute("board", boardService.getBoards(category, order));
+
         return "board/list";
     }
 
     @GetMapping("/search")
     public String getAllBoardsBySearch(@RequestParam(name = "search", defaultValue = "title") String search, @RequestParam(name = "stext", defaultValue = "") String stext, Model model) {
-        if(search.equals("title")) {
-            model.addAttribute("board", boardService.searchBoardsByTitle(stext));
-        } else if(search.equals("content")) {
-            model.addAttribute("board", boardService.searchBoardsByContent(stext));
-        } else if(search.equals("nick")) {
-            model.addAttribute("board", boardService.searchBoardsByNick(stext));
-        }
+        model.addAttribute("board", boardService.searchBoards(search, stext));
         return "board/list";
     }
 

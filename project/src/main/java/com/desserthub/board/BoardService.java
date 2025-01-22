@@ -18,17 +18,51 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public List<Board> searchBoardsByTitle(String boardTitle) {
-        return boardRepository.findByBoardTitleContaining(boardTitle);
+    public List<Board> getAllBoardsDesc() {
+        return boardRepository.findAllByIdNotNullOrderByIdDesc();
     }
 
-    public List<Board> searchBoardsByContent(String boardContent) {
-        return boardRepository.findByBoardContentContaining(boardContent);
+    public List<Board> getAllBoardsPopular() {
+        return boardRepository.findAllByBoardLikedNotNullOrderByIdDesc();
     }
 
-    public List<Board> searchBoardsByNick(String userNn) {
-        return boardRepository.findByUserNnContaining(userNn);
+    public List<Board> getBoards(String category, String order) {
+        if(category.equals("all")) {
+            if(order.equals("latest")) {
+                return boardRepository.findAllByIdNotNullOrderByIdDesc();
+            } else if(order.equals("popular")) {
+                return boardRepository.findAllByIdNotNullOrderByBoardLikedDesc();
+            } else if(order.equals("oldest")) {
+                return boardRepository.findAllByIdNotNullOrderByIdAsc();
+            } else {
+                return null;
+            }
+        } else {
+            if(order.equals("latest")) {
+                return boardRepository.findByBoardCategoryOrderByBoardLikedDesc(category);
+            } else if(order.equals("popular")) {
+                return boardRepository.findByBoardCategoryOrderByBoardLikedDesc(category);
+            } else if(order.equals("oldest")) {
+                return boardRepository.findByBoardCategoryOrderByBoardWritedayAsc(category);
+            } else {
+                return null;
+            }
+        }
     }
+
+    
+    public List<Board> searchBoards(String search, String stext) {
+        if(search.equals("title")) {
+            return boardRepository.findByBoardTitleContaining(stext);
+        } else if(search.equals("content")) {
+            return boardRepository.findByBoardContentContaining(stext);
+        } else if(search.equals("nick")) {
+            return boardRepository.findByUserNnContaining(stext);
+        } else {
+            return null;
+        }
+    }
+
 
     public Optional<Board> getBoard(Long id) {
         return boardRepository.findById(id);
