@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/general.css">
   <link rel="stylesheet" href="/css/fragments/header.css">
   <link rel="stylesheet" href="/css/user/nav.css">
-  <link rel="stylesheet" href="/css/fragments/footer.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
   <link rel="stylesheet" href="/css/user/editimage.css">
   <style>
 
@@ -20,45 +20,33 @@
 
 <body>
 
-  <!-- 헤더 포함 -->
   <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 사이드바 포함 -->
   <nav th:replace="user/profile/profile-nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <!-- 마이페이지 구조 -->
   <div class="mypage-container">
 
     <div class="container">
       <h2>프로필 사진 변경</h2>
 
-      <form id="uploadForm" th:action="@{/user/update/image}" th:object="${user}" method="post" enctype="multipart/form-data">
+      <form id="uploadForm" th:action="@{/user/update/image}" th:object="${user}" method="post"
+        enctype="multipart/form-data">
         <!-- 현재 프로필 사진 (동그란 모양) -->
         <div class="profile-pic" id="profilePic">
-          <img th:src="${user.userPi}" alt="사진 선택" style="max-width: 100%; max-height: 100%;" /> <!-- 디코딩 필요 없음! -->
+          <img th:src="${user.userPi}" alt="사진 선택" style="max-width: 100%; max-height: 100%;" />
           <!-- <span>사진 선택</span> -->
         </div>
-        
-        <!-- 파일 업로드 입력 -->
-        <!-- <input type="file" id="fileInput" class="file-input" accept="image/jpg, image/png" onchange="previewImage()"> -->
 
-        
+
         <input type="file" id="imageUpload" accept="image/*" onchange="encodeImage(event)" required />
         <div class="preview-container" id="previewContainer"></div>
-        
-        <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{userPi}" >
-    
 
-        <!-- 찾아보기 및 업로드 버튼 -->
-        <!-- <br>
-        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">찾아보기</button>
-        <button class="upload-btn" onclick="uploadImage()">업로드</button> -->
+        <input type="hidden" id="encodedImage" name="encodedImage" th:field="*{userPi}">
 
-  
-            <div class="button-container">
-                <button type="button" id="cancelBtn">취소</button>
-                <button type="submit" id="submitBtn">등록</button>
-            </div>
+        <div class="button-container">
+          <button type="button" id="cancelBtn">취소</button>
+          <button type="submit" id="submitBtn">등록</button>
+        </div>
 
       </form>
       <!-- 사진 형식과 크기 제한 안내 -->
@@ -67,10 +55,10 @@
       </div>
     </div>
 
+    <!-- 푸터 포함 -->
+    <footer th:replace="fragments/footer.html :: footer"></footer>
   </div>
 
-  <!-- 푸터 포함 -->
-  <footer th:replace="fragments/footer.html :: footer"></footer>
 
 
   <script>
@@ -94,33 +82,33 @@
     }
 
 
-        // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
-        function encodeImage(event) {
-            var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
-            
-            if (file) {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    // Base64 인코딩된 데이터
-                    var base64data = reader.result;
-    
-                    // 숨은 입력 필드에 Base64 데이터 설정
-                    document.getElementById('encodedImage').value = base64data;
-    
-                    // 미리보기 이미지 표시
-                    var previewContainer = document.getElementById('previewContainer');
-                    previewContainer.innerHTML = '';  // 기존 미리보기 제거
-                    var imgElement = document.createElement('img');
-                    imgElement.src = base64data;
-                    imgElement.alt = 'Image Preview';
-                    imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
-                    previewContainer.appendChild(imgElement);
-                };
-    
-                reader.readAsDataURL(file);  // 파일을 Base64로 읽음
-            }
-        }
-    
+    // 이미지 선택 시 Base64로 변환하여 숨은 필드에 설정하는 함수
+    function encodeImage(event) {
+      var file = event.target.files[0];  // 파일 입력에서 선택된 첫 번째 파일을 가져옵니다.
+
+      if (file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          // Base64 인코딩된 데이터
+          var base64data = reader.result;
+
+          // 숨은 입력 필드에 Base64 데이터 설정
+          document.getElementById('encodedImage').value = base64data;
+
+          // 미리보기 이미지 표시
+          var previewContainer = document.getElementById('previewContainer');
+          previewContainer.innerHTML = '';  // 기존 미리보기 제거
+          var imgElement = document.createElement('img');
+          imgElement.src = base64data;
+          imgElement.alt = 'Image Preview';
+          imgElement.style.maxWidth = '300px';  // 미리보기 이미지 크기 조정
+          previewContainer.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(file);  // 파일을 Base64로 읽음
+      }
+    }
+
 
     function uploadImage() {
       const fileInput = document.getElementById('fileInput');

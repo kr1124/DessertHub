@@ -11,19 +11,16 @@
   <link rel="stylesheet" href="/css/general.css">
   <link rel="stylesheet" href="/css/fragments/header.css">
   <link rel="stylesheet" href="/css/user/nav.css">
-  <link rel="stylesheet" href="/css/fragments/footer.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
   <link rel="stylesheet" href="/css/user/manage.css">
 </head>
 
 <body>
 
-  <!-- 헤더 포함 -->
   <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 사이드바 포함 -->
   <nav th:replace="user/profile/profile-nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <!-- 마이페이지 구조 -->
   <div class="mypage-container">
 
     <div class="container">
@@ -42,7 +39,6 @@
 
       <div id="postsContainer" class="list-container active">
         <div class="item" th:each="board : ${boardList}">
-          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
             <a th:href="@{/board/{id}(id=${board.id})}" class="no-underline">
               <h3 th:text="${board.boardTitle}">게시글 제목</h3>
@@ -67,7 +63,6 @@
       <!-- 갤러리 -->
       <div id="galleryContainer" class="list-container">
         <div class="item" th:each="gallery : ${galleryList}">
-          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
             <a th:href="@{/gallery/gview/{id}(id=${gallery.id})}" class="no-underline">
               <h3 th:text="${gallery.galleryTitle}"></h3>
@@ -87,7 +82,6 @@
       <!-- 댓글 -->
       <div id="commentsContainer" class="list-container">
         <div class="item" th:each="reply : ${replyList}">
-          <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
             <a th:href="@{/board/{id}(id=${reply.boardId})}" class="no-underline">
               <p
@@ -102,11 +96,8 @@
             </form>
           </div>
         </div>
-
-
       </div>
 
-      <!-- <button id="deleteSelectedBtn">전체 삭제</button> -->
     </div>
   </div>
 
@@ -128,64 +119,6 @@
     });
   </script>
 
-  <!-- legacy -->
-  <script>
-
-
-    // 검색 기능
-    // document.getElementById('searchBtn').addEventListener('click', () => {
-    //   const query = document.getElementById('searchInput').value.toLowerCase();
-    //   const items = document.querySelectorAll('.list-container.active .item');
-    //   items.forEach(item => {
-    //     const title = item.querySelector('h3').textContent.toLowerCase();
-    //     const content = item.querySelector('p').textContent.toLowerCase();
-    //     if (title.includes(query) || content.includes(query)) {
-    //       item.style.display = 'block';
-    //     } else {
-    //       item.style.display = 'none';
-    //     }
-    //   });
-    // });
-
-    // 삭제 기능
-    // document.querySelectorAll('.delete-btn').forEach(button => {
-    //   button.addEventListener('click', function () {
-    //     const item = this.closest('.item');
-    //     if (confirm('정말로 삭제하시겠습니까?')) {
-    //       item.remove();
-    //     }
-    //   });
-    // });
-
-    // 선택 삭제 기능
-    // document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
-    //   const selectedItems = document.querySelectorAll('.list-container.active .select-item:checked');
-    //   if (selectedItems.length === 0) {
-    //     alert('선택된 항목이 없습니다.');
-    //     return;
-    //   }
-    //   if (confirm('선택한 항목을 삭제하시겠습니까?')) {
-    //     selectedItems.forEach(checkbox => {
-    //       checkbox.closest('.item').remove();
-    //     });
-    //     alert('선택된 항목이 삭제되었습니다.');
-    //   }
-    // });
-
-    // document.getElementById('searchBtn').addEventListener('click', () => {
-    //   const query = document.getElementById('searchInput').value.toLowerCase();
-    //   const items = document.querySelectorAll('.list-container.active .item');
-    //   items.forEach(item => {
-    //     const title = item.querySelector('h3').textContent.toLowerCase();
-    //     const content = item.querySelector('p').textContent.toLowerCase();
-    //     if (title.includes(query) || content.includes(query)) {
-    //       item.style.display = 'block';
-    //     } else {
-    //       item.style.display = 'none';
-    //     }
-    //   });
-    // });
-  </script>
 </body>
 
 </html>

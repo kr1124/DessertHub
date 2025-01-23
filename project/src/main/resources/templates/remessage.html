@@ -8,7 +8,6 @@
 </head>
 
 <body>
-    <!-- 메시지와 타겟 정보가 있을 경우 -->
     <div th:if="${message}" id="flashMessage" style="display: none;">
         <span th:text="${message}"></span>
     </div>
@@ -18,7 +17,6 @@
 
     <script th:inline="javascript">
         window.onload = function () {
-            // message와 target이 존재하는지 확인
             var message = document.getElementById("flashMessage");
             var target = document.getElementById("redirectTarget");
 
@@ -27,7 +25,7 @@
                     // alert로 메시지를 띄운 후, 확인을 누르면 지정된 target으로 이동
                     alert(message.innerText);
                 }
-                
+
                 // 확인을 누르면 리다이렉트 (목적지로 이동)
                 window.location.href = target.innerText;
             }

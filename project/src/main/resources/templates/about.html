@@ -18,20 +18,15 @@
 
 <body>
 
-  <!-- 헤더 포함 -->
   <header th:replace="fragments/header.html :: header"></header>
 
-
   <main>
-    <!-- 사이드바 포함 -->
     <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-    <!-- 상단 내비게이션 -->
     <div class="center-content">
       <nav class="top-nav">
         <a href="javascript:void(0);" onclick="showSection('about', this)" class="active">About Us</a>
         <a href="javascript:void(0);" onclick="showSection('team', this)">Meet Our Team</a>
-        <!-- <a href="javascript:void(0);" onclick="showSection('contact', this)">Contact Us</a> -->
       </nav>
 
       <!-- About Section -->
@@ -60,25 +55,12 @@
         </div>
       </div>
 
-      <!-- Contact Us Section -->
-      <!-- <div id="contact" class="section contact-section">
-        <h2>Contact Us</h2>
-        <div class="contact-form">
-          <input type="text" id="title" placeholder="제목">
-          <input type="email" id="email" placeholder="이메일">
-          <textarea id="message" rows="4" placeholder="내용"></textarea>
-          <button onclick="submitContactForm()">등록</button>
-        </div>
-      </div> -->
-
     </div>
   </main>
 
-  <!-- 푸터 포함 -->
   <footer th:replace="fragments/footer.html :: footer"></footer>
 
   <script>
-
     document.addEventListener('DOMContentLoaded', function () {
       const defaultSection = document.querySelector('.top-nav a.active');
       showSection('about', defaultSection);
@@ -102,20 +84,6 @@
       // 클릭된 링크에 'active' 클래스 추가
       element.classList.add('active');
     }
-
-    // function submitContactForm() {
-    //   // 입력값 가져오기
-    //   const title = document.getElementById('title').value.trim();
-    //   const email = document.getElementById('email').value.trim();
-    //   const message = document.getElementById('message').value.trim();
-
-    //   // 입력값 확인
-    //   if (title && email && message) {
-    //     alert('등록되었습니다!');
-    //   } else {
-    //     alert('모든 필드를 입력해주세요.');
-    //   }
-    // }
   </script>
 </body>
 

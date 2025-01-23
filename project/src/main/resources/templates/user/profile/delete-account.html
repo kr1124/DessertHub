@@ -11,33 +11,27 @@
   <link rel="stylesheet" href="/css/general.css">
   <link rel="stylesheet" href="/css/fragments/header.css">
   <link rel="stylesheet" href="/css/user/nav.css">
-  <link rel="stylesheet" href="/css/fragments/footer.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
   <link rel="stylesheet" href="/css/user/delete.css">
 </head>
 
 <body>
 
-
-  <!-- 헤더 포함 -->
   <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 사이드바 포함 -->
   <nav th:replace="user/profile/profile-nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <!-- 마이페이지 구조 -->
   <div class="mypage-container">
-
+    
     <div class="container">
       <h2 class="h2delete">회원 탈퇴</h2>
 
       <p>회원 탈퇴 시, 모든 데이터가 삭제됩니다. 정말 탈퇴하시겠습니까?</p>
 
-      <form id="profileDeleteForm" action="/user/delete" th:object="${user}" method="post">
-        <!-- 아이디 입력란 -->
+      <form id="profileDeleteForm" action="/user/delete" th:object="${user}" method="get">
         <label for="userId">아이디</label>
         <input type="text" id="userId" th:field="*{userId}" placeholder="아이디를 입력하세요">
 
-        <!-- 비밀번호 입력란 -->
         <label for="password">비밀번호</label>
         <input type="password" id="password" th:field="*{userPw}" placeholder="비밀번호를 입력하세요">
 
@@ -45,7 +39,6 @@
         <input type="password" id="confirm-password" placeholder="비밀번호 확인">
         <p id="password-feedback"></p>
 
-        <!-- 탈퇴 버튼 -->
         <button type="button" class="button" onclick="confirmDeactivation()">탈퇴</button>
 
       </form>
@@ -58,7 +51,6 @@
 
   </div>
 
-  <!-- 푸터 포함 -->
   <footer th:replace="fragments/footer.html :: footer"></footer>
 
   <script>
@@ -96,11 +88,10 @@
 
       const confirmDeactivation = confirm("탈퇴하시겠습니까?");
       if (confirmDeactivation) {
-        //alert("탈퇴가 진행됩니다.");
         document.getElementById("profileDeleteForm").submit();
       } else {
         alert("탈퇴가 취소되었습니다.");
-        event.preventDefault();  // POST 요청을 막음
+        event.preventDefault();
         return;
       }
     }
