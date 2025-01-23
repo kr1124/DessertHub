@@ -22,7 +22,7 @@ public class DessertService {
     }
 
     public Dessert findid(String dessertChara, String dessertName){
-        return dessertRepository.findByDescriptionOrName(dessertChara, dessertName);
+        return dessertRepository.findByDessertCharaOrDessertName(dessertChara, dessertName);
     }
 
 }

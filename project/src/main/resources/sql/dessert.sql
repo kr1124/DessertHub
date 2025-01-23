@@ -37,11 +37,12 @@ CREATE TABLE user(
 CREATE TABLE dessert(
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     dessert_name VARCHAR(255),
-    dessert_img LONGTEXT,
+    dessert_image LONGTEXT,
     dessert_chara VARCHAR(255)
 ) COMMENT '';
 
 SELECT * FROM gallery;
 SELECT * FROM board;
+SELECT * FROM dessert;
 
 commit;
