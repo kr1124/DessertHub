@@ -97,7 +97,15 @@ public class GalleryController {
         galleryService.deleteGallery(id);
         
         redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
-        redirectAttributes.addFlashAttribute("target", "gallery/main");
+        redirectAttributes.addFlashAttribute("target", "/gallery");
+        return "redirect:/remessage";
+    }
+    @PostMapping("/{id}/udelete")
+    public String deleteGalleryInUserPage(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        galleryService.deleteGallery(id);
+        
+        redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "/user/profile/manage-content");
         return "redirect:/remessage";
     }
 }

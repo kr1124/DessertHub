@@ -61,10 +61,10 @@ public class DlikeController {
                 dlike.setUserId(userId);
                 dlike.setTarget("board");
                 dlike.setTargetId(id);
-                dlike.setTargetTitle(boardService.getBoard(userId).orElseThrow(null).getBoardTitle());
-                dlike.setTargetContent(boardService.getBoard(userId).orElseThrow(null).getBoardContent());
+                dlike.setTargetTitle(boardService.getBoard(id).orElseThrow(null).getBoardTitle());
+                dlike.setTargetContent(boardService.getBoard(id).orElseThrow(null).getBoardContent());
                 
-                boardService.increaseLike(id);
+                boardService.updateBoardCounts(id);
 
                 dlikeService.createLike(dlike);
             }
@@ -78,7 +78,7 @@ public class DlikeController {
         try {
             dlike = dlikeService.getLike((Long)session.getAttribute("userId"), id, "board");
         
-            boardService.decreaseLike(id);
+            boardService.updateBoardCounts(id);
 
             dlikeService.deleteLike(dlike.getId());
         } catch (Exception e) {
@@ -99,10 +99,10 @@ public class DlikeController {
                 dlike.setUserId(userId);
                 dlike.setTarget("gallery");
                 dlike.setTargetId(id);
-                dlike.setTargetTitle(galleryService.getGallery(userId).orElseThrow(null).getGalleryTitle());
-                dlike.setTargetContent(galleryService.getGallery(userId).orElseThrow(null).getGalleryImg());
+                dlike.setTargetTitle(galleryService.getGallery(id).orElseThrow(null).getGalleryTitle());
+                dlike.setTargetContent(galleryService.getGallery(id).orElseThrow(null).getGalleryImg());
                 
-                galleryService.increaseLike(id);
+                galleryService.updateGalleryCount(id);
 
                 dlikeService.createLike(dlike);
             }
@@ -117,7 +117,7 @@ public class DlikeController {
         try {
             dlike = dlikeService.getLike((Long)session.getAttribute("userId"), id, "gallery");
         
-            galleryService.decreaseLike(id);
+            galleryService.updateGalleryCount(id);
 
             dlikeService.deleteLike(dlike.getId());
         } catch (Exception e) {

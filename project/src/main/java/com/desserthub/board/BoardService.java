@@ -2,6 +2,11 @@ package com.desserthub.board;
 
 import org.springframework.stereotype.Service;
 
+import com.desserthub.dlike.Dlike;
+import com.desserthub.dlike.DlikeRepository;
+import com.desserthub.reply.Reply;
+import com.desserthub.reply.ReplyRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +14,13 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
+    private final DlikeRepository dlikeRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, ReplyRepository replyRepository, DlikeRepository dlikeRepository) {
         this.boardRepository = boardRepository;
+        this.replyRepository = replyRepository;
+        this.dlikeRepository = dlikeRepository;
     }
 
     public List<Board> getAllBoards() {
@@ -90,39 +99,49 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    public Board increaseLike(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(null);
+    // public Board increaseLike(Long id) {
+    //     Board board = boardRepository.findById(id).orElseThrow(null);
 
-        board.setBoardLiked(board.getBoardLiked() + 1);
-        return boardRepository.save(board);
-    }
+    //     board.setBoardLiked(board.getBoardLiked() + 1);
+    //     return boardRepository.save(board);
+    // }
 
-    public Board decreaseLike(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(null);
+    // public Board decreaseLike(Long id) {
+    //     Board board = boardRepository.findById(id).orElseThrow(null);
 
-        if(board.getBoardLiked() > 0) {
-            board.setBoardLiked(board.getBoardLiked() - 1);
-        }
-        return boardRepository.save(board);
-    }
+    //     if(board.getBoardLiked() > 0) {
+    //         board.setBoardLiked(board.getBoardLiked() - 1);
+    //     }
+    //     return boardRepository.save(board);
+    // }
 
-    public Board increaseComment(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(null);
+    // public Board increaseComment(Long id) {
+    //     Board board = boardRepository.findById(id).orElseThrow(null);
 
-        board.setBoardComment(board.getBoardComment() + 1);
-        return boardRepository.save(board);
-    }
+    //     board.setBoardComment(board.getBoardComment() + 1);
+    //     return boardRepository.save(board);
+    // }
 
-    public Board decreaseComment(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(null);
+    // public Board decreaseComment(Long id) {
+    //     Board board = boardRepository.findById(id).orElseThrow(null);
 
-        if(board.getBoardComment() > 0) {
-            board.setBoardComment(board.getBoardComment() - 1);
-        }
-        return boardRepository.save(board);
-    }
+    //     if(board.getBoardComment() > 0) {
+    //         board.setBoardComment(board.getBoardComment() - 1);
+    //     }
+    //     return boardRepository.save(board);
+    // }
 
     public List<Board> getUserBoard(Long uid) {
         return boardRepository.findByUserId(uid);
+    }
+
+    public void updateBoardCounts(Long bid) {
+        List<Reply> replyList =  replyRepository.findByBoardId(bid);
+        List<Dlike> likeList = dlikeRepository.findByTargetIdAndTarget(bid, "board");
+
+        Board board = boardRepository.findById(bid).orElseThrow(null);
+        board.setBoardComment(replyList.size());
+        board.setBoardLiked(likeList.size());
+        boardRepository.save(board);
     }
 }

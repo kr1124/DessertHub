@@ -10,4 +10,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     List<Reply> findByUserId(Long userId);
 
+    void deleteAllByUserId(Long userId);
 }

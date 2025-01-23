@@ -1,16 +1,34 @@
 package com.desserthub.home;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-// 이 어노테이션은 해당 클래스가 서비스 계층에 속함을 나타냅니다.
-// Spring은 이 클래스를 **빈(Bean)**으로 등록하여 다른 클래스에서 의존성 주입을 통해 사용할 수 있게 만듭니다.
+import com.desserthub.board.Board;
+import com.desserthub.board.BoardRepository;
+import com.desserthub.gallery.GalleryRepository;
+import com.desserthub.user.UserRepository;
+
 @Service
 public class HomeService {
 
-    //비즈니스 로직을 처리하는 메서드입니다. 이 예시에서는 단순히 인사말을 반환합니다.
-    public String getGreeting() {
-        return "Hello, welcome to Dessert Hub!";
-    }
+    // private final BoardRepository boardRepository;
+    // private final UserRepository userRepository;
+    // private final GalleryRepository galleryRepository;
 
-    
+    // public HomeService(BoardRepository boardRepository, UserRepository userRepository, GalleryRepository galleryRepository) {
+    //     this.boardRepository = boardRepository;
+    //     this.userRepository = userRepository;
+    //     this.galleryRepository = galleryRepository;
+    // }
+
+
+    // public void updateUserDB(Long uid) {
+    //     List<Board> boardList = boardRepository.findByUserId(uid);
+    //     User user = userRepository.findById(uid);
+
+    //     for(Board board : boardList) {
+    //         board.setUserNn(null);
+    //     }
+    // }
 }

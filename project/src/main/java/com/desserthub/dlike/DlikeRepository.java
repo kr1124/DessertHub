@@ -15,4 +15,6 @@ public interface DlikeRepository extends JpaRepository<Dlike, Long> {
     // my page에서 씀
     List<Dlike> findByUserIdAndTarget(Long userId, String target);
 
+    void deleteAllByUserId(Long userId);
+
 }

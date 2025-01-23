@@ -1,7 +1,5 @@
 package com.desserthub.board;
 
-import java.time.LocalDateTime;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -38,6 +36,7 @@ public class BoardController {
         model.addAttribute("selected1", "all");
         model.addAttribute("selected2", "latest");
         model.addAttribute("board", boardService.getAllBoardsDesc());
+        model.addAttribute("userList", userService.getAllUsers());
         return "board/list";
     }
 
@@ -137,16 +136,14 @@ public class BoardController {
         return "redirect:/remessage";
     }
 
-    
-    // @GetMapping("/{id}/like")
-    // public void likeBoard(@PathVariable Long id) {
-    //     boardService.increaseLike(id);
-    // }
-    
-    // @GetMapping("/{id}/unlike")
-    // public void unlikeBoard(@PathVariable Long id) {
-    //     boardService.decreaseLike(id);
-    // }
+    @PostMapping("/{id}/udelete")
+    public String deleteBoardInUserPage(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        boardService.deleteBoard(id);
+        
+        redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "/user/profile/manage-content");
+        return "redirect:/remessage";
+    }
 
     @PostMapping("/{id}/reply")
     public String addReply(@PathVariable Long id, @ModelAttribute Reply reply, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -163,7 +160,7 @@ public class BoardController {
             nr.setReplyBody(reply.getReplyBody());
     
             replyService.createReply(nr);
-            boardService.increaseComment(id);
+            boardService.updateBoardCounts(id);
             
             // redirectAttributes.addFlashAttribute("message", "작성되었습니다.");
             redirectAttributes.addFlashAttribute("target", "board/" + id);
@@ -178,15 +175,27 @@ public class BoardController {
 
     @PostMapping("/{id}/dereply") //this id is reply's id
     public String deleteReply(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        //System.out.println("일단 호출은 됨?");
         Reply reply = replyService.getReply(id).orElseThrow(null);
         Long boardId = reply.getBoardId();
-        boardService.decreaseComment(boardId);
+        boardService.updateBoardCounts(boardId);
 
         replyService.deleteReply(id);
         
         // redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
         redirectAttributes.addFlashAttribute("target", "board/" + boardId);
+        return "redirect:/remessage";
+    }
+
+    @PostMapping("/{id}/udereply") //this id is reply's id
+    public String deleteReplyInUserPage(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Reply reply = replyService.getReply(id).orElseThrow(null);
+        Long boardId = reply.getBoardId();
+        boardService.updateBoardCounts(boardId);
+
+        replyService.deleteReply(id);
+        
+        // redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "/user/profile/manage-content");
         return "redirect:/remessage";
     }
     

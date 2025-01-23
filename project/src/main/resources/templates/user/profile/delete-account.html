@@ -34,22 +34,22 @@
 
       <form id="profileDeleteForm" action="/user/delete" th:object="${user}" method="post">
         <!-- 아이디 입력란 -->
-      <label for="userId">아이디</label>
-      <input type="text" id="userId" th:field="*{userId}" placeholder="아이디를 입력하세요">
+        <label for="userId">아이디</label>
+        <input type="text" id="userId" th:field="*{userId}" placeholder="아이디를 입력하세요">
 
-      <!-- 비밀번호 입력란 -->
-      <label for="password">비밀번호</label>
-      <input type="password" id="password" th:field="*{userPw}" placeholder="비밀번호를 입력하세요">
+        <!-- 비밀번호 입력란 -->
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" th:field="*{userPw}" placeholder="비밀번호를 입력하세요">
 
-      <label for="confirm-password">비밀번호 확인</label>
-      <input type="password" id="confirm-password" placeholder="비밀번호 확인">
-      <p id="password-feedback"></p>
+        <label for="confirm-password">비밀번호 확인</label>
+        <input type="password" id="confirm-password" placeholder="비밀번호 확인">
+        <p id="password-feedback"></p>
 
-      <!-- 탈퇴 버튼 -->
-      <button class="button" onclick="confirmDeactivation()">탈퇴</button>
+        <!-- 탈퇴 버튼 -->
+        <button type="button" class="button" onclick="confirmDeactivation()">탈퇴</button>
 
       </form>
-      
+
 
       <div class="info">
         <p>탈퇴 후 복구는 불가능합니다.</p>
@@ -97,6 +97,7 @@
       const confirmDeactivation = confirm("탈퇴하시겠습니까?");
       if (confirmDeactivation) {
         //alert("탈퇴가 진행됩니다.");
+        document.getElementById("profileDeleteForm").submit();
       } else {
         alert("탈퇴가 취소되었습니다.");
         event.preventDefault();  // POST 요청을 막음

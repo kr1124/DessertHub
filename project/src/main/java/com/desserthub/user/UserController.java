@@ -161,7 +161,7 @@ public class UserController {
         try {
             user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
         } catch (Exception e) {
-            // TODO: handle exception
+            
         }
 
         if(user == null) {
@@ -264,8 +264,9 @@ public class UserController {
 
     @PostMapping("update")
     public String profile_update_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+        Long uid = (Long)session.getAttribute("userId");
 
-        if(userService.updateUser((Long)session.getAttribute("userId"), user)) {
+        if(userService.updateUser(uid, user)) {
             redirectAttributes.addFlashAttribute("message", "수정되었습니다.");
             redirectAttributes.addFlashAttribute("target", "/user/profile");
             return "redirect:/remessage";
@@ -293,11 +294,11 @@ public class UserController {
 
     // 회원 탈퇴 처리 및 세션 삭제
     @PostMapping("/delete")
-    public String withdraw(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String delet_user(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
+        User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
 
-        if(userService.deleteUser(user.getUserId(), user.getUserPw())) {
-            // TODO 작성한 글, 갤러리, 등 전부 삭제 조치
-
+        if(tuser != null) {
+            userService.deleteUser(user.getUserId(), user.getUserPw());
             session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
 
             redirectAttributes.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.");

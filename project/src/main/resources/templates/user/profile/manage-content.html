@@ -46,15 +46,18 @@
           <div class="item-details">
             <a th:href="@{/board/{id}(id=${board.id})}" class="no-underline">
               <h3 th:text="${board.boardTitle}">게시글 제목</h3>
-              <p th:text="${#strings.length(board.boardContent) > 10 ? #strings.substring(board.boardContent, 0, 10) + '...' : board.boardContent}">게시글 내용입니다.</p>
+              <p
+                th:text="${#strings.length(board.boardContent) > 10 ? #strings.substring(board.boardContent, 0, 10) + '...' : board.boardContent}">
+                게시글 내용입니다.</p>
             </a>
           </div>
           <div class="item-actions">
             <a th:href="@{/board/{id}/edit(id=${board.id})}">
-                <button id="edit-post" class="edit-btn" th:if="${board.userId == session.userId}">수정</button>
+              <button id="edit-post" class="edit-btn" th:if="${board.userId == session.userId}">수정</button>
             </a>
-            <form th:action="@{/board/{id}/delete(id=${board.id})}" method="post" style="display:inline;">
-                <button id="delete-post" class="delete-btn" type="submit" th:if="${board.userId == session.userId}">삭제</button>
+            <form th:action="@{/board/{id}/udelete(id=${board.id})}" method="post" style="display:inline;">
+              <button id="delete-post" class="delete-btn" type="submit"
+                th:if="${board.userId == session.userId}">삭제</button>
             </form>
           </div>
         </div>
@@ -73,25 +76,29 @@
           </div>
 
           <div class="item-actions">
-            <form th:action="@{/gallery/{id}/delete(id=${gallery.id})}" th:if="${session.userId == gallery.userId}" method="post">
-                <button class="delete-btn" type="submit">삭제</button>
+            <form th:action="@{/gallery/{id}/udelete(id=${gallery.id})}" th:if="${session.userId == gallery.userId}"
+              method="post">
+              <button class="delete-btn" type="submit">삭제</button>
             </form>
           </div>
         </div>
       </div>
 
       <!-- 댓글 -->
-      <div id="commentsContainer" class="list-container">        
+      <div id="commentsContainer" class="list-container">
         <div class="item" th:each="reply : ${replyList}">
           <!-- <input type="checkbox" class="select-item"> -->
           <div class="item-details">
             <a th:href="@{/board/{id}(id=${reply.boardId})}" class="no-underline">
-              <p th:text="${#strings.length(reply.replyBody) > 10 ? #strings.substring(reply.replyBody, 0, 10) + '...' : reply.replyBody}">댓글 내용입니다.</p>
+              <p
+                th:text="${#strings.length(reply.replyBody) > 10 ? #strings.substring(reply.replyBody, 0, 10) + '...' : reply.replyBody}">
+                댓글 내용입니다.</p>
             </a>
           </div>
           <div class="item-actions">
-            <form th:action="@{/board/{id}/dereply(id=${reply.id})}" th:if="${session.userId == reply.userId}" method="post">
-                <button class="delete-btn" type="submit">삭제</button>
+            <form th:action="@{/board/{id}/udereply(id=${reply.id})}" th:if="${session.userId == reply.userId}"
+              method="post">
+              <button class="delete-btn" type="submit">삭제</button>
             </form>
           </div>
         </div>
@@ -99,7 +106,7 @@
 
       </div>
 
-      <button id="deleteSelectedBtn">전체 삭제</button>
+      <!-- <button id="deleteSelectedBtn">전체 삭제</button> -->
     </div>
   </div>
 
@@ -109,9 +116,7 @@
   <!-- 푸터 포함 -->
   <footer th:replace="fragments/footer.html :: footer"></footer>
 
-
   <script>
-
     const navButtons = document.querySelectorAll('.nav-buttons button');
     const containers = document.querySelectorAll('.list-container');
 
@@ -121,60 +126,65 @@
         document.getElementById(button.dataset.category + 'Container').classList.add('active');
       });
     });
+  </script>
+
+  <!-- legacy -->
+  <script>
+
 
     // 검색 기능
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const items = document.querySelectorAll('.list-container.active .item');
-      items.forEach(item => {
-        const title = item.querySelector('h3').textContent.toLowerCase();
-        const content = item.querySelector('p').textContent.toLowerCase();
-        if (title.includes(query) || content.includes(query)) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
-      });
-    });
+    // document.getElementById('searchBtn').addEventListener('click', () => {
+    //   const query = document.getElementById('searchInput').value.toLowerCase();
+    //   const items = document.querySelectorAll('.list-container.active .item');
+    //   items.forEach(item => {
+    //     const title = item.querySelector('h3').textContent.toLowerCase();
+    //     const content = item.querySelector('p').textContent.toLowerCase();
+    //     if (title.includes(query) || content.includes(query)) {
+    //       item.style.display = 'block';
+    //     } else {
+    //       item.style.display = 'none';
+    //     }
+    //   });
+    // });
 
     // 삭제 기능
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', function () {
-        const item = this.closest('.item');
-        if (confirm('정말로 삭제하시겠습니까?')) {
-          item.remove();
-        }
-      });
-    });
+    // document.querySelectorAll('.delete-btn').forEach(button => {
+    //   button.addEventListener('click', function () {
+    //     const item = this.closest('.item');
+    //     if (confirm('정말로 삭제하시겠습니까?')) {
+    //       item.remove();
+    //     }
+    //   });
+    // });
 
     // 선택 삭제 기능
-    document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
-      const selectedItems = document.querySelectorAll('.list-container.active .select-item:checked');
-      if (selectedItems.length === 0) {
-        alert('선택된 항목이 없습니다.');
-        return;
-      }
-      if (confirm('선택한 항목을 삭제하시겠습니까?')) {
-        selectedItems.forEach(checkbox => {
-          checkbox.closest('.item').remove();
-        });
-        alert('선택된 항목이 삭제되었습니다.');
-      }
-    });
+    // document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
+    //   const selectedItems = document.querySelectorAll('.list-container.active .select-item:checked');
+    //   if (selectedItems.length === 0) {
+    //     alert('선택된 항목이 없습니다.');
+    //     return;
+    //   }
+    //   if (confirm('선택한 항목을 삭제하시겠습니까?')) {
+    //     selectedItems.forEach(checkbox => {
+    //       checkbox.closest('.item').remove();
+    //     });
+    //     alert('선택된 항목이 삭제되었습니다.');
+    //   }
+    // });
 
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const items = document.querySelectorAll('.list-container.active .item');
-      items.forEach(item => {
-        const title = item.querySelector('h3').textContent.toLowerCase();
-        const content = item.querySelector('p').textContent.toLowerCase();
-        if (title.includes(query) || content.includes(query)) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
-      });
-    });
+    // document.getElementById('searchBtn').addEventListener('click', () => {
+    //   const query = document.getElementById('searchInput').value.toLowerCase();
+    //   const items = document.querySelectorAll('.list-container.active .item');
+    //   items.forEach(item => {
+    //     const title = item.querySelector('h3').textContent.toLowerCase();
+    //     const content = item.querySelector('p').textContent.toLowerCase();
+    //     if (title.includes(query) || content.includes(query)) {
+    //       item.style.display = 'block';
+    //     } else {
+    //       item.style.display = 'none';
+    //     }
+    //   });
+    // });
   </script>
 </body>
 

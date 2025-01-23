@@ -4,15 +4,29 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import com.desserthub.board.Board;
+import com.desserthub.board.BoardRepository;
+import com.desserthub.dlike.DlikeRepository;
+import com.desserthub.gallery.Gallery;
+import com.desserthub.gallery.GalleryRepository;
+import com.desserthub.reply.ReplyRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final GalleryRepository galleryRepository;
+    private final ReplyRepository replyRepository;
+    private final DlikeRepository dlikeRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(BoardRepository boardRepository, UserRepository userRepository, GalleryRepository galleryRepository, ReplyRepository replyRepository, DlikeRepository dlikeRepository) {
+        this.boardRepository = boardRepository;
         this.userRepository = userRepository;
+        this.galleryRepository = galleryRepository;
+        this.replyRepository = replyRepository;
+        this.dlikeRepository = dlikeRepository;
     }
 
     public List<User> getAllUsers() {
@@ -32,14 +46,6 @@ public class UserService {
     }
 
     public boolean updateUser(Long id, User userDetails) {
-        // User user = userRepository.findById(userCode).orElseThrow(null);
-
-        // user.setUserPw(userDetails.getUserPw());
-        // user.setUserEm(userDetails.getUserEm());
-        // user.setUserNn(userDetails.getUserNn());
-
-        // return userRepository.save(user);
-
         boolean result = false;
         User target_user = null;
         
@@ -57,7 +63,18 @@ public class UserService {
                 target_user.setUserEm(userDetails.getUserEm());
             }
             if (userDetails.getUserNn() != null && userDetails.getUserNn() != "") {
-                target_user.setUserNn(userDetails.getUserNn());
+                String newUserNn = userDetails.getUserNn();
+                target_user.setUserNn(newUserNn);
+
+                List<Board> boardList = boardRepository.findByUserId(id);
+                List<Gallery> galleryList = galleryRepository.findByUserId(id);
+                for(Board board : boardList) {
+                    board.setUserNn(newUserNn);
+                }
+                for(Gallery gallery : galleryList) {
+                    gallery.setUserNn(newUserNn);
+                }
+
             }
 
             userRepository.save(target_user);
@@ -67,6 +84,7 @@ public class UserService {
 
         return result;
     }
+
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -78,15 +96,23 @@ public class UserService {
         try {
             user = userRepository.findByUserId(userId).orElseThrow(null);
         } catch (Exception e) {
-            // TODO: handle exception
+            
         }
-
+        Long uid = null;
         if (user != null) {
+            uid = user.getId();
             if(userId.equals(user.getUserId()) && userPw.equals(user.getUserPw())) {
-                deleteUser(user.getId());
+                deleteUser(uid);
                 result = true;
             }
         }
+
+        boardRepository.deleteAllByUserId(uid);
+        galleryRepository.deleteAllByUserId(uid);
+        replyRepository.deleteAllByUserId(uid);
+        dlikeRepository.deleteAllByUserId(uid);
+
+        // 댓글 수나 찜수 변경 
 
         return result;
     }
