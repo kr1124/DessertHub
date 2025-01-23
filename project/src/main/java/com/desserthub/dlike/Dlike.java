@@ -1,4 +1,4 @@
-package com.desserthub.like;
+package com.desserthub.dlike;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 
 @Entity
-public class Like {
+public class Dlike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,8 @@ public class Like {
     private Long userId;
     private String target;
     private Long targetId;
+    private String targetTitle;
+    private String targetContent;
 
     public Long getId() {
         return id;
@@ -47,5 +49,22 @@ public class Like {
 
     public void setTargetId(Long targetId) {
         this.targetId = targetId;
+    }
+
+    public String getTargetContent() {
+        return targetContent;
+    }
+
+    public void setTargetContent(String targetContent) {
+        this.targetContent = targetContent;
+    }
+
+    public String getTargetTitle() {
+        return targetTitle;
+    }
+
+    public void setTargetTitle(String targetTitle) {
+        this.targetTitle = targetTitle;
     }    
+
 }

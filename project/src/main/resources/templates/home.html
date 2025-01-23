@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dessert Hub Community</title>
-  
+
   <link rel="stylesheet" href="/css/general.css">
   <link rel="stylesheet" href="/css/fragments/header.css">
   <link rel="stylesheet" href="/css/fragments/nav.css">
@@ -15,13 +15,10 @@
 
 <body>
 
-  <!-- 헤더 포함 -->
   <header th:replace="fragments/header.html :: header"></header>
 
-  <!-- 사이드바 포함 -->
   <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-  <!-- 페이지 콘텐츠 -->
   <main>
     <div class="content">
       <div class="slider" id="slider">
@@ -33,28 +30,32 @@
       <section class="featured">
         <h2>추천 디저트</h2>
         <div class="card-grid">
-          <div class="card">
-            <img src="img/valentinesdayminiberrytrifles4.png" alt="Dessert">
-            <p>부드럽고 상큼한 스트로베리 케이크 (⁎⁍̴̛͂▿⁍̴̛͂⁎)*✲ﾟ*｡⋆♡ོ </p>
-          </div>
-          <div class="card">
-            <img src="img/espresso-works-blog-christmas-desserts-ideas-and-recipes_1081x.jpg" alt="Dessert">
-            <p>크리마스에 가족과 함께 즐기는 쿠키 ദ്ദി(☆⸝⸝ʚ̴̶̷̆ ᴗ ʚ̴̶̷̆⸝⸝) </p>
-          </div>
-          <div class="card">
-            <img src="img/flourless-chocolate-cake-SQUARE.jpg" alt="Dessert">
-            <p>
-              달콤한 초코 케이크<br>
-              (っ˘ڡ˘ς)🍴 🍰 🍴(*^∀^* )
-            </p>
-
-          </div>
+          <a href="/board/4" class="no-underline">
+            <div class="card">
+              <img src="img/valentinesdayminiberrytrifles4.png" alt="Dessert">
+              <p>부드럽고 상큼한 스트로베리 케이크 (⁎⁍̴̛͂▿⁍̴̛͂⁎)*✲ﾟ*｡⋆♡ོ </p>
+            </div>
+          </a>
+          <a href="/board/5" class="no-underline">
+            <div class="card">
+              <img src="img/espresso-works-blog-christmas-desserts-ideas-and-recipes_1081x.jpg" alt="Dessert">
+              <p>크리마스에 가족과 함께 즐기는 쿠키 ദ്ദി(☆⸝⸝ʚ̴̶̷̆ ᴗ ʚ̴̶̷̆⸝⸝) </p>
+            </div>
+          </a>
+          <a href="/board/6" class="no-underline">
+            <div class="card">
+              <img src="img/flourless-chocolate-cake-SQUARE.jpg" alt="Dessert">
+              <p>
+                달콤한 초코 케이크<br>
+                (っ˘ڡ˘ς)🍴 🍰 🍴(*^∀^* )
+              </p>
+            </div>
+          </a>
         </div>
       </section>
     </div>
   </main>
 
-  <!-- 푸터 포함 -->
   <footer th:replace="fragments/footer.html :: footer"></footer>
 
 

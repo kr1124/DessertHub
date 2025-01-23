@@ -76,7 +76,7 @@ body {
     top: 0;
     width: 10px;
     height: 16px;
-    background: dimgrey;
+    background: red;
     border-radius: 50px 50px 0 0;
 }
 
@@ -94,6 +94,45 @@ body {
 
 .heart-btn.active:before,
 .heart-btn.active:after {
+    background: dimgrey !important;
+
+}
+/* 회색하트 버튼 스타일 */
+.heart-btn-gray {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.heart-btn-gray:before,
+.heart-btn-gray:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 16px;
+    background: dimgrey;
+    border-radius: 50px 50px 0 0;
+}
+
+.heart-btn-gray:before {
+    left: 10px;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.heart-btn-gray:after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+}
+
+.heart-btn-gray.active:before,
+.heart-btn-gray.active:after {
     background: red !important;
 
 }

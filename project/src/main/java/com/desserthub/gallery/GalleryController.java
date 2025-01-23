@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.desserthub.board.Board;
+import com.desserthub.dlike.DlikeService;
 import com.desserthub.user.User;
 import com.desserthub.user.UserService;
 
@@ -21,14 +21,22 @@ public class GalleryController {
 
     private final GalleryService galleryService;
     private final UserService userService;
+    private final DlikeService dlikeService;
 
-    public GalleryController(GalleryService galleryService, UserService userService) {
+    public GalleryController(GalleryService galleryService, UserService userService, DlikeService dlikeService) {
         this.galleryService = galleryService;
         this.userService = userService;
+        this.dlikeService = dlikeService;
     }
 
     @GetMapping
-    public String getAllGallerys(Model model) {
+    public String getAllGallerys(Model model, HttpSession session) {
+        Long uid = (Long)session.getAttribute("userId");
+
+        if(uid != null) {
+            model.addAttribute("likeListGallery", dlikeService.getUserLikes(uid, "gallery"));
+        }
+
         model.addAttribute("galleryList", galleryService.getAllGallerys());
         return "gallery/main";
     }
@@ -48,9 +56,11 @@ public class GalleryController {
 
     @PostMapping("/upload")
     public String createGallery(@ModelAttribute Gallery gallery, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        Long uid = (Long)session.getAttribute("userId");
+
+        User user = userService.getUser(uid).orElseThrow(null);
         
-        gallery.setUserId(user.getUserId());
+        gallery.setUserId(uid);
         gallery.setUserNn(user.getUserNn());
 
         gallery.setGalleryLiked(0);
@@ -66,17 +76,19 @@ public class GalleryController {
     
     // 특정 이미지 조회 (GET 요청)
     @GetMapping("/gview/{id}")
-    public String viewImage(@PathVariable Long id, Model model) {
+    public String viewImage(@PathVariable Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         // id에 해당하는 Gallery 객체 찾기
         Gallery gallery = galleryService.getGallery(id).orElseThrow(() -> new RuntimeException("Gallery not found"));
 
         if (gallery != null) {
             // Gallery 객체를 모델에 추가
             model.addAttribute("gallery", gallery);
+            model.addAttribute("isLike", dlikeService.getLike(id, "gallery"));
             return "gallery/galleryView"; // galleryView.html로 이동
         } else {
-            model.addAttribute("message", "이미지를 찾을 수 없습니다.");
-            return "error"; // error.html로 이동 (이미지가 없을 경우)
+            redirectAttributes.addFlashAttribute("message", "이미지를 찾을 수 없습니다..");
+            redirectAttributes.addFlashAttribute("target", "/gallery");
+            return "redirect:/remessage";
         }
     }
 
@@ -85,7 +97,15 @@ public class GalleryController {
         galleryService.deleteGallery(id);
         
         redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
-        redirectAttributes.addFlashAttribute("target", "gallery/main");
+        redirectAttributes.addFlashAttribute("target", "/gallery");
+        return "redirect:/remessage";
+    }
+    @PostMapping("/{id}/udelete")
+    public String deleteGalleryInUserPage(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        galleryService.deleteGallery(id);
+        
+        redirectAttributes.addFlashAttribute("message", "삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("target", "/user/profile/manage-content");
         return "redirect:/remessage";
     }
 }

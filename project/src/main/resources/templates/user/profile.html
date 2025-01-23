@@ -11,104 +11,28 @@
 
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/fragments/header.css">
-    <!-- <link rel="stylesheet" href="/css/fragments/nav.css"> -->
     <link rel="stylesheet" href="/css/user/nav.css">
-    <link rel="stylesheet" href="/css/fragments/footer.css">
+    <link rel="stylesheet" href="/css/fragments/footer2.css">
     <link rel="stylesheet" href="/css/user/profile.css">
 
 </head>
 
 <body>
 
-    <!-- 헤더 포함 -->
     <header th:replace="fragments/header.html :: header"></header>
 
-    <!-- 사이드바 포함 -->
     <nav th:replace="user/profile/profile-nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
 
-    <!-- 마이페이지 구조 -->
     <div class="mypage-container">
-
-        <!--콘텐츠 영역 -->
         <div id="mypage" class="content">
             <h3>마이페이지에 오신 것을 환영합니다!</h3>
             <br>
             <p>왼쪽 메뉴를 클릭하여 내용을 확인하세요.</p>
         </div>
-
-        <!-- <div th:replace="user/parts/profile-edit.html :: pedit" class="section edit-section"></div> -->
-
     </div>
 
-    <!-- 푸터 포함 -->
     <footer th:replace="fragments/footer.html :: footer"></footer>
 
-    <!-- 스크립트 -->
-    <!-- <script>
-
-        // 모든 메뉴 항목을 가져옵니다.
-        const menuItems = document.querySelectorAll('.menu-item');
-
-        // 각 메뉴 항목에 클릭 이벤트를 추가하여 active 클래스를 토글합니다.
-        menuItems.forEach(item => {
-            item.addEventListener('click', function () {
-
-                // 이미 active 클래스를 가진 항목이 있다면 active 클래스 제거
-                menuItems.forEach(item => item.classList.remove('active'));
-
-                // 클릭한 항목에 active 클래스를 추가
-                this.classList.add('active');
-
-                // data-content 속성에 따라 페이지 내용 변경 (예시)
-                const contentUrl = this.getAttribute('data-content');
-                console.log(`현재 페이지: ${contentUrl}`);
-                // 실제로 페이지를 전환하거나 Ajax로 데이터를 불러올 수 있습니다.
-            });
-        });
-
-
-        // 해당 화면으로 이동 
-
-        const menuItemse = document.querySelectorAll('.menu-item');
-        const content = document.querySelector('.content');
-
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const page = item.getAttribute('data-content'); // data-content 속성에서 경로 가져오기
-
-                fetch(page)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Failed to load: ${response.statusText}`);
-                        }
-                        return response.text();
-                    })
-                    .then(html => {
-                        content.innerHTML = html; // 콘텐츠 업데이트
-
-                        // 삽입된 스크립트 실행 처리
-                        const scripts = content.querySelectorAll('script'); // 모든 <script> 태그 선택
-                        scripts.forEach(script => {
-                            const newScript = document.createElement('script'); // 새로운 <script> 태그 생성
-                            if (script.src) {
-                                // 외부 스크립트 로드
-                                newScript.src = script.src;
-                                newScript.async = true;
-                            } else {
-                                // 인라인 스크립트 실행
-                                newScript.textContent = script.textContent;
-                            }
-                            document.body.appendChild(newScript); // DOM에 삽입하여 실행
-                            script.remove(); // 기존 스크립트 제거
-                        });
-                    })
-                    .catch(error => {
-                        content.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-                    });
-            });
-        });
-
-    </script> -->
 </body>
 
 </html>

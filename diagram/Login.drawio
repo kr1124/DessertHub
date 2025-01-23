@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="페이지-1" id="HWVJXGZuW3CK4hEEdGh3">
-        <mxGraphModel dx="1123" dy="522" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+        <mxGraphModel dx="905" dy="572" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -65,7 +65,7 @@
                 <mxCell id="S_vBsWQpr0SqbrmdmOaY-98" value="USER_NICKNAME" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;dashed=1;" parent="S_vBsWQpr0SqbrmdmOaY-59" vertex="1">
                     <mxGeometry y="120" width="140" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="2" value="USER_PF" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="S_vBsWQpr0SqbrmdmOaY-59">
+                <mxCell id="2" value="USER_PF" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;dashed=1;" parent="S_vBsWQpr0SqbrmdmOaY-59" vertex="1">
                     <mxGeometry y="150" width="140" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="S_vBsWQpr0SqbrmdmOaY-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S_vBsWQpr0SqbrmdmOaY-50" target="S_vBsWQpr0SqbrmdmOaY-54" edge="1">
@@ -106,7 +106,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="S_vBsWQpr0SqbrmdmOaY-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="S_vBsWQpr0SqbrmdmOaY-77" edge="1" target="S_vBsWQpr0SqbrmdmOaY-44">
+                <mxCell id="S_vBsWQpr0SqbrmdmOaY-86" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="S_vBsWQpr0SqbrmdmOaY-77" target="S_vBsWQpr0SqbrmdmOaY-44" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="510" y="220" as="targetPoint"/>
                         <Array as="points">

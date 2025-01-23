@@ -1,12 +1,12 @@
-// package com.desserthub.test;
+package com.desserthub.test;
 
-// import javax.persistence.Entity;
-// import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-// @Entity
-// public class TestEntity {
-//     @Id
-//     private Long id;
+@Entity
+public class TestEntity {
+    @Id
+    private Long id;
 
 
-// }
+}

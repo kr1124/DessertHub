@@ -10,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.desserthub.gallery.Gallery;
-
+import com.desserthub.board.BoardService;
+import com.desserthub.dlike.DlikeService;
+import com.desserthub.gallery.GalleryService;
+import com.desserthub.reply.ReplyService;
 
 
 // 로그인, 회원가입 관련 컨트롤러
@@ -20,9 +22,17 @@ import com.desserthub.gallery.Gallery;
 public class UserController {
 
     private final UserService userService;
+    private final DlikeService dlikeService;
+    private final BoardService boardService;
+    private final GalleryService galleryService;
+    private final ReplyService replyService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, DlikeService dlikeService, BoardService boardService, GalleryService galleryService, ReplyService replyService) {
         this.userService = userService;
+        this.dlikeService = dlikeService;
+        this.boardService = boardService;
+        this.galleryService = galleryService;
+        this.replyService = replyService;
     }
 
     @GetMapping("/login")
@@ -44,10 +54,8 @@ public class UserController {
         if(userService.login_check(user)) {
             User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
             session.setAttribute("userId", tuser.getId());
-            //System.out.println("세션에 userId 저장됨: " + tuser.getId());  // 디버깅용 로그
-            //아래는 session과는 다르게, 저장되지는 않는 일회성 메시지 전달이며 리다이렉트 시에도 유지됨
+            session.setAttribute("userNn", tuser.getUserNn());
             redirectAttributes.addFlashAttribute("message", (String)tuser.getUserNn() + "님 로그인을 환영합니다.");
-            //redirectAttributes.addFlashAttribute("message", "로그인 성공!");
             redirectAttributes.addFlashAttribute("target", "/home");
             return "redirect:/remessage";
         } else {
@@ -145,15 +153,101 @@ public class UserController {
 
     @GetMapping("/profile")
     public String request_get_user_profile(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        
         //유저의 데이터를 DB에서 가져와 model을 통해 뷰에 전달
+        Long uid = (Long)session.getAttribute("userId");
         User user = null;
 
-        try {
-            user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        } catch (Exception e) {
-            // TODO: handle exception
+        if(uid == null) {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            user = userService.getUser(uid).orElseThrow(null);
+            model.addAttribute("user", user);
+            return "user/profile";
+        }
+    }
+
+    @GetMapping("/profile/edit-image")
+    public String request_profile_image_edit(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long uid = (Long)session.getAttribute("userId");
+        User user = null;
+
+        if(uid == null) {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            user = userService.getUser(uid).orElseThrow(null);
+            model.addAttribute("user", user);
+            return "user/profile/profile-edit-image";
+        }
+    }
+
+    @GetMapping("/profile/edit")
+    public String request_profile_edit(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long uid = (Long)session.getAttribute("userId");
+        User user = null;
+
+        if(uid == null) {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            user = userService.getUser(uid).orElseThrow(null);
+            model.addAttribute("user", user);
+            return "user/profile/profile-edit";
         }
 
+        
+    }
+
+    @GetMapping("/profile/favorites-list")
+    public String request_fav(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long uid = (Long)session.getAttribute("userId");
+
+        if(uid == null) {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            model.addAttribute("likeListBoard", dlikeService.getUserLikes(uid, "board"));
+            model.addAttribute("likeListGallery", dlikeService.getUserLikes(uid, "gallery"));
+    
+            return "user/profile/favorites-list";
+        }
+    }
+    
+
+    @GetMapping("/profile/manage-content")
+    public String request_manage_content(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        Long uid = (Long)session.getAttribute("userId");
+
+        User user = userService.getUser(uid).orElseThrow(null);
+        
+        if(user == null) {
+            // 잘못된 접근이므로 경고와 함께 home으로 보내야함
+            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute("target", "/home");
+            return "redirect:/remessage";
+        } else {
+            model.addAttribute("boardList", boardService.getUserBoard(uid));
+            model.addAttribute("galleryList", galleryService.getUserGallery(uid));
+            model.addAttribute("replyList", replyService.getUserReply(uid));
+            model.addAttribute("user", user);
+            return "user/profile/manage-content";
+        }
+    }
+
+    @GetMapping("/withdraw")
+    public String request_withdraw(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
+        
         if(user == null) {
             // 잘못된 접근이므로 경고와 함께 home으로 보내야함
             redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
@@ -161,53 +255,16 @@ public class UserController {
             return "redirect:/remessage";
         } else {
             model.addAttribute("user", user);
-            return "user/profile";
+            return "user/profile/delete-account";
         }
-    }
-
-    @GetMapping("/profile/edit-image")
-    public String request_profile_image_edit(Model model, HttpSession session) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        
-        model.addAttribute("user", user);
-        return "user/profile/profile-edit-image";
-    }
-
-    @GetMapping("/profile/edit")
-    public String request_profile_edit(Model model, HttpSession session) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        
-        model.addAttribute("user", user);
-        return "user/profile/profile-edit";
-    }
-
-    @GetMapping("/profile/favorites-list")
-    public String request_fav(Model model) {
-        return "user/profile/favorites-list";
-    }
-    
-
-    @GetMapping("/profile/manage-content")
-    public String request_manage_content(Model model, HttpSession session) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        
-        model.addAttribute("user", user);
-        return "user/profile/manage-content";
-    }
-
-    @GetMapping("/withdraw")
-    public String request_withdraw(Model model, HttpSession session) {
-        User user = userService.getUser((Long)session.getAttribute("userId")).orElseThrow(null);
-        
-        model.addAttribute("user", user);
-        return "user/profile/delete-account";
     }
     
 
     @PostMapping("update")
     public String profile_update_handler(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+        Long uid = (Long)session.getAttribute("userId");
 
-        if(userService.updateUser((Long)session.getAttribute("userId"), user)) {
+        if(userService.updateUser(uid, user)) {
             redirectAttributes.addFlashAttribute("message", "수정되었습니다.");
             redirectAttributes.addFlashAttribute("target", "/user/profile");
             return "redirect:/remessage";
@@ -234,12 +291,12 @@ public class UserController {
     
 
     // 회원 탈퇴 처리 및 세션 삭제
-    @PostMapping("/delete")
-    public String withdraw(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
+    @GetMapping("/delete")
+    public String delet_user(@ModelAttribute User user, HttpSession session, RedirectAttributes redirectAttributes) {
+        User tuser = userService.getUser(user.getUserId()).orElseThrow(null);
 
-        if(userService.deleteUser(user.getUserId(), user.getUserPw())) {
-            // TODO 작성한 글, 갤러리, 등 전부 삭제 조치
-
+        if(tuser != null) {
+            userService.deleteUser(user.getUserId(), user.getUserPw());
             session.invalidate();  // 전체 세션을 무효화하여 로그아웃 처리
 
             redirectAttributes.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.");

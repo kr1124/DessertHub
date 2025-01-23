@@ -37,9 +37,33 @@ CREATE TABLE user(
 CREATE TABLE dessert(
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     dessert_name VARCHAR(255),
-    dessert_img LONGTEXT,
+    dessert_image LONGTEXT,
     dessert_chara VARCHAR(255)
 ) COMMENT '';
+
+CREATE TABLE dlike(
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    user_id int,
+    target VARCHAR(255),
+    target_id INT,
+    target_title VARCHAR(255),
+    target_content longtext
+) COMMENT '';
+
+CREATE TABLE reply(
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    user_id int,
+    user_nn VARCHAR(255),
+    board_id int,
+    reply_body longtext,
+    reply_time DATETIME
+) COMMENT '';
+
+ALTER TABLE board AUTO_INCREMENT=1;
+ALTER TABLE gallery AUTO_INCREMENT=1;
+ALTER TABLE user AUTO_INCREMENT=1;
+ALTER TABLE reply AUTO_INCREMENT=1;
+ALTER TABLE dlike AUTO_INCREMENT=1;
 
 SELECT * FROM gallery;
 SELECT * FROM board;

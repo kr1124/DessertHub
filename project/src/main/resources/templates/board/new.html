@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="category">카테고리</label>
                     <select id="category" th:field="*{boardCategory}">
-                        <option value="notice">공지사항</option>
+                        <option value="notice" th:if="${session.userId == 1}">공지사항</option>
                         <option value="free">자유게시판</option>
                         <option value="qna">Q&A</option>
                     </select>
@@ -48,7 +48,7 @@
 
                     <!-- 미리보기 이미지 표시 영역 -->
                     <div id="previewContainer" style="display: none; max-width: 100%; overflow: hidden; margin-top: 10px;">
-                        <img id="preview-image" src="" alt="업로드할 이미지 미리보기" style="width: 100%; max-width: 300px; height: auto;">
+                        <img id="preview-image" src="" alt="업로드할 이미지 미리보기" style="max-width: 100%; max-height: 200px; height: auto; width: auto;">
                     </div>
                 </div>
                 <div class="divider"></div>
