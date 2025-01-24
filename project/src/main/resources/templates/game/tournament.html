@@ -4,18 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>디저트 월드컵</title>
+
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/fragments/header.css">
+  <link rel="stylesheet" href="/css/fragments/nav.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
+
   <style>
-    body {
+/* 전역 설정 */
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+    }
+
+    /* body {
       font-family: 'Noto Sans KR', sans-serif;
       background-color: #ffe6e6;
       text-align: center;
       padding: 20px;
-    }
+    } */
+
     .container {
-      max-width: 600px;
+      max-width: 1000px;
       margin: auto;
       padding: 20px;
       background: #fff0f5;
+      text-align: center;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
@@ -82,21 +98,39 @@
       font-size: 16px;
       padding: 5px 10px;
     }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
+
 <body>
-  <div id="game-container" class="container">
-    <h1>디저트 월드컵</h1>
-    <p>두 개의 디저트 중 하나를 선택하세요!</p>
-    <div id="round-text"></div>
-    <div id="pair-container"></div>
-  </div>
+
+<!-- 헤더 포함 -->
+<header th:replace="fragments/header.html :: header"></header>
+
+<div class="main-layout">
+  <!-- 사이드바 포함 -->
+  <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
+    <div id="game-container" class="container">
+      <h1>디저트 월드컵</h1>
+      <p>두 개의 디저트 중 하나를 선택하세요!</p>
+      <div id="round-text"></div>
+      <div id="pair-container" class="button-container">
+
+      </div>
+    </div>
 
   <div id="result-container" class="container result-container">
     <h1>최종 선택된 디저트</h1>
     <h2 id="result-text"></h2>
     <button id="retry-button" class="button">다시 하기</button>
     <button id="share-button" class="button">공유하기</button>
+    
   </div>
 
   <!-- 공유 팝업 -->
@@ -104,26 +138,15 @@
     <button class="close-btn" id="close-popup">X</button>
     <iframe src="../sns.html"></iframe>
   </div>
+  </div>
 
-  <script>
-    let desserts = [
-      { name: '초콜릿 케이크', emoji: '🍰' },
-      { name: '딸기 마카롱', emoji: '🍓' },
-      { name: '블루베리 타르트', emoji: '🍇' },
-      { name: '치즈 케이크', emoji: '🍨' },
-      { name: '크로와상', emoji: '🥐' },
-      { name: '티라미수', emoji: '☕' },
-      { name: '팬케이크', emoji: '🥞' },
-      { name: '푸딩', emoji: '🍮' },
-      { name: '도넛', emoji: '🍩' },
-      { name: '초코칩 쿠키', emoji: '🍪' },
-      { name: '와플', emoji: '🧇' },
-      { name: '파르페', emoji: '🍧' },
-      { name: '에클레어', emoji: '🍰' },
-      { name: '무스 케이크', emoji: '🎂' },
-      { name: '젤라또', emoji: '🍦' },
-      { name: '마카롱', emoji: '🍬' }
-    ];
+  <!-- 푸터 포함 -->
+  <footer th:replace="fragments/footer.html :: footer"></footer>
+
+
+
+  <script th:inline="javascript">    
+    let desserts = /*[[${dessert}]]*/ [];
 
     let currentIndex = 0;
     let round = 1;
@@ -156,8 +179,17 @@
 
     function createButton(dessert) {
       const button = document.createElement('button');
-      button.classList.add('button');
-      button.textContent = `${dessert.emoji} ${dessert.name}`;
+      button.classList.add('button');    
+      
+      const img = document.createElement('img');
+      img.src = dessert.dessertImage; 
+      img.alt = dessert.dessertName;   
+      img.style.width = '400px';        
+      img.style.height = '400px';     
+      const text = document.createElement('span');  
+      button.textContent = `${dessert.dessertChara} ${dessert.dessertName}`;
+      button.appendChild(img);
+      button.appendChild(text);
       button.addEventListener('click', () => {
         selectedDesserts.push(dessert);
         nextPair();
@@ -180,7 +212,10 @@
     }
 
     function showFinalResult(dessert) {
-      document.getElementById('result-text').textContent = `${dessert.name} (${dessert.emoji})`;
+      document.getElementById('result-text').innerHTML = `
+        <img src="${dessert.dessertImage}" alt="${dessert.dessertName}" style="width: 500px; height: 500px;"><br>
+        ${dessert.dessertName} (${dessert.dessertChara})
+      `;
       document.getElementById('game-container').style.display = 'none';
       document.getElementById('result-container').style.display = 'block';
     }
@@ -192,7 +227,6 @@
     document.getElementById('share-button').addEventListener('click', () => {
       document.getElementById('share-popup').style.display = 'block';
     });
-
     // 팝업 닫기 버튼
     document.getElementById('close-popup').addEventListener('click', () => {
       document.getElementById('share-popup').style.display = 'none';

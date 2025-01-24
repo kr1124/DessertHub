@@ -15,8 +15,10 @@
 
 </head>
 
+
 <body>
     
+
     <!-- 헤더 포함 -->
     <header th:replace="fragments/header.html :: header"></header>
 
@@ -26,7 +28,10 @@
 
         <div name="page-content">
             <div class="container" id="game-container">
-
+                
+    <input type="text" id="userId" class="fixed-id" th:value="${dessert.dessertName}" disabled>
+    <img th:src="${dessert.dessertImage}" alt="">
+    <p th:text="${dessert.dessertChara}"></p>
             </div>
             <div>
                 

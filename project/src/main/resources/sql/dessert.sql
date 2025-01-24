@@ -67,5 +67,6 @@ ALTER TABLE dlike AUTO_INCREMENT=1;
 
 SELECT * FROM gallery;
 SELECT * FROM board;
+SELECT * FROM dessert;
 
 commit;
