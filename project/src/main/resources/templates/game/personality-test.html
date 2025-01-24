@@ -35,6 +35,10 @@
       font-size: 36px;
       color: #ff66b2;
     }
+    h2 {
+      
+      color: #ff66b2;
+    }
 
     .question {
       font-size: 22px;
@@ -164,6 +168,7 @@
 
     </div>
     <button class="button" id="retry-button">다시 하기</button>
+    <button class="button" id="share-button">공유하기</button>
     </div>
 
   <!-- 공유하기 팝업 -->
@@ -279,6 +284,9 @@ document.getElementById('retry-button').addEventListener('click', () => location
 
 // 팝업 닫기 버튼
 document.getElementById('close-popup').addEventListener('click', () => document.getElementById('share-popup').style.display = 'none');
+
+// 공유하기 버튼
+document.getElementById('share-button').addEventListener('click', () => document.getElementById('share-popup').style.display = 'block');
 
 // 첫 번째 질문 표시
 showQuestion();

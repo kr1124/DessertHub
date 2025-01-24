@@ -129,6 +129,7 @@
     <h1>최종 선택된 디저트</h1>
     <h2 id="result-text"></h2>
     <button id="retry-button" class="button">다시 하기</button>
+    <button id="share-button" class="button">공유하기</button>
     
   </div>
 
@@ -222,6 +223,10 @@
     // 다시 하기 버튼
     document.getElementById('retry-button').addEventListener('click', () => location.reload());
 
+    // 공유하기 버튼
+    document.getElementById('share-button').addEventListener('click', () => {
+      document.getElementById('share-popup').style.display = 'block';
+    });
     // 팝업 닫기 버튼
     document.getElementById('close-popup').addEventListener('click', () => {
       document.getElementById('share-popup').style.display = 'none';
