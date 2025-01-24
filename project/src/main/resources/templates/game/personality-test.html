@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>성격 유형 테스트</title>
+  
+  <link rel="stylesheet" href="/css/general.css">
+  <link rel="stylesheet" href="/css/fragments/header.css">
+  <link rel="stylesheet" href="/css/fragments/nav.css">
+  <link rel="stylesheet" href="/css/fragments/footer2.css">
+
+
   <style>
     body {
       font-family: 'Noto Sans KR', sans-serif;
@@ -131,6 +138,13 @@
 </head>
 <body>
 
+  <!-- 헤더 포함 -->
+  <header th:replace="fragments/header.html :: header"></header>
+
+  <div class="main-layout">
+    <!-- 사이드바 포함 -->
+    <nav th:replace="fragments/nav.html :: nav" style="width: 200px; margin-right: 20px;"></nav>
+
   <div class="container" id="quiz-container">
     <h1>성격 유형 테스트</h1>
     <p>당신의 성격 유형을 알아보고, 그에 맞는 디저트를 추천해드립니다!</p>
@@ -145,40 +159,60 @@
   <!-- 결과 화면 -->
   <div class="result-container" id="result-container">
     <h2>추천 디저트</h2>
-    <div class="result" id="result-text"></div>
+    <div class="result" id="result-text">
+      
+
+    </div>
     <button class="button" id="retry-button">다시 하기</button>
-    <button class="button" id="share-button">공유하기</button>
-  </div>
+    </div>
 
   <!-- 공유하기 팝업 -->
   <div class="iframe-popup" id="share-popup">
     <button class="close-btn" id="close-popup">X</button>
     <iframe src="../sns.html"></iframe>
   </div>
+
+  <!-- 푸터 포함 -->
+  <footer th:replace="fragments/footer.html :: footer"></footer>
   <script>
       // 초기 변수 설정
 const questions = [
   {
     question: "새로운 사람을 만날 때, 어떤 태도를 보이나요?",
     answers: [
-      { text: "활발하게 먼저 다가간다.", dessert: "초콜릿 케이크" },
-      { text: "조용히 상대의 반응을 살핀다.", dessert: "딸기 마카롱" }
+      { text: "활발하게 먼저 다가간다.", score: 0, dessert: "dessert1"},
+      { text: "조용히 상대의 반응을 살핀다.", score: 16, dessert: "dessert2" }
     ]
   },
   {
     question: "계획을 세우는 것을 좋아하나요?",
     answers: [
-      { text: "계획을 철저히 세운다.", dessert: "블루베리 타르트" },
-      { text: "상황에 따라 유동적으로 움직인다.", dessert: "팬케이크" }
+      { text: "계획을 철저히 세운다.", score: 0, dessert: "dessert1" },
+      { text: "상황에 따라 유동적으로 움직인다.", score: 8, dessert: "dessert2" }
     ]
   },
   {
     question: "문제를 해결할 때 어떤 방식이 더 편한가요?",
     answers: [
-      { text: "논리적이고 분석적인 접근을 선호한다.", dessert: "크로와상" },
-      { text: "감정과 직관을 따르는 편이다.", dessert: "푸딩" }
+      { text: "논리적이고 분석적인 접근을 선호한다.", score: 0, dessert: "dessert1" },
+      { text: "감정과 직관을 따르는 편이다.", score: 4, dessert: "dessert3" }
+    ]
+  },
+  {
+    question: "취미생활을 즐길 때는 어느쪽이 더 좋나요?",
+    answers: [
+      { text: "혼자서 할 수 있는 것을 즐긴다.", score: 0, dessert: "dessert1" },
+      { text: "여럿이서 즐길 수 있는 것을 선호한다.", score: 2, dessert: "dessert2" }
+    ]
+  },
+  {
+    question: "아이디어를 낼때는 어떤 쪽을 선호하나요?",
+    answers: [
+      { text: "비교적 단순하고 안전한 아이디어를 선호한다.", score: 0, dessert: "dessert1" },
+      { text: "보다 복잡하고 새로운 쪽에 도전한다.", score: 1, dessert: "dessert3" }
     ]
   }
+
 ];
 
 let currentQuestionIndex = 0;
@@ -199,14 +233,14 @@ function showQuestion() {
     const button = document.createElement('button');
     button.innerText = answer.text;
     button.classList.add('button');
-    button.addEventListener('click', () => selectAnswer(answer.dessert));
+    button.addEventListener('click', () => selectAnswer(answer));
     answerButtons.appendChild(button);
   });
 }
 
 // 답변 선택 시 실행 함수
-function selectAnswer(dessert) {
-  dessertScores[dessert] = (dessertScores[dessert] || 0) + 1;
+function selectAnswer(answer) {
+  dessertScores[answer.dessert] = (dessertScores[answer.dessert] || 0) + answer.score;
   currentQuestionIndex++;
 
   if (currentQuestionIndex < questions.length) {
@@ -218,21 +252,30 @@ function selectAnswer(dessert) {
 
 // 결과 표시 함수
 function showResult() {
-  // 가장 높은 점수의 디저트 선택
-  const resultDessert = Object.keys(dessertScores).reduce((a, b) =>
-    dessertScores[a] > dessertScores[b] ? a : b
-  );
+  const totalScore = Object.values(dessertScores).reduce((a, b) => a + b, 0);
+  const url = "/dessert/personality-test/"+totalScore;
 
-  document.getElementById('result-text').textContent = `${resultDessert}`;
+  fetch(url)
+  .then(response => response.json())
+  .then(dessert => {  
+    document.getElementById('result-text').innerHTML = `
+        <img src="${dessert.dessertImage}" alt="${dessert.dessertName}" style="width: 500px; height: 500px;"/>
+        <br>
+        <span>${dessert.dessertName}</span><br>
+        <span>${dessert.dessertChara}</span>
+      `;
+  })
+  .catch(error =>  {
+
+  });
+
+  // document.getElementById('result-text').textContent = `${resultDessert}`;
   document.getElementById('quiz-container').style.display = 'none'; // 질문 숨기기
   document.getElementById('result-container').style.display = 'block'; // 결과창 보이기
 }
 
 // 다시 시작 버튼
 document.getElementById('retry-button').addEventListener('click', () => location.reload());
-
-// 공유하기 버튼
-document.getElementById('share-button').addEventListener('click', () => document.getElementById('share-popup').style.display = 'block');
 
 // 팝업 닫기 버튼
 document.getElementById('close-popup').addEventListener('click', () => document.getElementById('share-popup').style.display = 'none');
