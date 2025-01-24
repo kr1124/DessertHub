@@ -73,7 +73,7 @@
 
                 <ul id="comment-list" class="comment-list">
                     <li th:each="replyItem : ${replyList}">
-                        <span th:text="${replyItem.replyBody}"></span>
+                        <span th:text="${replyItem.userNn} + '  :  ' + ${replyItem.replyBody}"></span>
 
                         <form th:action="@{/board/{id}/dereply(id=${replyItem.id})}" th:if="${session.userId == replyItem.userId}" method="post">
                             <button class="delete-btn" type="submit">삭제</button>
