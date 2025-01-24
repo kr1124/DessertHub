@@ -14,7 +14,7 @@ public class Dessert {
 
     private String dessertName; //이름
     private String dessertImage; //이미지
-    private String dessertChara; //특징
+    private String dessertChara; //이모지
 
     public Long getId() {
         return id;

@@ -33,20 +33,19 @@ public class DessertController {
         return "game/tournament"; 
     }
 
-        // 성격 유형 테스트
+    // 성격 유형 테스트
     @GetMapping("/personality-test")
     public String getPersonalityTestPage(Model model) {
         
         List<Dessert> desserts = dessertService.getAllDesserts(); 
         model.addAttribute("desserts", desserts);
         
-         return "game/personality-test";  // 성격 유형 테스트 페이지
+        return "game/personality-test";
     }
 
     @GetMapping("/personality-test/{id}")
     @ResponseBody
     public Dessert getPersonalityResult(@PathVariable int id, Model model) {
-        // System.out.println("호출됨");
         List<Dessert> desserts = dessertService.getAllDesserts(); 
         Dessert dessert = desserts.get(id);
         
@@ -55,7 +54,7 @@ public class DessertController {
 
     @GetMapping("/api/desserts/all")
     public List<Dessert> getAllDesserts() {
-        return dessertService.getAllDesserts(); // 디저트 정보를 데이터베이스에서 가져오는 서비스 메서드
+        return dessertService.getAllDesserts();
     }
         
     @GetMapping("/random-draw")
@@ -68,15 +67,4 @@ public class DessertController {
             model.addAttribute("dessert", randomDessert);
         return "game/random-draw"; 
     }
-
-    // @GetMapping("/sample")
-    // public String sampleRandomDessert(Model model) {
-    //     List<Dessert> desserts = dessertService.getAllDesserts();
-    //         Random random = new Random();
-    //         int randomIndex = random.nextInt(desserts.size());
-    //         Dessert randomDessert = desserts.get(randomIndex);            
-    //         // 랜덤 디저트를 모델에 추가
-    //         model.addAttribute("dessert", randomDessert);
-    //     return "game/sample"; 
-    // }
 }
